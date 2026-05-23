@@ -10,6 +10,8 @@
 
 `emet` is an advanced grounding tool designed specifically for AI coding agents. It prevents agents from hallucinating API endpoints, guessing library versions, or inventing CVE details by injecting real-time, highly authoritative, and conflict-resolved web research directly into their context window.
 
+![emet in action](docs/assets/emet-demo.gif)
+
 ![community packs](docs/assets/emet-community.png)
 
 ## 💡 Why `emet`?
