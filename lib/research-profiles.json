@@ -12,7 +12,7 @@
     "useJinaFallback": true,
     "maxChunksPerPage": 3,
     "searchProvider": "ddg_html",
-    "allowedSourceTypes": ["official_doc", "github_readme", "github_repo", "paper", "blog", "forum", "other", "file"],
+    "allowedSourceTypes": ["official_doc", "github_readme", "github_repo", "paper", "blog", "news", "forum", "other", "file"],
     "minAuthoritativeSources": 1,
     "minSources": 3,
     "cacheTtlMs": 86400000
@@ -30,7 +30,7 @@
     "useJinaFallback": true,
     "maxChunksPerPage": 3,
     "searchProvider": "ddg_html",
-    "allowedSourceTypes": ["official_doc", "github_readme", "github_repo", "paper", "blog", "forum", "other", "file"],
+    "allowedSourceTypes": ["official_doc", "github_readme", "github_repo", "paper", "blog", "news", "forum", "other", "file"],
     "minAuthoritativeSources": 1,
     "minSources": 4,
     "cacheTtlMs": 86400000
@@ -48,7 +48,7 @@
     "useJinaFallback": true,
     "maxChunksPerPage": 3,
     "searchProvider": "ddg_html",
-    "allowedSourceTypes": ["official_doc", "github_readme", "github_repo", "other", "file"],
+    "allowedSourceTypes": ["official_doc", "github_readme", "github_repo", "news", "other", "file"],
     "minAuthoritativeSources": 1,
     "minSources": 3,
     "cacheTtlMs": 172800000
@@ -66,7 +66,7 @@
     "useJinaFallback": true,
     "maxChunksPerPage": 3,
     "searchProvider": "academic",
-    "allowedSourceTypes": ["paper", "official_doc", "github_readme", "github_repo", "other", "file"],
+    "allowedSourceTypes": ["paper", "official_doc", "github_readme", "github_repo", "news", "other", "file"],
     "minAuthoritativeSources": 1,
     "minSources": 3,
     "preferRecent": true,

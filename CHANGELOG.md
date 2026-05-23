@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.0.5 (Hotfix)
+
+### Added
+- **Runtime Trace in Cached Results:** Added a detailed `runtimeTrace` payload to cached research results, including per-turn search queries, ranked search results, fetched page snapshots, conflict/sufficiency decisions, follow-up actions, final synthesis metadata, and run provenance such as `runId`, `createdAt`, `cacheKey`, and `queryHash`.
+- **Canonical Research Freshness Helpers:** Added shared freshness normalization helpers so raw dates, legacy freshness values, and canonical freshness buckets are now interpreted through one consistent path.
+- **Shared Source Meta Service Layer:** Added shared source metadata helpers for `has_authority`, `has_forum`, `has_news`, `has_recent`, and `source_count` so runtime logic and dataset/log export paths use the exact same rules.
+- **Regression Coverage:** Added focused tests for runtime trace persistence, freshness normalization, log-derived follow-up metadata, and canonical news-source detection.
+
+### Changed
+- **Cache Payload Schema:** Expanded the runtime cache payload to preserve full research traces instead of only the compact end result, making cached runs directly usable for later training and inspection workflows.
+- **Freshness Serialization:** Changed cached and synthesized source freshness values to canonical buckets (`today`, `this_week`, `this_year`, `older`, `unknown`) instead of leaking raw date strings into downstream consumers.
+- **News Source Classification:** Changed source typing so news-like URLs are now recognized canonically as `news`, and updated allowed source type profiles so these sources are not filtered out accidentally.
+- **Unified Follow-Up Inputs:** Changed both runtime follow-up routing and log-derived follow-up dataset generation to reuse the same shared source-meta logic.
+
+### Fixed
+- **Broken Recency Signal (`has_recent`):** Fixed a mismatch where runtime and log-derived follow-up inputs still checked legacy freshness values like `recent` and `current_year`, causing recent sources to be missed even when publish dates were present.
+- **Inconsistent News Detection:** Fixed divergence where some code paths expected `sourceType === "news"` even though source classification did not reliably emit `news`, leading to inconsistent `has_news` signals across runtime, logs, and evaluations.
+- **Structured Cache/Log Consistency:** Fixed inconsistencies between runtime cache records, trace snapshots, and follow-up export utilities so all three now observe the same source freshness and source-meta behavior.
+
+### Removed
+- **Legacy Freshness Assumptions:** Removed the remaining runtime dependence on old `recent` / `current_year` freshness checks in follow-up metadata generation.
+
+## Legacy History (Old Tool / Pre-Migration Version Line)
+
+The entries below are preserved from the older version line before the current scoped `@black-knight.dev/emet` release sequence.
+
 ## 1.4.1 (Hotfix)
 
 - **Fixed Bundle Configuration:** Added `ml` directory to `package.json` files array to ensure the Python daemon scripts and local ML models (`.joblib`) are correctly included in the npm published tarball. This ensures the zero-setup architecture functions securely out of the box after fresh installations.

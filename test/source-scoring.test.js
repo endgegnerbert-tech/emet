@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildDeepQueries, detectClaimConflicts, detectCoverageGaps, detectConflictSignals, normalizePaperTitle, prioritizeSourceEntries, scoreSourceEntry } from "../lib/research.js";
+import { buildDeepQueries, classifySourceType, detectClaimConflicts, detectCoverageGaps, detectConflictSignals, normalizePaperTitle, prioritizeSourceEntries, scoreSourceEntry } from "../lib/research.js";
 
 test("prioritizeSourceEntries prefers official docs over blogs", () => {
   const sources = [
@@ -34,6 +34,12 @@ test("prioritizeSourceEntries keeps visible score metadata", () => {
   assert.equal(typeof ranked[0].score, "number");
   assert.equal(typeof ranked[0].authoritative, "boolean");
   assert.ok(["today", "this_week", "this_year", "older", "unknown"].includes(ranked[0].freshness));
+});
+
+test("classifySourceType recognizes canonical news sources", () => {
+  assert.equal(classifySourceType("https://www.reuters.com/world/example-story", "Example Story"), "news");
+  assert.equal(classifySourceType("https://example.com/docs/reference", "Reference"), "official_doc");
+  assert.equal(classifySourceType("https://medium.com/example/post", "Post"), "blog");
 });
 
 test("buildDeepQueries adds academic paper hints", () => {

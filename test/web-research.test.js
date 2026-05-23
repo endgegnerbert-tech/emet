@@ -177,7 +177,10 @@ test("persistent research cache can round-trip a cached result", () => {
 });
 
 test("createResearchResult normalizes missing schema fields", () => {
-  const result = createResearchResult({ answer: "A", sources: [{ title: "Doc", url: "https://example.com" }] });
+  const result = createResearchResult({
+    answer: "A",
+    sources: [{ title: "Doc", url: "https://example.com" }],
+  });
 
   assert.equal(result.answer, "A");
   assert.deepEqual(result.bullets, []);
@@ -187,6 +190,19 @@ test("createResearchResult normalizes missing schema fields", () => {
   assert.deepEqual(result.openSubQuestions, []);
   assert.equal(result.confidence, 0);
   assert.deepEqual(result.unverifiedClaims, []);
+});
+
+
+test("createResearchResult normalizes raw source freshness dates into canonical buckets", () => {
+  const result = createResearchResult({
+    sources: [{
+      title: "Doc",
+      url: "https://example.com",
+      freshness: new Date().toISOString().slice(0, 10),
+    }],
+  });
+
+  assert.equal(result.sources[0].freshness, "today");
 });
 
 test("fetchPageSource uses Jina Reader proactively for known reader-friendly domains", async () => {
@@ -450,6 +466,13 @@ test("runWebResearch in deep mode performs follow-up research and finalizes resu
     assert.equal(typeof result.confidenceScore, "number");
     assert.equal(typeof result.conflictSummary, "string");
     assert.ok(Array.isArray(result.codeBlocks));
+    assert.equal(result.runtimeTrace.schemaVersion, 2);
+    assert.equal(typeof result.runtimeTrace.domainDecision.finalDomain, "string");
+    assert.ok(result.runtimeTrace.turns.length >= 1);
+    assert.ok(result.runtimeTrace.turns[0].searchResults.length >= 1);
+    assert.equal(typeof result.runtimeTrace.turns[0].pageCandidates[0]?.text, "string");
+    assert.ok(Array.isArray(result.runtimeTrace.final.mergedPages));
+    assert.equal(result.runtimeTrace.final.synthesis.answer, result.answer);
   } finally {
     globalThis.fetch = previousFetch;
   }

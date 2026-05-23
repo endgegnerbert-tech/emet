@@ -2,20 +2,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import { sourceMetaFromSources } from "../../lib/research.js";
+
 export const DEFAULT_RESEARCH_LOG_PATH = process.env.EMET_LOG_PATH || path.join(os.homedir(), ".pi", "logs", "emet.jsonl");
 
-export function isAuthoritativeSource(source = {}) {
-  return Boolean(source.authoritative) || ["official_doc", "github_readme", "github_repo", "paper"].includes(source.sourceType);
-}
-
 export function sourceMetaFromPages(pages = []) {
-  return {
-    has_authority: pages.some(isAuthoritativeSource),
-    has_forum: pages.some((source) => source.sourceType === "forum" || /forum|reddit|stack/i.test(source.url || "")),
-    has_news: pages.some((source) => source.sourceType === "news" || /news|blog|article/i.test(source.url || "")),
-    has_recent: pages.some((source) => source.freshness === "recent" || source.freshness === "current_year"),
-    source_count: pages.length,
-  };
+  return sourceMetaFromSources(pages);
 }
 
 export function observedActionFromResult(result = {}) {
