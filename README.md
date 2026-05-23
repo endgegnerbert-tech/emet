@@ -2,7 +2,7 @@
 
 ![emet logo](docs/assets/emet-logo.png)
 
-[![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/emet)
+[![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
 [![tests](https://img.shields.io/badge/tests-121%2F121-brightgreen)](https://github.com/endgegnerbert-tech/emet)
 [![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
 
