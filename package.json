@@ -26,11 +26,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tomsej/emet.git"
+    "url": "git+https://github.com/endgegnerbert-tech/emet.git"
   },
-  "homepage": "https://github.com/tomsej/emet#readme",
+  "homepage": "https://github.com/endgegnerbert-tech/emet#readme",
   "bugs": {
-    "url": "https://github.com/tomsej/emet/issues"
+    "url": "https://github.com/endgegnerbert-tech/emet/issues"
   },
   "keywords": [
     "pi-package"

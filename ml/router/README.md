@@ -29,21 +29,21 @@ python ml/router/embed_model2vec.py \
 python ml/router/train_domain_classifier.py \
   --embeddings data/router/domain-model2vec.npz data/router/synthetic-model2vec.npz \
   --gold-embeddings data/router/gold-model2vec.npz \
-  --out .cache/models/pi-research-router/domain \
+  --out .cache/models/emet-router/domain \
   --model-type auto
 
 python ml/router/evaluate_domain.py \
-  --model .cache/models/pi-research-router/domain/model.joblib \
+  --model .cache/models/emet-router/domain/model.joblib \
   --embeddings data/router/gold-model2vec.npz \
   --out metrics/router/domain-model2vec-lr.json
 
 python ml/router/benchmark_latency.py \
-  --model-dir .cache/models/pi-research-router/domain \
+  --model-dir .cache/models/emet-router/domain \
   --examples data/router/gold-domain.jsonl \
   --out metrics/router/latency.json
 
 python scripts/router/eval_domain_unknown.py \
-  --model-dir .cache/models/pi-research-router/domain \
+  --model-dir .cache/models/emet-router/domain \
   --input data/router/unknown-domain-smoke.jsonl
 ```
 
@@ -65,21 +65,21 @@ python ml/router/train_structured_baseline.py --task sufficiency
 
 Outputs:
 
-- `.cache/models/pi-research-router/conflict-structured/`
-- `.cache/models/pi-research-router/sufficiency-structured/`
+- `.cache/models/emet-router/conflict-structured/`
+- `.cache/models/emet-router/sufficiency-structured/`
 - `metrics/router/conflict-structured-models.json`
 - `metrics/router/sufficiency-structured-models.json`
 
 ## Runtime flags
 
 ```bash
-PI_RESEARCH_TINY_ROUTER=1
-PI_RESEARCH_TINY_ROUTER_MODEL=.cache/models/pi-research-router
-PI_RESEARCH_TINY_ROUTER_TIMEOUT_MS=50
-PI_RESEARCH_TINY_ROUTER_DOMAIN=1
-PI_RESEARCH_TINY_ROUTER_FOLLOWUP=1
-PI_RESEARCH_TINY_ROUTER_CONFLICT=0
-PI_RESEARCH_TINY_ROUTER_SUFFICIENCY=0
+EMET_TINY_ROUTER=1
+EMET_TINY_ROUTER_MODEL=.cache/models/emet-router
+EMET_TINY_ROUTER_TIMEOUT_MS=50
+EMET_TINY_ROUTER_DOMAIN=1
+EMET_TINY_ROUTER_FOLLOWUP=1
+EMET_TINY_ROUTER_CONFLICT=0
+EMET_TINY_ROUTER_SUFFICIENCY=0
 ```
 
 Keep conflict/sufficiency off until metrics are reviewed.
@@ -91,7 +91,7 @@ Safe MCP runtime deploy:
 ```bash
 scripts/router/deploy-server-runtime.sh \
   blackknight@100.98.190.19 \
-  ~/work/pi-research-runtime
+  ~/work/emet-runtime
 ```
 
 This syncs the repo, installs user-local Node if needed, copies trained router models, runs `npm install`, and writes:
@@ -102,5 +102,5 @@ This syncs the repo, installs user-local Node if needed, copies trained router m
 Recommended start command:
 
 ```bash
-ssh blackknight@100.98.190.19 'cd ~/work/pi-research-runtime && ./start-mcp-tiny-router-safe.sh'
+ssh blackknight@100.98.190.19 'cd ~/work/emet-runtime && ./start-mcp-tiny-router-safe.sh'
 ```

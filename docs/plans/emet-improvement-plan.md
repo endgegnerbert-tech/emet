@@ -1,4 +1,4 @@
-# pi-research improvement plan (revised)
+# emet improvement plan (revised)
 
 ## Goal
 Improve research quality, reduce wasted turns, and make failures measurable by tightening follow-up planning, authority policy, weak-page handling, and eval coverage.

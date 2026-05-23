@@ -1,7 +1,7 @@
-# pi-research Scrapling fetch design
+# emet Scrapling fetch design
 
 ## Goal
-Make `pi-research` more robust at page retrieval by adding a small fetch adapter layer that can fall back to Scrapling only when needed.
+Make `emet` more robust at page retrieval by adding a small fetch adapter layer that can fall back to Scrapling only when needed.
 
 ## Recommendation
 Use **approach A: minimal adapter + heuristics**.
@@ -23,7 +23,7 @@ Scrapling already provides the right primitives:
 
 ## Scope
 ### In scope
-- Add one small fetch abstraction in pi-research
+- Add one small fetch abstraction in emet
 - Use `AsyncFetcher` as the first Scrapling-backed option
 - Escalate to `DynamicFetcher` and `StealthyFetcher` only when heuristics say so
 - Keep Jina fallback as a separate fallback path

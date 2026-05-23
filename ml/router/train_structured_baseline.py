@@ -127,7 +127,7 @@ def main():
     args = parser.parse_args()
 
     input_path = args.input or TASK_INPUTS[args.task]
-    out_dir = args.out_dir or os.path.join(".cache", "models", "pi-research-router", f"{args.task}-structured")
+    out_dir = args.out_dir or os.path.join(".cache", "models", "emet-router", f"{args.task}-structured")
     metrics_path = os.path.join("metrics", "router", f"{args.task}-structured-models.json")
 
     rows = load_jsonl(input_path)

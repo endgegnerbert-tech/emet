@@ -1,4 +1,4 @@
-# pi-research retrieval policy
+# emet retrieval policy
 
 ## Purpose
 This document freezes the retrieval policy so authority, weak-page handling, and follow-up behavior do not drift into ad-hoc heuristics.

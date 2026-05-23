@@ -1,8 +1,8 @@
-# pi-research README Refresh Implementation Plan
+# emet README Refresh Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Rewrite the README to present pi-research as a local, agent-friendly research tool with clearer English, stronger positioning, and complete usage guidance.
+**Goal:** Rewrite the README to present emet as a local, agent-friendly research tool with clearer English, stronger positioning, and complete usage guidance.
 
 **Architecture:** This is a documentation-only change. The only file to update is `README.md`. The new README should lead with a concise product explanation, clarify that the package does not rely on external research APIs or API keys, document the public tool parameters, and explain outputs, behavior, and limitations without mentioning browser automation.
 
@@ -18,9 +18,9 @@
 - [ ] **Step 1: Replace the README with the new English version**
 
 ```md
-# pi-research
+# emet
 
-`pi-research` is a Pi extension for fast, local-first web research inside the agent.
+`emet` is a Pi extension for fast, local-first web research inside the agent.
 
 It searches the live web, ranks sources, reads the most relevant pages, and synthesizes a grounded answer with citations.
 It does **not** require an external research API or API key, and it is not a browser automation tool.
@@ -32,7 +32,7 @@ Most agents need two things to answer well:
 1. a way to search the web efficiently
 2. a way to turn sources into a usable answer
 
-`pi-research` does both inside Pi, so the agent can research topics without calling a separate hosted research service.
+`emet` does both inside Pi, so the agent can research topics without calling a separate hosted research service.
 
 ## What it does
 
@@ -57,13 +57,13 @@ Use `browser_action` for clicks, screenshots, DOM inspection, or page interactio
 ### For Pi
 
 ```bash
-pi install npm:pi-research
+pi install npm:emet
 ```
 
 ### For npm-based workflows
 
 ```bash
-npm install pi-research
+npm install emet
 ```
 
 ## Quick start
@@ -186,21 +186,21 @@ The tool returns structured data, including:
 
 ## Package info
 
-- Package name: `pi-research`
-- Entry point: `extensions/pi-research.ts`
-- GitHub: `https://github.com/endgegnerbert-tech/pi-research`
+- Package name: `emet`
+- Entry point: `extensions/emet.ts`
+- GitHub: `https://github.com/endgegnerbert-tech/emet`
 
 ## Release notes
 
-- Pi install: `pi install npm:pi-research`
-- npm install: `npm install pi-research`
-- Tool name: `pi-research`
+- Pi install: `pi install npm:emet`
+- npm install: `npm install emet`
+- Tool name: `emet`
 ```
 
 - [ ] **Step 2: Verify the README reads cleanly and matches the public tool schema**
 
 Run: `node -e "const p=require('./package.json'); console.log(p.pi.extensions[0])"`
-Expected: prints `./extensions/pi-research.ts`
+Expected: prints `./extensions/emet.ts`
 
 Run: `npm test --silent`
 Expected: all tests pass
@@ -209,5 +209,5 @@ Expected: all tests pass
 
 ```bash
 git add README.md docs/superpowers/plans/2026-04-28-readme-refresh.md
-git commit -m "docs: refresh pi-research README"
+git commit -m "docs: refresh emet README"
 ```

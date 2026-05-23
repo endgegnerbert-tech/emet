@@ -6,7 +6,7 @@ TRM is not a better generic MLP. TRM is useful when the task has an internal sta
 
 So we do not feed TRM raw text and ask for a boolean. We feed TRM a structured evidence state and let it refine the decision.
 
-## Good TRM targets in pi-research
+## Good TRM targets in emet
 
 ### Target 1: conflict resolution
 

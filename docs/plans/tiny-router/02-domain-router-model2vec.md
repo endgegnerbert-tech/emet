@@ -100,8 +100,8 @@ test/tiny-router.test.js
 Feature flag:
 
 ```text
-PI_RESEARCH_TINY_ROUTER=1
-PI_RESEARCH_TINY_ROUTER_MODEL=/path/to/domain-router
+EMET_TINY_ROUTER=1
+EMET_TINY_ROUTER_MODEL=/path/to/domain-router
 ```
 
 Decision thresholds:

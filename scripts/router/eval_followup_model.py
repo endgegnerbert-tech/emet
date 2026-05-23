@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(os.getcwd(), 'ml', 'router'))
 from features import load_embedding_model, extract_followup_features
 
 DATA_PATH = os.path.join('data', 'followup', 'gold-followup.jsonl')
-MODEL_PATH = os.path.join('.cache', 'models', 'pi-research-router', 'followup', 'model.joblib')
+MODEL_PATH = os.path.join('.cache', 'models', 'emet-router', 'followup', 'model.joblib')
 OUT_PATH = os.path.join('metrics', 'router', 'followup-model-gold.json')
 
 rows = [json.loads(line) for line in open(DATA_PATH) if line.strip()]

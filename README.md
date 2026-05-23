@@ -3,7 +3,7 @@
 ![emet logo](docs/assets/emet-logo.png)
 
 [![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/emet)
-[![tests](https://img.shields.io/badge/tests-121%2F121-brightgreen)](https://github.com/tomsej/emet)
+[![tests](https://img.shields.io/badge/tests-121%2F121-brightgreen)](https://github.com/endgegnerbert-tech/emet)
 [![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
 
 **The Zero-Setup Research Engine for Autonomous AI Agents.**
@@ -111,4 +111,4 @@ We are actively working on scaling the reasoning capabilities:
 ## 📝 License & Notices
 - **License:** MIT
 - **Third-party notices:** See `THIRD_PARTY_NOTICES.md`
-- **GitHub:** [https://github.com/tomsej/emet](https://github.com/tomsej/emet)
+- **GitHub:** [https://github.com/endgegnerbert-tech/emet](https://github.com/endgegnerbert-tech/emet)

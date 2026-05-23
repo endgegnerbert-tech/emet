@@ -1,5 +1,5 @@
 {
-  "note": "Real-run silver validation from ~/.pi/logs/pi-research.jsonl. Inputs use first-turn fetched pages; action labels are inferred from actual stored followupQuery/followupRounds, not synthetic training data. This is not hand-labeled gold.",
+  "note": "Real-run silver validation from ~/.pi/logs/emet.jsonl. Inputs use first-turn fetched pages; action labels are inferred from actual stored followupQuery/followupRounds, not synthetic training data. This is not hand-labeled gold.",
   "cacheRuns": 189,
   "logSessions": 39,
   "evalRuns": 21,

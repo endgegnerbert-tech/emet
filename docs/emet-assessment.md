@@ -1,4 +1,4 @@
-# pi-research assessment
+# emet assessment
 
 ## Short verdict
 - Good research tool.
@@ -29,5 +29,5 @@
 
 ## Why MCP showed up
 - MCP was the harness layer I used to inspect and run commands.
-- `pi-research` is still the actual extension/tool name.
+- `emet` is still the actual extension/tool name.
 - So the logs show MCP because that is the transport/tooling layer, not because the tool changed name.

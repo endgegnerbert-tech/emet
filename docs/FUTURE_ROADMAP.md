@@ -1,6 +1,6 @@
 # Future Vision & Next Steps
 
-This document outlines the strategic roadmap for taking `pi-research` to the next level. After migrating away from the heavyweight BitNet JSON-planner toward the blazing-fast Hybrid Architecture (Tiny-Router with Model2Vec and Structured ML), the foundation is now solid.
+This document outlines the strategic roadmap for taking `emet` to the next level. After migrating away from the heavyweight BitNet JSON-planner toward the blazing-fast Hybrid Architecture (Tiny-Router with Model2Vec and Structured ML), the foundation is now solid.
 
 The next evolutionary leaps involve **Scaling Data** and **Deep Semantic Reasoning**.
 

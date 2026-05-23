@@ -75,7 +75,7 @@ python ml/router/embed_model2vec.py \
 python ml/router/train_domain_classifier.py \
   --embeddings data/router/domain-model2vec.npz \
   --gold data/router/gold-domain.jsonl \
-  --out .cache/models/pi-research-router/domain
+  --out .cache/models/emet-router/domain
 ```
 
 Expected resource usage:
@@ -109,7 +109,7 @@ Before TRM, train an MLP on the exact same structured features.
 python ml/router/train_structured_mlp.py \
   --features data/router/structured-features.npz \
   --task conflict \
-  --out .cache/models/pi-research-router/conflict-mlp
+  --out .cache/models/emet-router/conflict-mlp
 ```
 
 If MLP solves it, do not build TRM for V1.
@@ -128,7 +128,7 @@ python ml/router/train_trm_structured.py \
   --seq-len 64 \
   --batch-size 4 \
   --device cpu \
-  --out .cache/models/pi-research-router/conflict-trm
+  --out .cache/models/emet-router/conflict-trm
 ```
 
 Try CUDA only if CPU is too slow and memory is safe:
@@ -186,7 +186,7 @@ Run:
 
 ```bash
 python ml/router/benchmark_latency.py \
-  --models .cache/models/pi-research-router \
+  --models .cache/models/emet-router \
   --examples data/router/gold-domain.jsonl \
   --out metrics/router/latency.json
 ```

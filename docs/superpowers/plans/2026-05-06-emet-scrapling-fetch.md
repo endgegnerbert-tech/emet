@@ -1,8 +1,8 @@
-# pi-research Scrapling fetch implementation plan
+# emet Scrapling fetch implementation plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a small async-first fetch adapter so `pi-research` can fall back to Scrapling only when pages are blocked, thin, or JS-driven.
+**Goal:** Add a small async-first fetch adapter so `emet` can fall back to Scrapling only when pages are blocked, thin, or JS-driven.
 
 **Architecture:** Keep `lib/web-research.js` as the orchestration layer, but move fetch selection into a tiny adapter module. The adapter will try the current fast HTTP path first, then escalate to Scrapling (`AsyncFetcher`, `DynamicFetcher`, `StealthyFetcher`) through a Python bridge only when heuristics say the page is unreadable or protected. Jina remains a separate reader fallback.
 

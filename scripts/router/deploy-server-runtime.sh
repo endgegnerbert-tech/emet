@@ -2,14 +2,14 @@
 set -euo pipefail
 
 REMOTE_HOST="${1:-blackknight@100.98.190.19}"
-REMOTE_RUNTIME_DIR="${2:-~/work/pi-research-runtime}"
-REMOTE_TRAIN_DIR="${REMOTE_TRAIN_DIR:-~/work/pi-research-router-phase4-20260521}"
+REMOTE_RUNTIME_DIR="${2:-~/work/emet-runtime}"
+REMOTE_TRAIN_DIR="${REMOTE_TRAIN_DIR:-~/work/emet-router-phase4-20260521}"
 NODE_LINE="${NODE_LINE:-22}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 
-ssh "$REMOTE_HOST" "mkdir -p $REMOTE_RUNTIME_DIR/.cache/models/pi-research-router"
+ssh "$REMOTE_HOST" "mkdir -p $REMOTE_RUNTIME_DIR/.cache/models/emet-router"
 
 rsync -az --delete \
   --exclude '.git' \
@@ -21,21 +21,21 @@ rsync -az --delete \
   --exclude '__pycache__' \
   ./ "$REMOTE_HOST:$REMOTE_RUNTIME_DIR/"
 
-if [ -d ".cache/models/pi-research-router/followup" ]; then
+if [ -d ".cache/models/emet-router/followup" ]; then
   rsync -az \
-    .cache/models/pi-research-router/followup/ \
-    "$REMOTE_HOST:$REMOTE_RUNTIME_DIR/.cache/models/pi-research-router/followup/"
+    .cache/models/emet-router/followup/ \
+    "$REMOTE_HOST:$REMOTE_RUNTIME_DIR/.cache/models/emet-router/followup/"
 fi
 
 ssh "$REMOTE_HOST" "REMOTE_RUNTIME_DIR=$REMOTE_RUNTIME_DIR REMOTE_TRAIN_DIR=$REMOTE_TRAIN_DIR NODE_LINE=$NODE_LINE bash -s" <<'EOF'
 set -euo pipefail
 cd "$REMOTE_RUNTIME_DIR"
 
-mkdir -p .cache/models/pi-research-router
+mkdir -p .cache/models/emet-router
 for model in domain conflict-structured sufficiency-structured; do
-  if [ -d "$REMOTE_TRAIN_DIR/.cache/models/pi-research-router/$model" ]; then
-    rm -rf ".cache/models/pi-research-router/$model"
-    cp -R "$REMOTE_TRAIN_DIR/.cache/models/pi-research-router/$model" ".cache/models/pi-research-router/$model"
+  if [ -d "$REMOTE_TRAIN_DIR/.cache/models/emet-router/$model" ]; then
+    rm -rf ".cache/models/emet-router/$model"
+    cp -R "$REMOTE_TRAIN_DIR/.cache/models/emet-router/$model" ".cache/models/emet-router/$model"
   fi
 done
 
@@ -76,14 +76,14 @@ cat > start-mcp-tiny-router-safe.sh <<'SH'
 set -euo pipefail
 cd "$(dirname "$0")"
 export PATH="$HOME/.local/node/bin:$PATH"
-export PI_RESEARCH_TINY_ROUTER=1
-export PI_RESEARCH_TINY_ROUTER_MODEL="$PWD/.cache/models/pi-research-router"
-export PI_RESEARCH_TINY_ROUTER_PYTHON="$PWD/.venv-router/bin/python"
-export PI_RESEARCH_TINY_ROUTER_TIMEOUT_MS="${PI_RESEARCH_TINY_ROUTER_TIMEOUT_MS:-50}"
-export PI_RESEARCH_TINY_ROUTER_DOMAIN=1
-export PI_RESEARCH_TINY_ROUTER_FOLLOWUP=0
-export PI_RESEARCH_TINY_ROUTER_CONFLICT=0
-export PI_RESEARCH_TINY_ROUTER_SUFFICIENCY=0
+export EMET_TINY_ROUTER=1
+export EMET_TINY_ROUTER_MODEL="$PWD/.cache/models/emet-router"
+export EMET_TINY_ROUTER_PYTHON="$PWD/.venv-router/bin/python"
+export EMET_TINY_ROUTER_TIMEOUT_MS="${EMET_TINY_ROUTER_TIMEOUT_MS:-50}"
+export EMET_TINY_ROUTER_DOMAIN=1
+export EMET_TINY_ROUTER_FOLLOWUP=0
+export EMET_TINY_ROUTER_CONFLICT=0
+export EMET_TINY_ROUTER_SUFFICIENCY=0
 exec node ./mcp/server.js
 SH
 chmod +x start-mcp-tiny-router-safe.sh
@@ -93,21 +93,21 @@ cat > start-mcp-tiny-router-experimental.sh <<'SH'
 set -euo pipefail
 cd "$(dirname "$0")"
 export PATH="$HOME/.local/node/bin:$PATH"
-export PI_RESEARCH_TINY_ROUTER=1
-export PI_RESEARCH_TINY_ROUTER_MODEL="$PWD/.cache/models/pi-research-router"
-export PI_RESEARCH_TINY_ROUTER_PYTHON="$PWD/.venv-router/bin/python"
-export PI_RESEARCH_TINY_ROUTER_TIMEOUT_MS="${PI_RESEARCH_TINY_ROUTER_TIMEOUT_MS:-50}"
-export PI_RESEARCH_TINY_ROUTER_DOMAIN=1
-export PI_RESEARCH_TINY_ROUTER_FOLLOWUP=1
-export PI_RESEARCH_TINY_ROUTER_CONFLICT=1
-export PI_RESEARCH_TINY_ROUTER_SUFFICIENCY=1
+export EMET_TINY_ROUTER=1
+export EMET_TINY_ROUTER_MODEL="$PWD/.cache/models/emet-router"
+export EMET_TINY_ROUTER_PYTHON="$PWD/.venv-router/bin/python"
+export EMET_TINY_ROUTER_TIMEOUT_MS="${EMET_TINY_ROUTER_TIMEOUT_MS:-50}"
+export EMET_TINY_ROUTER_DOMAIN=1
+export EMET_TINY_ROUTER_FOLLOWUP=1
+export EMET_TINY_ROUTER_CONFLICT=1
+export EMET_TINY_ROUTER_SUFFICIENCY=1
 exec node ./mcp/server.js
 SH
 chmod +x start-mcp-tiny-router-experimental.sh
 
 node -e "import('./mcp/server.js').then((m) => console.log(JSON.stringify(m.buildInitializeResult().serverInfo)))"
 
-find .cache/models/pi-research-router -maxdepth 2 -type f | sort
+find .cache/models/emet-router -maxdepth 2 -type f | sort
 EOF
 
 echo "Deployed to $REMOTE_HOST:$REMOTE_RUNTIME_DIR"

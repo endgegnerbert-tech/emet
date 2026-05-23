@@ -19,17 +19,17 @@ Responsibilities:
 ## Feature flags
 
 ```text
-PI_RESEARCH_TINY_ROUTER=1
-PI_RESEARCH_TINY_ROUTER_MODEL=/path/to/router
-PI_RESEARCH_TINY_ROUTER_TIMEOUT_MS=50
+EMET_TINY_ROUTER=1
+EMET_TINY_ROUTER_MODEL=/path/to/router
+EMET_TINY_ROUTER_TIMEOUT_MS=50
 ```
 
 Optional task flags later:
 
 ```text
-PI_RESEARCH_TINY_ROUTER_DOMAIN=1
-PI_RESEARCH_TINY_ROUTER_SUFFICIENCY=0
-PI_RESEARCH_TINY_ROUTER_CONFLICT=0
+EMET_TINY_ROUTER_DOMAIN=1
+EMET_TINY_ROUTER_SUFFICIENCY=0
+EMET_TINY_ROUTER_CONFLICT=0
 ```
 
 Default:
@@ -122,7 +122,7 @@ No free text from TRM.
 Domain V1 can be simple:
 
 ```text
-.cache/models/pi-research-router/domain/
+.cache/models/emet-router/domain/
   model.joblib
   model2vec-name.txt
   calibration.json

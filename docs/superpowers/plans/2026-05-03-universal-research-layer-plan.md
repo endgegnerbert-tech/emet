@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Turn `pi-research` into a domain-routed research layer with claim/evidence output, explicit domain packs, and a benchmark loop that prevents quality regressions.
+**Goal:** Turn `emet` into a domain-routed research layer with claim/evidence output, explicit domain packs, and a benchmark loop that prevents quality regressions.
 
 **Architecture:** Keep the existing web research pipeline, but split it into three layers: a small core router, isolated domain packs, and an eval harness. The core decides *what kind of research this is* and *how strict the answer must be*; domain packs own search/fetch/ranking for their topic; eval cases lock behavior so new heuristics do not silently drift.
 
-**Tech Stack:** Node.js, `node:test`, existing `typebox`, existing Pi extension API, current `pi-research` web search/fetch stack.
+**Tech Stack:** Node.js, `node:test`, existing `typebox`, existing Pi extension API, current `emet` web search/fetch stack.
 
 ---
 
@@ -277,11 +277,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import webResearchExtension from "../index.js";
 
-test("pi-research still registers and returns compacted evidence fields", () => {
+test("emet still registers and returns compacted evidence fields", () => {
   const tools = [];
   const pi = { on() {}, registerTool(tool) { tools.push(tool); } };
   webResearchExtension(pi);
-  assert.equal(tools[0].name, "pi-research");
+  assert.equal(tools[0].name, "emet");
 });
 ```
 
@@ -541,7 +541,7 @@ Expected: FAIL because the eval loader does not exist yet.
 
 - [ ] **Step 3: Write the minimal implementation**
 
-Add a loader that reads JSON case files and a runner that executes `pi-research` against them and returns pass/fail plus mismatch details.
+Add a loader that reads JSON case files and a runner that executes `emet` against them and returns pass/fail plus mismatch details.
 
 - [ ] **Step 4: Run the test and verify it passes**
 
