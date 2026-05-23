@@ -43,13 +43,13 @@ Best of all? **Zero setup.** No external search API keys to configure, no heavy 
 ### Pi Coding Agent (Extension)
 If you are using the Pi Agent harness, install the extension directly:
 ```bash
-pi install npm:emet
+pi install npm:@black-knight.dev/emet
 ```
 
 ### Node.js / NPM (Standalone Server)
 Install it globally to expose the MCP (Model Context Protocol) server for any compatible AI agent:
 ```bash
-npm install -g emet
+npm install -g @black-knight.dev/emet
 emet
 ```
 *(The MCP server identifies itself as `emet-mcp`, exposing the tool `emet`)*

@@ -1,14 +1,14 @@
 {
-  "name": "emet",
-  "version": "1.0.0",
+  "name": "@black-knight.dev/emet",
+  "version": "1.0.1",
   "private": false,
   "type": "module",
   "description": "Zero-setup grounded web research for AI coding agents.",
   "license": "MIT",
   "main": "./index.js",
   "bin": {
-    "emet": "./bin/emet.js",
-    "emet-mcp": "./bin/emet-mcp.js"
+    "emet": "./emet.js",
+    "emet-mcp": "./emet-mcp.js"
   },
   "files": [
     "bin",
