@@ -1,0 +1,15 @@
+{
+  "question": "Cloudflare access denied placeholder page",
+  "expectedDomain": "web",
+  "notes": "Blocked placeholders should be recognized as blocked/weak.",
+  "pageProbe": {
+    "page": {
+      "title": "Attention Required! | Cloudflare",
+      "text": "Access denied. Verify you are human.",
+      "url": "https://blocked.example.com/challenge"
+    },
+    "expectBlocked": true,
+    "expectWeak": true,
+    "expectSignals": ["placeholder", "weak_text"]
+  }
+}

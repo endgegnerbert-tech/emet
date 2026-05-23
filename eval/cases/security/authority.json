@@ -1,0 +1,24 @@
+{
+  "question": "Check CVE impact and vendor advisory",
+  "expectedDomain": "security",
+  "notes": "NIST/NVD security sources should count as authoritative.",
+  "sourceProbe": {
+    "query": "CVE-2024-3094 vendor advisory impact",
+    "sources": [
+      {
+        "title": "CVE-2024-3094 - NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-3094",
+        "text": "National Vulnerability Database entry for CVE-2024-3094."
+      },
+      {
+        "title": "Third-party summary",
+        "url": "https://example.com/cve-2024-3094-summary",
+        "text": "Third-party overview."
+      }
+    ],
+    "expectAuthoritativeHosts": ["nvd.nist.gov"],
+    "expectSourceTypes": [
+      { "host": "nvd.nist.gov", "sourceType": "official_doc" }
+    ]
+  }
+}

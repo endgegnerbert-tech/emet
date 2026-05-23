@@ -1,0 +1,57 @@
+{
+  "name": "emet",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "description": "Zero-setup grounded web research for AI coding agents.",
+  "license": "MIT",
+  "main": "./index.js",
+  "bin": {
+    "emet": "./bin/emet.js",
+    "emet-mcp": "./bin/emet-mcp.js"
+  },
+  "files": [
+    "bin",
+    "extensions",
+    "index.js",
+    "lib",
+    "ml",
+    "mcp",
+    "mcp-server.js",
+    "emet.js",
+    "emet-mcp.js",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md",
+    "package.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomsej/emet.git"
+  },
+  "homepage": "https://github.com/tomsej/emet#readme",
+  "bugs": {
+    "url": "https://github.com/tomsej/emet/issues"
+  },
+  "keywords": [
+    "pi-package"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "eval": "node --test test/eval-runner.test.js",
+    "mcp": "node ./mcp/server.js"
+  },
+  "dependencies": {
+    "@mariozechner/pi-ai": "*",
+    "typebox": "*"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-ai": "*",
+    "@mariozechner/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions/emet.ts"
+    ]
+  }
+}

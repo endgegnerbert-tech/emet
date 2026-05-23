@@ -1,0 +1,2 @@
+{"query": "Is Python 3.12 GIL-free?", "label": "needs_review", "rationale": "Pep 703 is accepted but it is a build flag, sources often confuse this.", "inputText": ""}
+{"query": "React server components performance", "label": "no_conflict", "rationale": "Different opinions on performance are not conflicts in facts.", "inputText": ""}

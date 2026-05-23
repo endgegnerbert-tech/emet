@@ -1,0 +1,7 @@
+{
+  "question": "Open issue in GitHub",
+  "expectedDomain": "github",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "GitHub case"
+}

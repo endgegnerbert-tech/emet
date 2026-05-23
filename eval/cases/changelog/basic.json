@@ -1,0 +1,7 @@
+{
+  "question": "What changed in the release notes?",
+  "expectedDomain": "changelog",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Changelog case"
+}

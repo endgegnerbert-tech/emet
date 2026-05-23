@@ -1,0 +1,63 @@
+{
+  "task": "domain",
+  "eval_set_size": 90,
+  "macro_f1": 0.779377186015585,
+  "accuracy": 0.7555555555555555,
+  "high_risk_downgrades": 6,
+  "classes": {
+    "security": {
+      "precision": 1,
+      "recall": 0.8,
+      "f1": 0.888888888888889,
+      "support": 10
+    },
+    "vendor-status": {
+      "precision": 1,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "support": 10
+    },
+    "papers": {
+      "precision": 1,
+      "recall": 0.7,
+      "f1": 0.8235294117647058,
+      "support": 10
+    },
+    "specs": {
+      "precision": 1,
+      "recall": 0.9,
+      "f1": 0.9473684210526316,
+      "support": 10
+    },
+    "package-registry": {
+      "precision": 1,
+      "recall": 0.5,
+      "f1": 0.6666666666666666,
+      "support": 10
+    },
+    "github": {
+      "precision": 0.7692307692307693,
+      "recall": 1,
+      "f1": 0.8695652173913044,
+      "support": 10
+    },
+    "changelog": {
+      "precision": 1,
+      "recall": 0.8,
+      "f1": 0.888888888888889,
+      "support": 10
+    },
+    "forums": {
+      "precision": 1,
+      "recall": 0.6,
+      "f1": 0.7499999999999999,
+      "support": 10
+    },
+    "web": {
+      "precision": 0.3448275862068966,
+      "recall": 1,
+      "f1": 0.5128205128205129,
+      "support": 10
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "question": "Read the RFC",
+  "expectedDomain": "specs",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Specs case"
+}

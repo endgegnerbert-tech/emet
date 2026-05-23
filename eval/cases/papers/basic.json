@@ -1,0 +1,7 @@
+{
+  "question": "Find the paper on attention",
+  "expectedDomain": "papers",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Paper case"
+}

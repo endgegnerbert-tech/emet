@@ -1,0 +1,16 @@
+{
+  "macro_f1": 0.5773809523809524,
+  "train_size": 122,
+  "val_size": 34,
+  "high_risk_downgrades": 1,
+  "classes": [
+    "changelog",
+    "github",
+    "package-registry",
+    "papers",
+    "security",
+    "specs",
+    "vendor-status",
+    "web"
+  ]
+}

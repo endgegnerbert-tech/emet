@@ -1,0 +1,43 @@
+{
+  "question": "2025 practical quantum error correction compare surface code qLDPC bosonic codes roadmap 2030 authoritative review",
+  "expectedDomain": "web",
+  "notes": "Follow-up queries should remain search-oriented and avoid meta-question phrasing.",
+  "followupProbe": {
+    "query": "surface code still dominant 2025 quantum error correction review practical roadmap 2030 authoritative",
+    "pages": [
+      {
+        "title": "Source A",
+        "url": "https://a.example.com",
+        "text": "Surface code is supported and recommended for the practical roadmap."
+      },
+      {
+        "title": "Source B",
+        "url": "https://b.example.com",
+        "text": "Surface code is not supported for the same practical roadmap."
+      }
+    ],
+    "expectNoQuestionMark": true,
+    "expectNotIncludes": ["which authoritative source"],
+    "expectAnyIncludes": ["official", "support", "comparison"]
+  },
+  "sufficiencyProbe": {
+    "query": "surface code still dominant 2025 quantum error correction review practical roadmap 2030 authoritative",
+    "sources": [
+      {
+        "title": "Source A",
+        "url": "https://a.example.com",
+        "text": "Surface code is supported and recommended for the practical roadmap."
+      },
+      {
+        "title": "Source B",
+        "url": "https://b.example.com",
+        "text": "Surface code is not supported for the same practical roadmap."
+      }
+    ],
+    "conflictDetected": true,
+    "minSources": 2,
+    "expectSufficient": false,
+    "expectAuthoritativeSourcesFound": false,
+    "expectOpenSubQuestionsNoQuestionMark": true
+  }
+}

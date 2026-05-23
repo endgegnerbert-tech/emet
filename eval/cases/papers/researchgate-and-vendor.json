@@ -1,0 +1,22 @@
+{
+  "question": "Quantum low density parity check codes paper",
+  "expectedDomain": "papers",
+  "notes": "Readable ResearchGate pages remain secondary while vendor/institutional paper hosts stay authoritative.",
+  "sourceProbe": {
+    "query": "quantum low density parity check codes paper",
+    "sources": [
+      {
+        "title": "Quantum Error Correction - IBM Research",
+        "url": "https://research.ibm.com/topics/quantum-error-correction",
+        "text": "Quantum error correction roadmap and research overview."
+      },
+      {
+        "title": "(PDF) Quantum Low-Density Parity-Check Codes - ResearchGate",
+        "url": "https://www.researchgate.net/publication/396541744_Quantum_Low-Density_Parity-Check_Codes",
+        "text": "Quantum low-density parity-check codes paper with references and results."
+      }
+    ],
+    "expectAuthoritativeHosts": ["research.ibm.com"],
+    "expectNonAuthoritativeHosts": ["researchgate.net"]
+  }
+}

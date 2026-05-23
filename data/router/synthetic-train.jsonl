@@ -1,0 +1,240 @@
+{"query": "CVE-2023-1234 details", "label": "security", "rationale": "Synthetic training example for security", "inputText": "CVE-2023-1234 details"}
+{"query": "latest apache vulnerability", "label": "security", "rationale": "Synthetic training example for security", "inputText": "latest apache vulnerability"}
+{"query": "log4shell exploit check", "label": "security", "rationale": "Synthetic training example for security", "inputText": "log4shell exploit check"}
+{"query": "windows zero day advisory", "label": "security", "rationale": "Synthetic training example for security", "inputText": "windows zero day advisory"}
+{"query": "nvd score for CVE-2021-44228", "label": "security", "rationale": "Synthetic training example for security", "inputText": "nvd score for CVE-2021-44228"}
+{"query": "cisa known exploited vulnerabilities", "label": "security", "rationale": "Synthetic training example for security", "inputText": "cisa known exploited vulnerabilities"}
+{"query": "github advisory GHSA-abc", "label": "security", "rationale": "Synthetic training example for security", "inputText": "github advisory GHSA-abc"}
+{"query": "mitre att&ck framework", "label": "security", "rationale": "Synthetic training example for security", "inputText": "mitre att&ck framework"}
+{"query": "ubuntu security patch tracker", "label": "security", "rationale": "Synthetic training example for security", "inputText": "ubuntu security patch tracker"}
+{"query": "debian security advisory 123", "label": "security", "rationale": "Synthetic training example for security", "inputText": "debian security advisory 123"}
+{"query": "redhat cve database", "label": "security", "rationale": "Synthetic training example for security", "inputText": "redhat cve database"}
+{"query": "suse security updates", "label": "security", "rationale": "Synthetic training example for security", "inputText": "suse security updates"}
+{"query": "npm audit high vulnerability", "label": "security", "rationale": "Synthetic training example for security", "inputText": "npm audit high vulnerability"}
+{"query": "is ssh vulnerable to terrapin", "label": "security", "rationale": "Synthetic training example for security", "inputText": "is ssh vulnerable to terrapin"}
+{"query": "openssl security advisory 2024", "label": "security", "rationale": "Synthetic training example for security", "inputText": "openssl security advisory 2024"}
+{"query": "linux kernel privilege escalation cve", "label": "security", "rationale": "Synthetic training example for security", "inputText": "linux kernel privilege escalation cve"}
+{"query": "spring boot remote code execution", "label": "security", "rationale": "Synthetic training example for security", "inputText": "spring boot remote code execution"}
+{"query": "jackson databind cve", "label": "security", "rationale": "Synthetic training example for security", "inputText": "jackson databind cve"}
+{"query": "chrome zero day update", "label": "security", "rationale": "Synthetic training example for security", "inputText": "chrome zero day update"}
+{"query": "ios 17 security content", "label": "security", "rationale": "Synthetic training example for security", "inputText": "ios 17 security content"}
+{"query": "android security bulletin", "label": "security", "rationale": "Synthetic training example for security", "inputText": "android security bulletin"}
+{"query": "vmware esxi vulnerability", "label": "security", "rationale": "Synthetic training example for security", "inputText": "vmware esxi vulnerability"}
+{"query": "citrix netscaler cve", "label": "security", "rationale": "Synthetic training example for security", "inputText": "citrix netscaler cve"}
+{"query": "fortinet vpn exploit", "label": "security", "rationale": "Synthetic training example for security", "inputText": "fortinet vpn exploit"}
+{"query": "palo alto pan-os advisory", "label": "security", "rationale": "Synthetic training example for security", "inputText": "palo alto pan-os advisory"}
+{"query": "cisco ios xe vulnerability", "label": "security", "rationale": "Synthetic training example for security", "inputText": "cisco ios xe vulnerability"}
+{"query": "f5 big-ip security advisory", "label": "security", "rationale": "Synthetic training example for security", "inputText": "f5 big-ip security advisory"}
+{"query": "atlassian confluence cve", "label": "security", "rationale": "Synthetic training example for security", "inputText": "atlassian confluence cve"}
+{"query": "gitlab security release", "label": "security", "rationale": "Synthetic training example for security", "inputText": "gitlab security release"}
+{"query": "jenkins security advisory", "label": "security", "rationale": "Synthetic training example for security", "inputText": "jenkins security advisory"}
+{"query": "github status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "github status"}
+{"query": "aws health dashboard", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "aws health dashboard"}
+{"query": "cloudflare outage today", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "cloudflare outage today"}
+{"query": "slack connection issues", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "slack connection issues"}
+{"query": "npm registry down", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "npm registry down"}
+{"query": "vercel deployment status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "vercel deployment status"}
+{"query": "discord server outage", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "discord server outage"}
+{"query": "openai chatgpt down", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "openai chatgpt down"}
+{"query": "azure devops status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "azure devops status"}
+{"query": "datadog status page", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "datadog status page"}
+{"query": "pagerduty incident response", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "pagerduty incident response"}
+{"query": "gcp status dashboard", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "gcp status dashboard"}
+{"query": "heroku platform status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "heroku platform status"}
+{"query": "netlify status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "netlify status"}
+{"query": "digitalocean status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "digitalocean status"}
+{"query": "linode system status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "linode system status"}
+{"query": "stripe api status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "stripe api status"}
+{"query": "twilio status page", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "twilio status page"}
+{"query": "sendgrid incident", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "sendgrid incident"}
+{"query": "mailgun status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "mailgun status"}
+{"query": "zoom outage", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "zoom outage"}
+{"query": "teams connection issues", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "teams connection issues"}
+{"query": "notion status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "notion status"}
+{"query": "figma outage", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "figma outage"}
+{"query": "miro status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "miro status"}
+{"query": "asana performance degradation", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "asana performance degradation"}
+{"query": "jira cloud status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "jira cloud status"}
+{"query": "confluence down", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "confluence down"}
+{"query": "bitbucket status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "bitbucket status"}
+{"query": "gitlab.com status", "label": "vendor-status", "rationale": "Synthetic training example for vendor-status", "inputText": "gitlab.com status"}
+{"query": "arxiv machine learning papers", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "arxiv machine learning papers"}
+{"query": "attention is all you need pdf", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "attention is all you need pdf"}
+{"query": "transformer models research paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "transformer models research paper"}
+{"query": "deep learning semantic scholar", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "deep learning semantic scholar"}
+{"query": "doi 10.1038/s41586-020-2649-2", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "doi 10.1038/s41586-020-2649-2"}
+{"query": "nature medicine latest articles", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "nature medicine latest articles"}
+{"query": "science journal quantum supremacy", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "science journal quantum supremacy"}
+{"query": "pubmed covid vaccine efficacy", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "pubmed covid vaccine efficacy"}
+{"query": "ieee transactions on pattern analysis", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "ieee transactions on pattern analysis"}
+{"query": "acm digital library search", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "acm digital library search"}
+{"query": "researchgate download pdf", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "researchgate download pdf"}
+{"query": "google scholar citation count", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "google scholar citation count"}
+{"query": "llama 2 open foundation and fine-tuned chat models", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "llama 2 open foundation and fine-tuned chat models"}
+{"query": "gpt-4 technical report arxiv", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "gpt-4 technical report arxiv"}
+{"query": "instructgpt paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "instructgpt paper"}
+{"query": "lora low-rank adaptation paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "lora low-rank adaptation paper"}
+{"query": "flashattention algorithm paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "flashattention algorithm paper"}
+{"query": "direct preference optimization paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "direct preference optimization paper"}
+{"query": "mixture of experts research", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "mixture of experts research"}
+{"query": "contrastive language-image pretraining paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "contrastive language-image pretraining paper"}
+{"query": "clip model openai paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "clip model openai paper"}
+{"query": "diffusion models beat gans paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "diffusion models beat gans paper"}
+{"query": "stable diffusion latent paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "stable diffusion latent paper"}
+{"query": "nerf neural radiance fields paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "nerf neural radiance fields paper"}
+{"query": "yolo object detection paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "yolo object detection paper"}
+{"query": "resnet deep residual learning paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "resnet deep residual learning paper"}
+{"query": "alexnet imagenet paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "alexnet imagenet paper"}
+{"query": "word2vec mikolov paper", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "word2vec mikolov paper"}
+{"query": "bert pre-training of deep bidirectional transformers", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "bert pre-training of deep bidirectional transformers"}
+{"query": "roberta robustly optimized bert pretraining approach", "label": "papers", "rationale": "Synthetic training example for papers", "inputText": "roberta robustly optimized bert pretraining approach"}
+{"query": "rfc 793 tcp specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "rfc 793 tcp specification"}
+{"query": "http/2 rfc 7540", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "http/2 rfc 7540"}
+{"query": "websocket protocol rfc 6455", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "websocket protocol rfc 6455"}
+{"query": "tls 1.3 rfc 8446", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "tls 1.3 rfc 8446"}
+{"query": "jwt json web token rfc 7519", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "jwt json web token rfc 7519"}
+{"query": "oauth 2.0 authorization framework rfc 6749", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "oauth 2.0 authorization framework rfc 6749"}
+{"query": "openid connect core 1.0", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "openid connect core 1.0"}
+{"query": "saml 2.0 specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "saml 2.0 specification"}
+{"query": "html living standard whatwg", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "html living standard whatwg"}
+{"query": "dom specification w3c", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "dom specification w3c"}
+{"query": "css flexbox level 1", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "css flexbox level 1"}
+{"query": "ecmascript language specification ecma-262", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "ecmascript language specification ecma-262"}
+{"query": "webassembly core specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "webassembly core specification"}
+{"query": "openapi specification 3.0.3", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "openapi specification 3.0.3"}
+{"query": "asyncapi specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "asyncapi specification"}
+{"query": "graphql specification october 2021", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "graphql specification october 2021"}
+{"query": "json schema specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "json schema specification"}
+{"query": "xml 1.0 specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "xml 1.0 specification"}
+{"query": "xpath 3.1 w3c recommendation", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "xpath 3.1 w3c recommendation"}
+{"query": "xslt 3.0 specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "xslt 3.0 specification"}
+{"query": "svg 2 w3c candidate recommendation", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "svg 2 w3c candidate recommendation"}
+{"query": "webrtc w3c specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "webrtc w3c specification"}
+{"query": "webgl specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "webgl specification"}
+{"query": "opengl 4.6 core profile", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "opengl 4.6 core profile"}
+{"query": "vulkan 1.3 specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "vulkan 1.3 specification"}
+{"query": "posix.1-2017 standard", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "posix.1-2017 standard"}
+{"query": "c11 iso/iec 9899:2011", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "c11 iso/iec 9899:2011"}
+{"query": "c++20 iso/iec 14882:2020", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "c++20 iso/iec 14882:2020"}
+{"query": "ieee 754 floating-point standard", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "ieee 754 floating-point standard"}
+{"query": "unicode 15.0.0 core specification", "label": "specs", "rationale": "Synthetic training example for specs", "inputText": "unicode 15.0.0 core specification"}
+{"query": "npm express package", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "npm express package"}
+{"query": "yarn add react-dom", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "yarn add react-dom"}
+{"query": "pnpm install typescript", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "pnpm install typescript"}
+{"query": "pypi numpy release", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "pypi numpy release"}
+{"query": "pip install pandas", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "pip install pandas"}
+{"query": "cargo publish crate", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "cargo publish crate"}
+{"query": "crates.io tokio", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "crates.io tokio"}
+{"query": "maven central repository search", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "maven central repository search"}
+{"query": "gradle dependencies spring-boot", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "gradle dependencies spring-boot"}
+{"query": "gem install bundler", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "gem install bundler"}
+{"query": "rubygems rails version", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "rubygems rails version"}
+{"query": "composer require symfony/console", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "composer require symfony/console"}
+{"query": "packagist laravel/framework", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "packagist laravel/framework"}
+{"query": "nuget package manager newtonsoft.json", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "nuget package manager newtonsoft.json"}
+{"query": "dotnet add package", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "dotnet add package"}
+{"query": "go get golang.org/x/crypto", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "go get golang.org/x/crypto"}
+{"query": "pkg.go.dev net/http", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "pkg.go.dev net/http"}
+{"query": "cran install.packages('dplyr')", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "cran install.packages('dplyr')"}
+{"query": "docker hub nginx official image", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "docker hub nginx official image"}
+{"query": "ghcr.io github container registry", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "ghcr.io github container registry"}
+{"query": "homebrew install wget", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "homebrew install wget"}
+{"query": "apt-get install curl", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "apt-get install curl"}
+{"query": "yum install httpd", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "yum install httpd"}
+{"query": "apk add alpine-sdk", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "apk add alpine-sdk"}
+{"query": "pacman -S archlinux-keyring", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "pacman -S archlinux-keyring"}
+{"query": "choco install git", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "choco install git"}
+{"query": "winget install powertoys", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "winget install powertoys"}
+{"query": "vcpkg install boost", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "vcpkg install boost"}
+{"query": "conan install fmt", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "conan install fmt"}
+{"query": "nix-env -iA nixpkgs.hello", "label": "package-registry", "rationale": "Synthetic training example for package-registry", "inputText": "nix-env -iA nixpkgs.hello"}
+{"query": "github.com/torvalds/linux", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github.com/torvalds/linux"}
+{"query": "microsoft/vscode github repo", "label": "github", "rationale": "Synthetic training example for github", "inputText": "microsoft/vscode github repo"}
+{"query": "pull request #42 on facebook/react", "label": "github", "rationale": "Synthetic training example for github", "inputText": "pull request #42 on facebook/react"}
+{"query": "issue #100 in vercel/next.js", "label": "github", "rationale": "Synthetic training example for github", "inputText": "issue #100 in vercel/next.js"}
+{"query": "github discussions tailwindlabs/tailwindcss", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github discussions tailwindlabs/tailwindcss"}
+{"query": "github releases kubernetes/kubernetes", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github releases kubernetes/kubernetes"}
+{"query": "github api get user", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github api get user"}
+{"query": "github actions workflow syntax", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github actions workflow syntax"}
+{"query": "github pages deployment", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github pages deployment"}
+{"query": "github copilot documentation", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github copilot documentation"}
+{"query": "github codespaces setup", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github codespaces setup"}
+{"query": "github advanced security features", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github advanced security features"}
+{"query": "github enterprise server admin guide", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github enterprise server admin guide"}
+{"query": "github webhooks documentation", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github webhooks documentation"}
+{"query": "github apps authentication", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github apps authentication"}
+{"query": "github oauth login flow", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github oauth login flow"}
+{"query": "github graphql api explorer", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github graphql api explorer"}
+{"query": "github rest api reference", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github rest api reference"}
+{"query": "github cli gh pr create", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github cli gh pr create"}
+{"query": "github desktop release notes", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github desktop release notes"}
+{"query": "github student developer pack", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github student developer pack"}
+{"query": "github sponsors program", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github sponsors program"}
+{"query": "github trending repositories", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github trending repositories"}
+{"query": "github search issues and pull requests", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github search issues and pull requests"}
+{"query": "github markdown syntax guide", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github markdown syntax guide"}
+{"query": "github wiki pages", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github wiki pages"}
+{"query": "github project boards", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github project boards"}
+{"query": "github milestones and labels", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github milestones and labels"}
+{"query": "github branch protection rules", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github branch protection rules"}
+{"query": "github codeowners file", "label": "github", "rationale": "Synthetic training example for github", "inputText": "github codeowners file"}
+{"query": "react 18 changelog", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "react 18 changelog"}
+{"query": "python 3.11 release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "python 3.11 release notes"}
+{"query": "node.js v20 release history", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "node.js v20 release history"}
+{"query": "typescript 5.0 what's new", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "typescript 5.0 what's new"}
+{"query": "next.js 13 changelog", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "next.js 13 changelog"}
+{"query": "vue 3 release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "vue 3 release notes"}
+{"query": "angular v16 update guide", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "angular v16 update guide"}
+{"query": "svelte 4 announcement", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "svelte 4 announcement"}
+{"query": "tailwind css v3.3 changelog", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "tailwind css v3.3 changelog"}
+{"query": "bootstrap 5 migration guide", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "bootstrap 5 migration guide"}
+{"query": "docker desktop 4.20 release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "docker desktop 4.20 release notes"}
+{"query": "kubernetes 1.28 changelog", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "kubernetes 1.28 changelog"}
+{"query": "ubuntu 22.04 lts release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "ubuntu 22.04 lts release notes"}
+{"query": "mac os sonoma features", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "mac os sonoma features"}
+{"query": "ios 17 release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "ios 17 release notes"}
+{"query": "android 14 new features", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "android 14 new features"}
+{"query": "windows 11 update history", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "windows 11 update history"}
+{"query": "chrome browser release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "chrome browser release notes"}
+{"query": "firefox latest version changelog", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "firefox latest version changelog"}
+{"query": "safari 17 features", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "safari 17 features"}
+{"query": "vscode march 2023 update", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "vscode march 2023 update"}
+{"query": "intellij idea 2023.2 what's new", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "intellij idea 2023.2 what's new"}
+{"query": "visual studio 2022 release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "visual studio 2022 release notes"}
+{"query": "xcode 15 beta release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "xcode 15 beta release notes"}
+{"query": "rust 1.70 release announcement", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "rust 1.70 release announcement"}
+{"query": "go 1.21 release notes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "go 1.21 release notes"}
+{"query": "java 21 new features", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "java 21 new features"}
+{"query": "c# 12 language changes", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "c# 12 language changes"}
+{"query": "php 8.2 changelog", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "php 8.2 changelog"}
+{"query": "ruby 3.2 release", "label": "changelog", "rationale": "Synthetic training example for changelog", "inputText": "ruby 3.2 release"}
+{"query": "stackoverflow how to center a div", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "stackoverflow how to center a div"}
+{"query": "reddit r/learnprogramming", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "reddit r/learnprogramming"}
+{"query": "stackexchange unix and linux", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "stackexchange unix and linux"}
+{"query": "serverfault nginx configuration", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "serverfault nginx configuration"}
+{"query": "superuser windows 11 taskbar", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "superuser windows 11 taskbar"}
+{"query": "mathoverflow topology question", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "mathoverflow topology question"}
+{"query": "hacker news ycombinator front page", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "hacker news ycombinator front page"}
+{"query": "lobsters computing discussion", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "lobsters computing discussion"}
+{"query": "dev.to web development articles", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "dev.to web development articles"}
+{"query": "hashnode blogging platform for developers", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "hashnode blogging platform for developers"}
+{"query": "medium programming tutorials", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "medium programming tutorials"}
+{"query": "quora what is the best programming language", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "quora what is the best programming language"}
+{"query": "discourse forum hosting", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "discourse forum hosting"}
+{"query": "rust users forum", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "rust users forum"}
+{"query": "python discuss forum", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "python discuss forum"}
+{"query": "go forum golangbridge", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "go forum golangbridge"}
+{"query": "swift forums apple", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "swift forums apple"}
+{"query": "kotlin discussions", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "kotlin discussions"}
+{"query": "reactiflux discord community", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "reactiflux discord community"}
+{"query": "vue land discord", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "vue land discord"}
+{"query": "kubernetes slack channel", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "kubernetes slack channel"}
+{"query": "cncf slack community", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "cncf slack community"}
+{"query": "elixir forum", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "elixir forum"}
+{"query": "crystal lang forum", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "crystal lang forum"}
+{"query": "zig showtime discord", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "zig showtime discord"}
+{"query": "nim forum", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "nim forum"}
+{"query": "julialang discourse", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "julialang discourse"}
+{"query": "rstudio community", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "rstudio community"}
+{"query": "unity forums", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "unity forums"}
+{"query": "unreal engine forums", "label": "forums", "rationale": "Synthetic training example for forums", "inputText": "unreal engine forums"}

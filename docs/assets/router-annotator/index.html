@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Router Gold Annotator</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f172a;
+        --panel: #111827;
+        --muted: #94a3b8;
+        --text: #e5e7eb;
+        --accent: #60a5fa;
+        --ok: #34d399;
+        --warn: #f59e0b;
+        --border: #334155;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .wrap {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .panel {
+        background: color-mix(in srgb, var(--panel) 92%, black);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      h1, h2, h3, p { margin-top: 0; }
+      .grid {
+        display: grid;
+        gap: 12px;
+      }
+      .grid.two {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      label {
+        display: block;
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      input[type="file"], select, textarea, button {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: #020617;
+        color: var(--text);
+        padding: 10px 12px;
+        font: inherit;
+      }
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+      .source-box {
+        white-space: pre-wrap;
+        background: #020617;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+        max-height: 360px;
+        overflow: auto;
+        line-height: 1.45;
+      }
+      .muted { color: var(--muted); }
+      .row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .row > * { flex: 1; }
+      .toolbar button, .label-buttons button {
+        width: auto;
+      }
+      .toolbar, .label-buttons {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      button {
+        cursor: pointer;
+      }
+      button.primary { background: #1d4ed8; }
+      button.good { background: #065f46; }
+      button.warn { background: #92400e; }
+      button.ghost { background: transparent; }
+      button.active {
+        outline: 2px solid var(--accent);
+        border-color: var(--accent);
+      }
+      .pill {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 4px 10px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .status-reviewed { color: var(--ok); }
+      .status-pending { color: var(--warn); }
+      .hidden { display: none; }
+      .small { font-size: 13px; }
+      a { color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="panel">
+        <h1>Router Gold Annotator</h1>
+        <p class="muted">Draft laden, Label prüfen, rationale kurz eintragen, Fortschritt lokal speichern, reviewed JSONL exportieren.</p>
+        <div class="grid two">
+          <div>
+            <label for="taskSelect">Task</label>
+            <select id="taskSelect">
+              <option value="conflict">Conflict</option>
+              <option value="sufficiency">Sufficiency</option>
+            </select>
+          </div>
+          <div>
+            <label><input id="pendingOnly" type="checkbox" /> Nur offene Einträge zeigen</label>
+          </div>
+        </div>
+        <div class="grid two">
+          <div>
+            <label for="draftFile">Draft JSONL</label>
+            <input id="draftFile" type="file" accept=".jsonl,.txt,application/jsonl,text/plain" />
+          </div>
+          <div>
+            <label for="reviewedFile">Bereits reviewed JSONL (optional)</label>
+            <input id="reviewedFile" type="file" accept=".jsonl,.txt,application/jsonl,text/plain" />
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:12px;">
+          <button id="loadButton" class="primary">Dateien laden</button>
+          <button id="loadSampleConflict" class="ghost">Conflict Draft aus Repo wählen</button>
+          <button id="loadSampleSufficiency" class="ghost">Sufficiency Draft aus Repo wählen</button>
+          <button id="exportButton" class="good">Reviewed exportieren</button>
+          <button id="clearStorageButton" class="warn">Lokalen Fortschritt löschen</button>
+        </div>
+        <p id="loadStatus" class="small muted" style="margin-top:10px;"></p>
+      </div>
+
+      <div id="workspace" class="hidden">
+        <div class="panel">
+          <div class="row">
+            <div style="flex: 2">
+              <h2>Kurze Bewertungsregeln</h2>
+              <div id="rubricText" class="small muted"></div>
+            </div>
+            <div style="flex: 1">
+              <h2>Vorschlag</h2>
+              <p class="small muted">Die App macht konservative Vorlabels: lieber <strong>needs_review</strong> / <strong>need_authority</strong> als zu optimistisch.</p>
+              <div class="toolbar">
+                <button id="acceptSuggestionButton" class="good">Vorschlag übernehmen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="row">
+            <div>
+              <h2 id="progressTitle">Fortschritt</h2>
+              <div id="progressSummary" class="small muted"></div>
+            </div>
+            <div>
+              <h2>Navigation</h2>
+              <div class="toolbar">
+                <button id="prevButton">← Vorherige</button>
+                <button id="nextButton">Nächste →</button>
+                <button id="markPendingButton" class="ghost">Label zurücksetzen</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="row">
+            <div style="flex: 3">
+              <h2 id="queryTitle">Query</h2>
+              <div id="metaPills"></div>
+            </div>
+            <div style="flex: 1">
+              <p class="small muted">Status: <strong id="itemStatus"></strong></p>
+              <p class="small muted">Pipeline-Kandidat: <strong id="candidateLabel"></strong></p>
+              <p class="small muted">Auto-Vorschlag: <strong id="suggestedLabel"></strong></p>
+              <p class="small muted">Final: <strong id="finalLabelText"></strong></p>
+            </div>
+          </div>
+
+          <div>
+            <h3>Label wählen</h3>
+            <div id="labelButtons" class="label-buttons"></div>
+          </div>
+
+          <div class="grid two" style="margin-top: 14px;">
+            <div>
+              <label for="rationaleInput">Rationale</label>
+              <textarea id="rationaleInput" placeholder="1 kurzer Satz: warum dieses Label?"></textarea>
+              <p class="small muted" id="suggestedRationale"></p>
+            </div>
+            <div>
+              <label>Quelle / Input</label>
+              <div id="inputText" class="source-box"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/docs/assets/router-annotator/app.js"></script>
+  </body>
+</html>

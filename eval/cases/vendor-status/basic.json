@@ -1,0 +1,7 @@
+{
+  "question": "Is the vendor status page green?",
+  "expectedDomain": "vendor-status",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Vendor status case"
+}

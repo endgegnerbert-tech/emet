@@ -1,0 +1,7 @@
+{
+  "question": "What is HTTP?",
+  "expectedDomain": "web",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Basic web case"
+}

@@ -1,0 +1,24 @@
+{
+  "question": "GitHub repository README docs in canonical repo",
+  "expectedDomain": "github",
+  "notes": "Canonical GitHub repo docs should rank as authoritative for github domain.",
+  "sourceProbe": {
+    "query": "typescript github releases readme docs",
+    "sources": [
+      {
+        "title": "TypeScript README",
+        "url": "https://github.com/microsoft/TypeScript/blob/main/README.md",
+        "text": "Official TypeScript README and documentation."
+      },
+      {
+        "title": "TypeScript issue",
+        "url": "https://github.com/microsoft/TypeScript/issues/1",
+        "text": "Issue state discussion."
+      }
+    ],
+    "expectAuthoritativeHosts": ["github.com"],
+    "expectSourceTypes": [
+      { "host": "github.com", "sourceType": "github_readme" }
+    ]
+  }
+}

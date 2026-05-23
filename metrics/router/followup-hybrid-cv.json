@@ -1,0 +1,433 @@
+{
+  "real_rows": 36,
+  "augmented_rows": 66,
+  "label_counts": {
+    "stop": 29,
+    "need_more_sources": 3,
+    "need_primary_source": 4
+  },
+  "aug_label_counts": {
+    "stop": 33,
+    "need_authority": 26,
+    "need_more_sources": 3,
+    "need_primary_source": 4
+  },
+  "model_accuracy": 0.7222222222222222,
+  "hybrid_accuracy": 0.6944444444444444,
+  "classification_report_model": {
+    "need_authority": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "need_more_sources": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 3.0
+    },
+    "need_primary_source": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 4.0
+    },
+    "stop": {
+      "precision": 0.7878787878787878,
+      "recall": 0.896551724137931,
+      "f1-score": 0.8387096774193549,
+      "support": 29.0
+    },
+    "accuracy": 0.7222222222222222,
+    "macro avg": {
+      "precision": 0.19696969696969696,
+      "recall": 0.22413793103448276,
+      "f1-score": 0.20967741935483872,
+      "support": 36.0
+    },
+    "weighted avg": {
+      "precision": 0.6346801346801346,
+      "recall": 0.7222222222222222,
+      "f1-score": 0.6756272401433692,
+      "support": 36.0
+    }
+  },
+  "classification_report_hybrid": {
+    "need_authority": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "need_conflict_resolution": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "need_more_sources": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 3.0
+    },
+    "need_primary_source": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 4.0
+    },
+    "need_recency": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 0.0
+    },
+    "stop": {
+      "precision": 0.875,
+      "recall": 0.7241379310344828,
+      "f1-score": 0.7924528301886793,
+      "support": 29.0
+    },
+    "accuracy": 0.6944444444444444,
+    "macro avg": {
+      "precision": 0.3125,
+      "recall": 0.28735632183908044,
+      "f1-score": 0.29874213836477986,
+      "support": 36.0
+    },
+    "weighted avg": {
+      "precision": 0.8159722222222222,
+      "recall": 0.6944444444444444,
+      "f1-score": 0.749475890985325,
+      "support": 36.0
+    }
+  },
+  "rows": [
+    {
+      "fold": 1,
+      "query": "topic guidance",
+      "mode": "deep",
+      "gold": "need_more_sources",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8216284599738378
+    },
+    {
+      "fold": 1,
+      "query": "local docs",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8648603534395006
+    },
+    {
+      "fold": 1,
+      "query": "BitNet 1.58-bit structured output JSON judging",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8793529307721415
+    },
+    {
+      "fold": 1,
+      "query": "topic guidance",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "need_authority",
+      "hybrid": "need_authority",
+      "confidence": 0.7541224727813832
+    },
+    {
+      "fold": 1,
+      "query": "topic guidance",
+      "mode": "deep",
+      "gold": "need_more_sources",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8216284599738378
+    },
+    {
+      "fold": 1,
+      "query": "AbortController cancel in-flight fetches Node.js best practice early cancellation Promise.all",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8589082375068672
+    },
+    {
+      "fold": 1,
+      "query": "Node.js AbortController guide",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8492366634571588
+    },
+    {
+      "fold": 1,
+      "query": "topic guidance",
+      "mode": "deep",
+      "gold": "need_more_sources",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8216284599738378
+    },
+    {
+      "fold": 2,
+      "query": "retrieval augmented generation papers",
+      "mode": "academic",
+      "gold": "need_primary_source",
+      "model": "stop",
+      "hybrid": "need_primary_source",
+      "confidence": 0.7256018693943348
+    },
+    {
+      "fold": 2,
+      "query": "retrieval augmented generation papers",
+      "mode": "academic",
+      "gold": "need_primary_source",
+      "model": "stop",
+      "hybrid": "need_primary_source",
+      "confidence": 0.7256018693943348
+    },
+    {
+      "fold": 2,
+      "query": "BitNet 1.58-bit models local agent routing latency",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8434807284176081
+    },
+    {
+      "fold": 2,
+      "query": "retrieval augmented generation papers",
+      "mode": "academic",
+      "gold": "need_primary_source",
+      "model": "stop",
+      "hybrid": "need_primary_source",
+      "confidence": 0.7256018693943348
+    },
+    {
+      "fold": 2,
+      "query": "GitHub repository README docs in canonical repo",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8211906095590087
+    },
+    {
+      "fold": 2,
+      "query": "model2vec static embeddings 7.2MB 80x faster MiniLM documentation GitHub",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8070790985450524
+    },
+    {
+      "fold": 2,
+      "query": "retrieval augmented generation papers",
+      "mode": "academic",
+      "gold": "need_primary_source",
+      "model": "stop",
+      "hybrid": "need_primary_source",
+      "confidence": 0.7256018693943348
+    },
+    {
+      "fold": 3,
+      "query": "Model Context Protocol tool naming best practices stability backwards compatibility official docs",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.7827047346578379
+    },
+    {
+      "fold": 3,
+      "query": "npm package.json bin field command line tool best practices package aliases deprecating package versions official docs",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.7948840752414217
+    },
+    {
+      "fold": 3,
+      "query": "What is HTTP?",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "need_authority",
+      "hybrid": "need_authority",
+      "confidence": 0.6928018621591586
+    },
+    {
+      "fold": 3,
+      "query": "DuckDB documentation memory management",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8102925997797171
+    },
+    {
+      "fold": 3,
+      "query": "best practices npm package download optional GGUF model Hugging Face llama.cpp one command setup local model cache 2026",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "need_recency",
+      "confidence": 0.820309368302334
+    },
+    {
+      "fold": 3,
+      "query": "official onnxruntime-node JavaScript API inference session documentation",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.7891117402670181
+    },
+    {
+      "fold": 3,
+      "query": "scikit-learn grouped cross validation GroupKFold calibration reject option text classification small dataset best practices",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8166146645892446
+    },
+    {
+      "fold": 4,
+      "query": "Model Context Protocol stdio initialize response protocolVersion tools/list tools/call current spec",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "need_recency",
+      "confidence": 0.7882804402007421
+    },
+    {
+      "fold": 4,
+      "query": "Docker Compose official documentation",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.797380400637708
+    },
+    {
+      "fold": 4,
+      "query": "small BitNet GGUF model llama.cpp download Hugging Face BitNet b1.58 GGUF 2025",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "need_conflict_resolution",
+      "confidence": 0.8283789727521262
+    },
+    {
+      "fold": 4,
+      "query": "npm package best practices optional native dependency postinstall avoid downloading large binaries models cache user command setup 2026",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "need_recency",
+      "confidence": 0.7985307881615095
+    },
+    {
+      "fold": 4,
+      "query": "official microsoft BitNet bitnet.cpp setup run bitnet-b1.58-2B-4T GGUF inference",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8406261276094051
+    },
+    {
+      "fold": 4,
+      "query": "official Transformers.js ONNX models Node.js all-MiniLM-L6-v2 feature extraction documentation onnxruntime-node",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.7876948518186372
+    },
+    {
+      "fold": 4,
+      "query": "best practices for small-data text classification with synthetic augmentation grouped split calibration abstain reject option hybrid rules plus classifier",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "need_conflict_resolution",
+      "confidence": 0.7839106758057669
+    },
+    {
+      "fold": 5,
+      "query": "cache probe unique",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8262730840018895
+    },
+    {
+      "fold": 5,
+      "query": "Best practices for moving command entrypoint while keeping backwards compatibility npm semver deprecation shim",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.824117968578801
+    },
+    {
+      "fold": 5,
+      "query": "npm bin field path starting with ./ invalid removed publish warning bin script name invalid removed",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8278072647468919
+    },
+    {
+      "fold": 5,
+      "query": "npm publish warning bin script name invalid and removed package.json bin field official docs target path rules",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8266242184454512
+    },
+    {
+      "fold": 5,
+      "query": "microsoft bitnet-b1.58-2B-4T-gguf TYPE_IQ4_NL_4_4 removed use IQ4_NL runtime repacking llama.cpp failed to load model bitnet.cpp",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "need_authority",
+      "hybrid": "need_authority",
+      "confidence": 0.7697906697235429
+    },
+    {
+      "fold": 5,
+      "query": "official TinyRecursiveModels TRM GitHub requirements L40S runtime Sudoku ARC AGI 7M parameters",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8302832085469145
+    },
+    {
+      "fold": 5,
+      "query": "site:huggingface.co/docs/transformers.js feature extraction Transformers.js pipeline Xenova all-MiniLM-L6-v2 Node.js",
+      "mode": "fast",
+      "gold": "stop",
+      "model": "stop",
+      "hybrid": "stop",
+      "confidence": 0.8170880698895259
+    }
+  ]
+}

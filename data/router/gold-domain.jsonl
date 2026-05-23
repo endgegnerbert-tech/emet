@@ -1,0 +1,90 @@
+{"query": "CVE-2024-3094 xz utils", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "CVE-2024-3094 xz utils"}
+{"query": "recent openssh vulnerability", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "recent openssh vulnerability"}
+{"query": "log4j exploit mitigation", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "log4j exploit mitigation"}
+{"query": "CVE-2023-44487 details", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "CVE-2023-44487 details"}
+{"query": "cisa advisory for ivanti", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "cisa advisory for ivanti"}
+{"query": "spring framework RCE", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "spring framework RCE"}
+{"query": "github security advisory GHSA-xxx", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "github security advisory GHSA-xxx"}
+{"query": "mitre cve database search", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "mitre cve database search"}
+{"query": "nvd severity for latest curl cve", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "nvd severity for latest curl cve"}
+{"query": "is my server vulnerable to heartbleed", "label": "security", "rationale": "Synthetic gold example for security", "inputText": "is my server vulnerable to heartbleed"}
+{"query": "GitHub actions runner outage", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "GitHub actions runner outage"}
+{"query": "is AWS us-east-1 down", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "is AWS us-east-1 down"}
+{"query": "cloudflare 502 bad gateway today", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "cloudflare 502 bad gateway today"}
+{"query": "slack status page", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "slack status page"}
+{"query": "npm registry incident report", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "npm registry incident report"}
+{"query": "vercel deployment failing outage", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "vercel deployment failing outage"}
+{"query": "discord connection issues right now", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "discord connection issues right now"}
+{"query": "openai api status", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "openai api status"}
+{"query": "azure active directory degradation", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "azure active directory degradation"}
+{"query": "datadog intake delayed", "label": "vendor-status", "rationale": "Synthetic gold example for vendor-status", "inputText": "datadog intake delayed"}
+{"query": "attention is all you need paper", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "attention is all you need paper"}
+{"query": "transformers arxiv 2017", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "transformers arxiv 2017"}
+{"query": "llama 3 technical report", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "llama 3 technical report"}
+{"query": "research paper on tokenization", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "research paper on tokenization"}
+{"query": "doi 10.1145/3357384.3357396", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "doi 10.1145/3357384.3357396"}
+{"query": "scientific study on sleep and memory", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "scientific study on sleep and memory"}
+{"query": "semantic scholar graph neural networks", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "semantic scholar graph neural networks"}
+{"query": "pubmed latest research on mrna", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "pubmed latest research on mrna"}
+{"query": "nature article on quantum computing", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "nature article on quantum computing"}
+{"query": "deepseek r1 math paper", "label": "papers", "rationale": "Synthetic gold example for papers", "inputText": "deepseek r1 math paper"}
+{"query": "rfc 2616 http 1.1", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "rfc 2616 http 1.1"}
+{"query": "html5 w3c specification", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "html5 w3c specification"}
+{"query": "ecmascript 2024 language spec", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "ecmascript 2024 language spec"}
+{"query": "css grid standard", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "css grid standard"}
+{"query": "whatwg fetch standard", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "whatwg fetch standard"}
+{"query": "json rfc 8259", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "json rfc 8259"}
+{"query": "oauth 2.0 specification", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "oauth 2.0 specification"}
+{"query": "webgl 2.0 reference", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "webgl 2.0 reference"}
+{"query": "openapi 3.1 standard", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "openapi 3.1 standard"}
+{"query": "posix standard signals", "label": "specs", "rationale": "Synthetic gold example for specs", "inputText": "posix standard signals"}
+{"query": "npm install lodash", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "npm install lodash"}
+{"query": "pypi requests package", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "pypi requests package"}
+{"query": "cargo add serde", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "cargo add serde"}
+{"query": "maven org.springframework", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "maven org.springframework"}
+{"query": "gem install rails", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "gem install rails"}
+{"query": "docker pull ubuntu", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "docker pull ubuntu"}
+{"query": "go get github.com/gin-gonic/gin", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "go get github.com/gin-gonic/gin"}
+{"query": "composer require guzzlehttp/guzzle", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "composer require guzzlehttp/guzzle"}
+{"query": "nuget newtonsoft.json", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "nuget newtonsoft.json"}
+{"query": "cran ggplot2 package", "label": "package-registry", "rationale": "Synthetic gold example for package-registry", "inputText": "cran ggplot2 package"}
+{"query": "github pull request #123 on react", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "github pull request #123 on react"}
+{"query": "issue 54 on facebook/react", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "issue 54 on facebook/react"}
+{"query": "vercel next.js discussions", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "vercel next.js discussions"}
+{"query": "how to open a github issue", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "how to open a github issue"}
+{"query": "github repo torvalds/linux", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "github repo torvalds/linux"}
+{"query": "tensorflow github commits", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "tensorflow github commits"}
+{"query": "pytorch pull request review", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "pytorch pull request review"}
+{"query": "github source code for fastapi", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "github source code for fastapi"}
+{"query": "search github issues for bug", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "search github issues for bug"}
+{"query": "kubernetes github repository", "label": "github", "rationale": "Synthetic gold example for github", "inputText": "kubernetes github repository"}
+{"query": "react 19 release notes", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "react 19 release notes"}
+{"query": "what is new in python 3.12", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "what is new in python 3.12"}
+{"query": "next.js changelog version 14", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "next.js changelog version 14"}
+{"query": "ubuntu 24.04 release history", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "ubuntu 24.04 release history"}
+{"query": "latest updates in vscode", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "latest updates in vscode"}
+{"query": "docker desktop release notes", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "docker desktop release notes"}
+{"query": "vue 3.4 changelog", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "vue 3.4 changelog"}
+{"query": "kubernetes v1.30 changelog", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "kubernetes v1.30 changelog"}
+{"query": "rust 1.77 release notes", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "rust 1.77 release notes"}
+{"query": "postgres 16 version history", "label": "changelog", "rationale": "Synthetic gold example for changelog", "inputText": "postgres 16 version history"}
+{"query": "stackoverflow how to exit vim", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "stackoverflow how to exit vim"}
+{"query": "reddit r/programming", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "reddit r/programming"}
+{"query": "discourse rust user forum", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "discourse rust user forum"}
+{"query": "hacker news discussion on ai", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "hacker news discussion on ai"}
+{"query": "stack overflow fix null pointer", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "stack overflow fix null pointer"}
+{"query": "quora why is python popular", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "quora why is python popular"}
+{"query": "reddit local llama fine tuning", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "reddit local llama fine tuning"}
+{"query": "swift forums generics", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "swift forums generics"}
+{"query": "unity answers movement script", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "unity answers movement script"}
+{"query": "stackexchange physics quantum", "label": "forums", "rationale": "Synthetic gold example for forums", "inputText": "stackexchange physics quantum"}
+{"query": "how to boil an egg", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "how to boil an egg"}
+{"query": "best movies of 2023", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "best movies of 2023"}
+{"query": "weather in new york today", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "weather in new york today"}
+{"query": "who is the ceo of microsoft", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "who is the ceo of microsoft"}
+{"query": "history of the roman empire", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "history of the roman empire"}
+{"query": "how does a car engine work", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "how does a car engine work"}
+{"query": "capital of france", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "capital of france"}
+{"query": "population of tokyo", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "population of tokyo"}
+{"query": "what is the speed of light", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "what is the speed of light"}
+{"query": "how to tie a tie", "label": "web", "rationale": "Synthetic gold example for web", "inputText": "how to tie a tie"}

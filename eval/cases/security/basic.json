@@ -1,0 +1,7 @@
+{
+  "question": "Check CVE impact",
+  "expectedDomain": "security",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Security case"
+}

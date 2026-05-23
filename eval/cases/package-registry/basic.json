@@ -1,0 +1,7 @@
+{
+  "question": "Check npm package docs",
+  "expectedDomain": "package-registry",
+  "expectedQuality": "high",
+  "expectedClaims": [],
+  "notes": "Package registry case"
+}

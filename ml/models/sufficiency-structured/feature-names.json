@@ -1,0 +1,22 @@
+[
+  "authoritative_source_count",
+  "blocked_source_count",
+  "blog_count",
+  "file_count",
+  "forum_count",
+  "github_readme_count",
+  "github_repo_count",
+  "has_authority",
+  "has_only_one_good_source",
+  "negative_signal_sources",
+  "official_doc_count",
+  "other_count",
+  "paper_count",
+  "positive_signal_sources",
+  "query_academic",
+  "query_comparison",
+  "query_procedural",
+  "query_temporal",
+  "query_versioned",
+  "source_count"
+]

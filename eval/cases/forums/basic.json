@@ -1,0 +1,7 @@
+{
+  "question": "Find forum advice",
+  "expectedDomain": "forums",
+  "expectedQuality": "mixed",
+  "expectedClaims": [],
+  "notes": "Forums case"
+}
