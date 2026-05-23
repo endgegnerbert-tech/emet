@@ -4,3 +4,5 @@ coverage/
 *.log
 .cache/
 .worktrees/
+.pi-context/
+.venv*/
