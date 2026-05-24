@@ -12,6 +12,10 @@ test("exportExamples extracts domain, sufficiency, and conflict tasks", () => {
         mode: "fast",
         sufficient: true,
         conflictDetected: true,
+        meta: {
+          versionContext: { versionSensitive: true, explicitVersion: true, normalizedTokens: [{ normalized: "2022-11-28" }] },
+          versionCoverage: { exactMatchSources: 1, mismatchSources: 0 },
+        },
         sources: [
           { title: "React", snippet: "React docs", sourceType: "official_doc" },
           { title: "Vue", snippet: "Vue docs", sourceType: "official_doc" }
@@ -57,4 +61,6 @@ test("exportExamples extracts domain, sufficiency, and conflict tasks", () => {
   // Check Conflict task
   assert.equal(conflicts[0].label, "conflict");
   assert.equal(conflicts[0].labelSource, "candidate_only");
+  assert.equal(sufficiencies.find((s) => s.query === "React versus Vue").meta.versionContext.explicitVersion, true);
+  assert.equal(conflicts[0].meta.versionCoverage.exactMatchSources, 1);
 });

@@ -72,6 +72,8 @@ export function analyzeResearchCache(cache) {
   const authoritativeSourcesFound = {};
   const sourceTypes = {};
   const sourceCountDistribution = {};
+  const versionSensitive = {};
+  const versionCoverage = { exactMatchRuns: 0, mismatchRuns: 0, changelogRuns: 0 };
   const missingFields = Object.fromEntries(REQUIRED_FIELDS.map((field) => [field, 0]));
   const highRiskDomains = { security: 0, papers: 0, specs: 0 };
   const normalizedQueries = new Map();
@@ -93,6 +95,13 @@ export function analyzeResearchCache(cache) {
     increment(conflictDetected, typeof run.conflictDetected === "boolean" ? run.conflictDetected : "missing");
     increment(authoritativeSourcesFound, typeof run.authoritativeSourcesFound === "boolean" ? run.authoritativeSourcesFound : "missing");
     increment(sourceCountDistribution, sourceCount);
+    const versionContext = run.meta?.versionContext || {};
+    const versionSummary = run.meta?.versionCoverage || run.runtimeTrace?.final?.versionSummary || {};
+    increment(versionSensitive, Boolean(versionContext.versionSensitive));
+
+    if (Number(versionSummary.exactMatchSources || 0) > 0) versionCoverage.exactMatchRuns += 1;
+    if (Number(versionSummary.mismatchSources || 0) > 0) versionCoverage.mismatchRuns += 1;
+    if (Number(versionSummary.changelogSources || 0) > 0) versionCoverage.changelogRuns += 1;
 
     for (const type of sourceTypeValues(run)) increment(sourceTypes, type);
     for (const field of REQUIRED_FIELDS) {
@@ -126,6 +135,8 @@ export function analyzeResearchCache(cache) {
     authoritativeSourcesFound: sortedObject(authoritativeSourcesFound),
     sourceCountDistribution: sortedObject(sourceCountDistribution),
     sourceTypes: sortedObject(sourceTypes),
+    versionSensitive: sortedObject(versionSensitive),
+    versionCoverage,
     missingFields: sortedObject(missingFields),
     duplicateNormalizedQueries,
     conflictCandidates: conflictCandidates.sort((a, b) => a.query.localeCompare(b.query)).slice(0, 100),

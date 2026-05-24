@@ -131,6 +131,24 @@ test("buildQueries uses heuristic fast planning without a model call", async () 
   assert.deepEqual(await buildQueries("was ist Jina Reader?", "fast", ctx, undefined), ["Jina Reader"]);
 });
 
+
+test("buildQueries keeps pinned versions intact for deprecated endpoint queries", async () => {
+  const ctx = {
+    model: "expensive/model",
+    modelRegistry: {
+      async getApiKeyAndHeaders() {
+        throw new Error("fast planning must not ask the model registry");
+      },
+    },
+  };
+
+  const queries = await buildQueries("GitHub REST apiVersion 2022-11-28 deprecated endpoint", "fast", ctx, undefined);
+
+  assert.ok(queries.every((item) => !/\b2026\b/.test(item)));
+  assert.ok(queries.some((item) => /2022-11-28/.test(item)));
+  assert.ok(queries.some((item) => /changelog|release notes|breaking changes/i.test(item)));
+});
+
 test("buildQueries can use model-planned subqueries only in deep mode", async () => {
   const ctx = {
     async completeResearch() {
@@ -473,6 +491,82 @@ test("runWebResearch in deep mode performs follow-up research and finalizes resu
     assert.equal(typeof result.runtimeTrace.turns[0].pageCandidates[0]?.text, "string");
     assert.ok(Array.isArray(result.runtimeTrace.final.mergedPages));
     assert.equal(result.runtimeTrace.final.synthesis.answer, result.answer);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("runWebResearch records version context and coverage for pinned deprecated queries", async () => {
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+
+  function ddgHtml(results) {
+    return results.map(({ url, title, snippet }) => `
+      <div class="result results_links">
+        <h2 class="result__title">
+          <a class="result__a" href="//duckduckgo.com/l/?uddg=${encodeURIComponent(url)}&amp;rut=abc">${title}</a>
+        </h2>
+        <a class="result__snippet">${snippet}</a>
+      </div>
+    `).join("\n");
+  }
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("duckduckgo.com/html")) {
+      return {
+        headers: { get: () => "text/html" },
+        async text() {
+          return ddgHtml([
+            {
+              url: "https://docs.github.com/en/rest/about-the-rest-api/breaking-changes?apiVersion=2022-11-28",
+              title: "Breaking changes - GitHub Docs",
+              snippet: "Breaking changes for REST API version 2022-11-28.",
+            },
+            {
+              url: "https://docs.github.com/en/rest/about-the-rest-api/api-versions?apiVersion=2026-03-10",
+              title: "API Versions - GitHub Docs",
+              snippet: "Current REST API version docs.",
+            },
+          ]);
+        },
+      };
+    }
+
+    if (text.includes("2022-11-28")) {
+      return {
+        url: text,
+        headers: { get: () => "text/html" },
+        async text() {
+          return `<html><title>Breaking changes</title><body>${"Breaking changes for version 2022-11-28 deprecated endpoint. ".repeat(30)}</body></html>`;
+        },
+      };
+    }
+
+    return {
+      url: text,
+      headers: { get: () => "text/html" },
+      async text() {
+        return `<html><title>API versions</title><body>${"Current API version 2026-03-10 documentation. ".repeat(30)}</body></html>`;
+      },
+    };
+  };
+
+  try {
+    const result = await runWebResearch(
+      "GitHub REST apiVersion 2022-11-28 deprecated endpoint",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { mode: "fast", isolate: true }
+    );
+
+    assert.equal(result.ok, true);
+    assert.equal(result.meta.versionContext.explicitVersion, true);
+    assert.equal(result.meta.versionContext.deprecatedIntent, true);
+    assert.ok(result.meta.versionCoverage.exactMatchSources >= 1);
+    assert.ok(result.runtimeTrace.final.versionSummary.breakingChangeSources >= 1);
+    assert.equal(result.runtimeTrace.final.mergedPages[0].versionSignals.exactVersionMatch, true);
   } finally {
     globalThis.fetch = previousFetch;
   }

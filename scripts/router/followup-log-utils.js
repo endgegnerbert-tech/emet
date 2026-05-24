@@ -13,8 +13,11 @@ export function sourceMetaFromPages(pages = []) {
 export function observedActionFromResult(result = {}) {
   if (Number(result.followupRounds || 0) === 0) return "stop";
 
+  const versionContext = result.meta?.versionContext || {};
+  const versionCoverage = result.meta?.versionCoverage || result.runtimeTrace?.final?.versionSummary || {};
   const followupQuery = String(result.followupQuery || "").toLowerCase();
   if (followupQuery.includes("support status") || result.conflictDetected) return "need_conflict_resolution";
+  if ((versionContext.versionSensitive || versionContext.explicitVersion) && Number(versionCoverage.exactMatchSources || 0) === 0) return "need_version_context";
   if (/\b(latest|current|2024|2025|release|changelog)\b/.test(followupQuery)) return "need_recency";
   if (/\b(arxiv|doi|publisher|primary source|announcement)\b/.test(followupQuery)) return "need_primary_source";
   if (/\b(version|migration|upgrade|v\d+)\b/.test(followupQuery)) return "need_version_context";

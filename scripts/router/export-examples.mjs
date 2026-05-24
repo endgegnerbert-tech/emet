@@ -31,6 +31,13 @@ function buildSourceText(sources) {
     .trim();
 }
 
+function versionMeta(run = {}) {
+  return {
+    versionContext: run.meta?.versionContext || null,
+    versionCoverage: run.meta?.versionCoverage || run.runtimeTrace?.final?.versionSummary || null,
+  };
+}
+
 export function exportExamples(cache) {
   const entries = cache && typeof cache === "object" ? Object.entries(cache) : [];
   const examples = [];
@@ -57,7 +64,8 @@ export function exportExamples(cache) {
       risk,
       meta: {
         cacheKey,
-        mode: run.mode || "fast"
+        mode: run.mode || "fast",
+        ...versionMeta(run),
       }
     });
 
@@ -75,7 +83,8 @@ export function exportExamples(cache) {
           cacheKey,
           mode: run.mode || "fast",
           sourceCount,
-          authoritativeSourcesFound: Boolean(run.authoritativeSourcesFound)
+          authoritativeSourcesFound: Boolean(run.authoritativeSourcesFound),
+          ...versionMeta(run),
         }
       });
     }
@@ -94,7 +103,8 @@ export function exportExamples(cache) {
           cacheKey,
           mode: run.mode || "fast",
           sourceCount,
-          conflictSummary: run.conflictSummary || ""
+          conflictSummary: run.conflictSummary || "",
+          ...versionMeta(run),
         }
       });
     }

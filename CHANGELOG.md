@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.6 (Hotfix)
+
+### Added
+- **Version Context Layer:** Added a shared `lib/version-context.js` service that extracts pinned versions, deprecation intent, migration intent, and version/source match signals from queries and sources.
+- **Version-Aware Runtime Metadata:** Added `versionContext`, `versionCoverage`, and per-source `versionSignals` to research results, runtime traces, and dataset export paths so future ML work can train on real version-sensitive retrieval behavior.
+- **Regression Coverage:** Added focused tests for pinned-version query planning, version-aware ranking, runtime trace coverage, and downstream export/audit utilities.
+
+### Changed
+- **Version-Sensitive Query Planning:** Changed fast/deep query builders and follow-up query generation to preserve pinned versions and prefer changelogs, release notes, migration guides, and breaking-change pages over generic latest-docs lookups.
+- **Version-Aware Source Ranking:** Changed search/page/source scoring so exact version matches and release-history style pages rank above mismatched current-version pages for deprecated endpoint queries.
+- **Structured Feature Exports:** Changed structured router/export utilities to carry version-sensitive flags and coverage summaries alongside existing authority/conflict metadata.
+
+### Fixed
+- **Pinned Version Drift:** Fixed retrieval planning that previously rewrote explicit version queries into current-year lookups, causing wrong-source selection for deprecated endpoints.
+- **Deprecated Endpoint Grounding:** Fixed ranking and synthesis so deprecated-version questions now stay anchored to the referenced version instead of silently drifting to latest documentation.
+- **Dataset Logging Gaps:** Fixed cache/log/export pipelines so version-specific evidence is now preserved for later audit and ML retraining.
+
 ## 1.0.5 (Hotfix)
 
 ### Added

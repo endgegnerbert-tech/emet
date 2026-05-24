@@ -20,6 +20,10 @@ test("analyzeResearchCache summarizes usable research runs deterministically", (
         conflictSummary: "Sources disagree.",
         conflictingSourcePairs: [[0, 1]],
         authoritativeSourcesFound: true,
+        meta: {
+          versionContext: { versionSensitive: true, explicitVersion: true },
+          versionCoverage: { exactMatchSources: 1, mismatchSources: 1, changelogSources: 1 },
+        },
         sourceTypes: ["official_doc", "blog"],
         sources: [
           { title: "NVD", url: "https://nvd.nist.gov/vuln/detail/CVE-2024-3094", sourceType: "official_doc" },
@@ -68,6 +72,10 @@ test("analyzeResearchCache summarizes usable research runs deterministically", (
   assert.equal(report.highRiskDomains.security, 1);
   assert.equal(report.conflictCandidates.length, 1);
   assert.equal(report.missingFields.authoritativeSourcesFound, 1);
+  assert.deepEqual(report.versionSensitive, { false: 2, true: 1 });
+  assert.equal(report.versionCoverage.exactMatchRuns, 1);
+  assert.equal(report.versionCoverage.mismatchRuns, 1);
+  assert.equal(report.versionCoverage.changelogRuns, 1);
 });
 
 test("writeAuditReport writes JSON report", () => {

@@ -80,3 +80,44 @@ test("page-based structured features match runtime pages", () => {
   assert.equal(sufficiencyFeatures.has_authority, 1);
   assert.equal(sufficiencyFeatures.github_readme_count, 1);
 });
+
+
+test("page-based structured features capture version coverage and changelog hints", () => {
+  const features = extractSufficiencyStructuredFeaturesFromPages("GitHub REST apiVersion 2022-11-28 deprecated endpoint", [
+    {
+      title: "Breaking changes - GitHub Docs",
+      sourceType: "official_doc",
+      authoritative: true,
+      text: "Breaking changes for API version 2022-11-28.",
+      versionSignals: {
+        pageKind: "breaking_changes",
+        matchedTokens: ["2022-11-28"],
+        exactVersionMatch: true,
+        partialVersionMatch: false,
+        mismatch: false,
+      },
+    },
+    {
+      title: "Current API Versions",
+      sourceType: "official_doc",
+      authoritative: true,
+      text: "Current API version 2026-03-10.",
+      versionSignals: {
+        pageKind: "versioned_doc",
+        matchedTokens: [],
+        exactVersionMatch: false,
+        partialVersionMatch: false,
+        mismatch: true,
+      },
+    },
+  ]);
+
+  assert.equal(features.query_versioned, 1);
+  assert.equal(features.query_explicit_version, 1);
+  assert.equal(features.query_deprecated_intent, 1);
+  assert.equal(features.query_prefers_changelog, 1);
+  assert.equal(features.version_exact_match_source_count, 1);
+  assert.equal(features.version_mismatch_source_count, 1);
+  assert.equal(features.breaking_changes_source_count, 1);
+  assert.equal(features.versioned_doc_source_count, 1);
+});

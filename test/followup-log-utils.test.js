@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { sourceMetaFromPages } from "../scripts/router/followup-log-utils.js";
+import { observedActionFromResult, sourceMetaFromPages } from "../scripts/router/followup-log-utils.js";
 
 test("sourceMetaFromPages treats publishDate-backed freshness as recent", () => {
   const meta = sourceMetaFromPages([
@@ -41,4 +41,16 @@ test("sourceMetaFromPages recognizes news-like sources canonically", () => {
   ]);
 
   assert.equal(meta.has_news, true);
+});
+
+test("observedActionFromResult uses version metadata when version coverage is missing", () => {
+  const action = observedActionFromResult({
+    followupRounds: 1,
+    meta: {
+      versionContext: { versionSensitive: true, explicitVersion: true },
+      versionCoverage: { exactMatchSources: 0, mismatchSources: 2 },
+    },
+  });
+
+  assert.equal(action, "need_version_context");
 });
