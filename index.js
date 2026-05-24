@@ -1,66 +1,20 @@
 import { Type } from "typebox";
 
-import { compactResearchPayload, classifyQueryIntent, inferOfficialDocsSite } from "./lib/research.js";
-import { clearResearchMemory, hashResearchQuery, setResearchMemory, shouldSkipResearch } from "./lib/research-memory.js";
+import { buildWebResearchGuidance, defaultMode } from "./lib/research.js";
+import { clearResearchMemory } from "./lib/research-memory.js";
 import { logResearchEvent } from "./lib/local-logger.js";
 import { runWebResearch } from "./lib/web-research.js";
+import { EmetRuntime } from "./lib/emet-runtime.js";
 
-const RESEARCH_STATE = new Map();
-
-function buildWebResearchGuidance() {
-  return "Use emet for current facts, docs, best practices, comparisons, and citations. Search if unsure.";
-}
-
-function defaultMode(query) {
-  const intent = classifyQueryIntent(query);
-  if (intent === "comparison" || intent === "comparative") return "deep";
-  if (intent === "academic") return "academic";
-  return "fast";
-}
-
-function buildFastRecoveryQuery(query) {
-  const docsSite = inferOfficialDocsSite(query || "");
-  return docsSite ? `site:${docsSite} ${query}` : `${query} official docs`;
-}
+const runtime = new EmetRuntime();
 
 function toolResponse(payload, text) {
   return { content: [{ type: "text", text }], details: payload };
 }
 
-function compactWebResearchToolResult(event) {
-  if (event.isError || event.toolName !== "emet") return null;
-  const payload = event.details;
-  if (!payload?.ok || payload.action !== "web_research") return null;
-
-  const compact = compactResearchPayload(payload);
-  const citationLines = Array.isArray(compact.citations)
-    ? compact.citations.map((citation, index) => `${index + 1}. ${citation.text} [source ${citation.sourceIndex}]`)
-    : [];
-  const text = [
-    payload.contentText,
-    "",
-    "## Citations",
-    "",
-    ...(citationLines.length ? citationLines : ["None"]),
-    "",
-    "## Status",
-    "",
-    `sufficient: ${compact.sufficient}`,
-    `authoritativeSourcesFound: ${compact.authoritativeSourcesFound}`,
-    ...(compact.conflictSummary ? [`conflictSummary: ${compact.conflictSummary}`] : []),
-  ].join("\n").trim();
-
-  return { content: [{ type: "text", text }] };
-}
-
-function getState(queryHash) {
-  if (!RESEARCH_STATE.has(queryHash)) RESEARCH_STATE.set(queryHash, { count: 0, lastHash: null, lastSufficient: false, fastRecoveryAllowed: false });
-  return RESEARCH_STATE.get(queryHash);
-}
-
 export default function webResearchExtension(pi) {
   pi.on("before_agent_start", async (event) => {
-    RESEARCH_STATE.clear();
+    runtime.clear();
     clearResearchMemory();
     await logResearchEvent("agent_start", {
       systemPromptLength: String(event.systemPrompt || "").length,
@@ -75,22 +29,14 @@ export default function webResearchExtension(pi) {
     const originalInput = { ...event.input };
     if (!event.input.mode) event.input.mode = defaultMode(event.input.query || "");
 
-    const queryHash = hashResearchQuery(event.input.query || "");
-    const state = getState(queryHash);
-    const mode = event.input.mode;
-    const isolate = Boolean(event.input.isolate || process.env.RESEARCH_ISOLATE === "1");
-    const force = Boolean(event.input.force);
-    let blocked = false;
-    let reason = "";
+    const { skip, reason, state, modifiedInput } = runtime.interceptCall(event.input);
 
-    if (shouldSkipResearch({ queryHash, lastHash: state.lastHash, lastWasSufficient: state.lastSufficient, force, isolate })) {
-      blocked = true;
-      reason = "Recent emet result was already sufficient for this exact query.";
+    if (skip) {
       await logResearchEvent("tool_call", {
         originalInput,
         finalInput: { ...event.input },
-        queryHash,
-        blocked,
+        queryHash: runtime.hashQuery(event.input.query || ""),
+        blocked: true,
         reason,
         state: {
           count: state.count,
@@ -102,18 +48,13 @@ export default function webResearchExtension(pi) {
       return { block: true, reason };
     }
 
-    if (mode === "fast" && state.count === 1 && state.fastRecoveryAllowed && !force && !isolate) {
-      event.input.query = buildFastRecoveryQuery(event.input.query || "");
-      state.fastRecoveryAllowed = false;
-    }
+    event.input = modifiedInput;
 
-    state.count += 1;
-    state.lastHash = queryHash;
     await logResearchEvent("tool_call", {
       originalInput,
       finalInput: { ...event.input },
-      queryHash,
-      blocked,
+      queryHash: runtime.hashQuery(event.input.query || ""),
+      blocked: false,
       state: {
         count: state.count,
         lastHash: state.lastHash,
@@ -126,15 +67,7 @@ export default function webResearchExtension(pi) {
   pi.on("tool_result", async (event) => {
     if (event.toolName === "emet") {
       if (!event.isError && event.details?.ok) {
-        const queryHash = hashResearchQuery(event.input?.query || "");
-        const state = getState(queryHash);
-        state.lastHash = queryHash;
-        state.lastSufficient = Boolean(event.details.sufficient);
-        const query = event.input?.query || "";
-        state.fastRecoveryAllowed = !event.details.sufficient
-          && !event.details.authoritativeSourcesFound
-          && ["best_practice", "temporal", "definition"].includes(classifyQueryIntent(query || ""));
-        setResearchMemory(`last:${queryHash}`, event.details);
+        runtime.interceptResult(event.input, event.details);
       }
       await logResearchEvent("tool_result", {
         toolName: event.toolName,
@@ -142,8 +75,13 @@ export default function webResearchExtension(pi) {
         input: event.input,
         details: event.details,
       });
+
+      if (!event.isError && event.details?.ok) {
+        const formatted = runtime.formatResponse(event.details);
+        return { content: [{ type: "text", text: formatted.text }] };
+      }
     }
-    return compactWebResearchToolResult(event) || undefined;
+    return undefined;
   });
 
   pi.registerTool({

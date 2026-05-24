@@ -1,0 +1,18 @@
+{
+  "name": "emet",
+  "version": "1.1.0",
+  "description": "Grounded web research MCP plugin for Claude Code with cited answers and live documentation lookup.",
+  "author": {
+    "name": "Black Knight"
+  },
+  "homepage": "https://github.com/endgegnerbert-tech/emet#readme",
+  "repository": "https://github.com/endgegnerbert-tech/emet",
+  "license": "MIT",
+  "keywords": ["mcp", "research", "citations", "claude-code"],
+  "mcpServers": {
+    "emet": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/emet-mcp.js"]
+    }
+  }
+}

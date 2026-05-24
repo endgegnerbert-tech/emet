@@ -1,6 +1,6 @@
 {
   "name": "@black-knight.dev/emet",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "private": false,
   "type": "module",
   "description": "Zero-setup grounded web research for AI coding agents.",
@@ -11,7 +11,10 @@
     "emet-mcp": "./emet-mcp.js"
   },
   "files": [
+    ".claude-plugin",
+    ".codex-plugin",
     "bin",
+    "configs",
     "extensions",
     "index.js",
     "lib",

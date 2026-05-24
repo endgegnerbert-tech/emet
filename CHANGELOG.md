@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.1.0
+
+### Added
+- **Modular MCP Server Structure:** Split the MCP server into `mcp/index.js`, `mcp/server.js`, `mcp/transport.js`, modular handlers, and dedicated services to avoid a monolithic server.
+- **Shared Agentic Runtime:** Added `lib/emet-runtime.js` as a shared runtime layer for duplicate-query skipping, fast recovery, state tracking, and response compaction across Pi and MCP.
+- **Shared Tool Schema:** Added `lib/tool-schema.js` as a single source of truth for the `emet` tool definition.
+- **MCP Native Primitives:** Added `prompts/list`, `prompts/get`, `resources/list`, and `resources/read` support.
+- **MCP Host Profile Layer:** Added modular host profiles for Claude Code, Cursor, VS Code/GitHub Copilot, Codex, Gemini, and generic MCP clients, with host-specific instructions, tool metadata, prompts, and profile resources.
+- **Host Config Examples:** Added publishable `configs/` examples and README install snippets for Claude Code, Cursor, VS Code/Copilot, Codex, and Gemini CLI.
+- **Plugin Manifests:** Added publishable Claude Code and Codex plugin manifest files for host-native packaging and validation flows.
+- **MCP Sampling Integration:** Added a sampling service that proxies MCP client sampling into the research engine via a virtual `ctx.completeResearch` adapter with graceful fallback.
+- **Regression Coverage:** Added/updated MCP tests for initialize, tools/list, tools/call, and sampling behavior.
+
+### Changed
+- **Pi/MCP Parity:** Updated both the Pi extension and MCP server to share the same research lifecycle, mode selection, and compaction behavior.
+- **Tool Execution Flow:** Routed MCP tool calls through the shared runtime so MCP now uses the same skip/fallback/recovery mechanics as Pi.
+- **Prompt/Resource Exposure:** Exposed research workflows and cached resource access as first-class MCP protocol surfaces.
+- **MCP Entrypoint Compatibility:** Kept `mcp/server.js` directly executable while moving public exports through `mcp/index.js`.
+- **Claude Code Transport Compatibility:** Updated stdio transport to support both Content-Length framing and Claude Code's JSON-line MCP framing.
+- **Documentation:** Updated the MCP architecture plan to reflect the non-monolithic structure and completed implementation checkpoints.
+
+### Fixed
+- **Monolithic MCP Server:** Removed the old single-file MCP server pattern and replaced it with isolated modules and service boundaries.
+- **Sampling Fallbacks:** Ensured unsupported or rejected sampling requests degrade cleanly into deterministic local heuristics.
+
 ## 1.0.6 (Hotfix)
 
 ### Added
@@ -147,7 +172,7 @@ By replacing the heavyweight BitNet JSON-planner with the new **Hybrid Tiny-Rout
 - Fetch heuristics were tuned to avoid false positives on normal GitHub pages.
 - `web-research` now keeps the fast HTTP path first and escalates only when needed.
 
-## 1.1.0
+## Legacy 1.1.0
 
 ### Added
 - Domain packs now drive routing and source controls for web, github, security, papers, specs, changelog, forums, package-registry, and vendor-status.

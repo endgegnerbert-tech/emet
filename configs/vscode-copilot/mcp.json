@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "emet": {
+      "type": "stdio",
+      "command": "emet"
+    }
+  }
+}

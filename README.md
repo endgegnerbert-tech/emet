@@ -43,18 +43,229 @@ Best of all? **Zero setup.** No external search API keys to configure, no heavy 
 ## 📦 Installation
 
 ### Pi Coding Agent (Extension)
-If you are using the Pi Agent harness, install the extension directly:
+If you are using the Pi Agent harness, the Pi install path stays the same:
+
 ```bash
 pi install npm:@black-knight.dev/emet
 ```
 
-### Node.js / NPM (Standalone Server)
-Install it globally to expose the MCP (Model Context Protocol) server for any compatible AI agent:
+**Pi compatibility note:** the public Pi extension contract is unchanged. It still exports `extensions/emet.ts`, registers the `emet` tool, and keeps the same modes (`fast`, `deep`, `code`, `academic`). The new host-profile layer only affects MCP server surfaces.
+
+### How to install the MCP server
+For MCP hosts, prefer a real binary over `npx`. `emet` ships bin aliases (`emet`, `emet-mcp`), and explicit installation is the most reliable cross-host setup.
+
+**Recommended global install**
 ```bash
 npm install -g @black-knight.dev/emet
 emet
 ```
-*(The MCP server identifies itself as `emet-mcp`, exposing the tool `emet`)*
+
+**Project-local install**
+```bash
+npm install @black-knight.dev/emet
+node ./node_modules/@black-knight.dev/emet/emet.js
+```
+
+**Local dev / repo checkout**
+```bash
+node ./mcp/server.js
+```
+
+The MCP server identifies itself as `emet-mcp` and exposes the tool `emet`.
+
+### Host install matrix
+
+| Host | Install command | Config example |
+| --- | --- | --- |
+| Claude Code | `npm install -g @black-knight.dev/emet` or plugin marketplace install | [`configs/claude-code/mcp.json`](./configs/claude-code/mcp.json) |
+| Cursor | `npm install -g @black-knight.dev/emet` | [`configs/cursor/mcp.json`](./configs/cursor/mcp.json) |
+| VS Code / Copilot | `npm install -g @black-knight.dev/emet` | [`configs/vscode-copilot/mcp.json`](./configs/vscode-copilot/mcp.json) |
+| Codex | `npm install -g @black-knight.dev/emet` or plugin marketplace install | [`configs/codex/config.toml`](./configs/codex/config.toml) |
+| Gemini CLI | `npm install -g @black-knight.dev/emet` | [`configs/gemini/settings.json`](./configs/gemini/settings.json) |
+
+**Verified in real CLIs:** Claude Code, Codex, and Gemini CLI were tested with temporary installs. Claude and Codex connected successfully; Gemini registered successfully and was then gated by workspace trust, which is expected behavior.
+
+### Host-specific setup
+Ready-to-copy examples live in [`configs/`](./configs).
+
+<details open>
+<summary><strong>Claude Code</strong></summary>
+
+**MCP install**
+```bash
+npm install -g @black-knight.dev/emet
+claude mcp add emet -- emet
+```
+
+**Project config**
+- Copy [`configs/claude-code/mcp.json`](./configs/claude-code/mcp.json) to `.mcp.json`
+
+**Plugin / marketplace files**
+- [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json)
+- [`./.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json)
+
+**Marketplace install**
+```bash
+claude plugin marketplace add https://github.com/endgegnerbert-tech/emet
+claude plugin install emet@emet
+```
+
+**Local marketplace install (repo checkout)**
+```bash
+claude plugin marketplace add .
+claude plugin install emet@emet
+```
+
+The Claude marketplace plugin runs the repo-bundled MCP entrypoint directly, so it does not require a separate global `emet` install.
+
+**Verify**
+```bash
+claude mcp list
+claude mcp get emet
+```
+
+For direct `claude mcp add ...`, expect `emet` with `Status: ✓ Connected`.
+For marketplace installs, Claude prefixes the server name, so `claude mcp list` should show `plugin:emet:emet` as connected.
+
+**Local marketplace validation**
+```bash
+claude plugin validate ./.claude-plugin/plugin.json
+```
+
+**Repo checkout alternative**
+```bash
+claude mcp add emet -- node ./mcp/server.js
+```
+
+</details>
+
+<details>
+<summary><strong>Cursor</strong></summary>
+
+**Install**
+```bash
+npm install -g @black-knight.dev/emet
+```
+
+Copy [`configs/cursor/mcp.json`](./configs/cursor/mcp.json) to `.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "emet": {
+      "command": "emet"
+    }
+  }
+}
+```
+
+**Verify**
+Restart Cursor and confirm `emet` appears in MCP settings/tools and exposes the `emet` tool.
+
+</details>
+
+<details>
+<summary><strong>VS Code / GitHub Copilot</strong></summary>
+
+**Install**
+```bash
+npm install -g @black-knight.dev/emet
+```
+
+Copy [`configs/vscode-copilot/mcp.json`](./configs/vscode-copilot/mcp.json) to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "emet": {
+      "type": "stdio",
+      "command": "emet"
+    }
+  }
+}
+```
+
+**Verify**
+Restart VS Code and confirm the MCP server is available from Copilot Chat and exposes the `emet` tool.
+
+</details>
+
+<details>
+<summary><strong>Codex</strong></summary>
+
+**MCP install**
+```bash
+npm install -g @black-knight.dev/emet
+```
+
+Merge [`configs/codex/config.toml`](./configs/codex/config.toml) into `~/.codex/config.toml` or your project-level Codex config:
+
+```toml
+[mcp_servers.emet]
+command = "emet"
+```
+
+**Plugin / marketplace files**
+- [`./.codex-plugin/plugin.json`](./.codex-plugin/plugin.json)
+- [`./.codex-plugin/mcp.json`](./.codex-plugin/mcp.json)
+- [`./.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json)
+- [`./plugins/emet`](./plugins/emet) (local marketplace source path)
+
+**Marketplace install**
+```bash
+codex plugin marketplace add https://github.com/endgegnerbert-tech/emet
+codex plugin add emet@emet
+```
+
+**Local marketplace install (repo checkout)**
+```bash
+codex plugin marketplace add .
+codex plugin add emet@emet
+```
+
+The Codex marketplace plugin bootstraps `@black-knight.dev/emet` on first run from the plugin bundle in `plugins/emet`, so it does not require a separate global `emet` install.
+
+**Verify**
+```bash
+codex mcp list
+codex mcp get emet
+```
+
+Expected: `enabled: true` and `transport: stdio`.
+
+**Marketplace usage**
+Codex reads local plugin marketplaces from `.agents/plugins/marketplace.json`. This repo now ships that file plus a dedicated `plugins/emet` bundle for local marketplace workflows and future marketplace packaging.
+
+</details>
+
+<details>
+<summary><strong>Gemini CLI</strong></summary>
+
+**Install**
+```bash
+npm install -g @black-knight.dev/emet
+```
+
+Merge [`configs/gemini/settings.json`](./configs/gemini/settings.json) into `~/.gemini/settings.json` or `.gemini/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "emet": {
+      "command": "emet"
+    }
+  }
+}
+```
+
+**Verify**
+```bash
+gemini mcp list
+```
+
+Expected: `emet` should appear in the configured MCP server list. In untrusted folders Gemini may show the server as configured but disabled until the workspace is trusted.
+
+</details>
 
 ---
 

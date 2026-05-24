@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "emet": {
+      "command": "node",
+      "args": ["./start.mjs"],
+      "cwd": "."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "emet",
+  "interface": {
+    "displayName": "emet"
+  },
+  "plugins": [
+    {
+      "name": "emet",
+      "source": {
+        "source": "local",
+        "path": "./plugins/emet"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
