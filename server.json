@@ -1,0 +1,30 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.endgegnerbert-tech/emet",
+  "title": "emet",
+  "description": "Zero-setup grounded web research MCP server for AI coding agents.",
+  "websiteUrl": "https://github.com/endgegnerbert-tech/emet#readme",
+  "repository": {
+    "url": "https://github.com/endgegnerbert-tech/emet",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/endgegnerbert-tech/emet/main/docs/assets/emet-logo.png",
+      "mimeType": "image/png"
+    }
+  ],
+  "version": "1.1.1",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@black-knight.dev/emet",
+      "version": "1.1.1",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}

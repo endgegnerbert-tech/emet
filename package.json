@@ -1,9 +1,9 @@
 {
   "name": "@black-knight.dev/emet",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": false,
   "type": "module",
-  "description": "Zero-setup grounded web research for AI coding agents.",
+  "description": "Zero-setup grounded web research MCP server and Pi extension for AI coding agents.",
   "license": "MIT",
   "main": "./index.js",
   "bin": {
@@ -24,6 +24,7 @@
     "emet.js",
     "emet-mcp.js",
     "README.md",
+    "server.json",
     "THIRD_PARTY_NOTICES.md",
     "package.json"
   ],
@@ -36,7 +37,23 @@
     "url": "https://github.com/endgegnerbert-tech/emet/issues"
   },
   "keywords": [
-    "pi-package"
+    "pi-package",
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "research",
+    "web-research",
+    "citations",
+    "grounded",
+    "docs",
+    "developer-tools",
+    "ai-agents",
+    "npm",
+    "claude-code",
+    "codex",
+    "cursor",
+    "gemini-cli",
+    "vscode-copilot"
   ],
   "scripts": {
     "test": "node --test",
@@ -55,6 +72,7 @@
   "pi": {
     "extensions": [
       "./extensions/emet.ts"
-    ]
+    ],
+    "image": "https://raw.githubusercontent.com/endgegnerbert-tech/emet/main/docs/assets/emet-demo.gif"
   }
 }

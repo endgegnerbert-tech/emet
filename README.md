@@ -8,7 +8,7 @@
 
 **The Zero-Setup Research Engine for Autonomous AI Agents.**
 
-`emet` is an advanced grounding tool designed specifically for AI coding agents. It prevents agents from hallucinating API endpoints, guessing library versions, or inventing CVE details by injecting real-time, highly authoritative, and conflict-resolved web research directly into their context window.
+`emet` is a grounded research layer for autonomous AI coding agents. It lets the agent decide when to verify facts, resolve source conflicts, or pull current documentation—without leaving the workflow.
 
 ![emet in action](docs/assets/emet-demo.gif)
 
@@ -16,16 +16,33 @@
 
 ## 💡 Why `emet`?
 
-The world does not need just another "AI Search Engine"—there are plenty of massive, standalone research tools out there. 
+Most search tools give links. `emet` gives the agent live, cited, conflict-aware answers it can use directly.
 
-Instead, `emet` was built specifically to solve a crucial problem in the **Agentic Workflow**: When an autonomous agent is deep in a coding loop, compiling errors, or debugging, it needs hard facts instantly without losing focus. Calling out to heavy external search services or trying to execute brittle Playwright scripts breaks the agent's flow, wastes context window tokens, and leads to hallucinations.
+It fits the agent loop naturally: when the model sees uncertainty, version drift, API confusion, or security questions, it can autonomously call `emet` for grounding before it answers.
 
-`emet` solves this by providing a lightweight, internal **cognitive research loop** directly into the agent harness:
-1. **Agent-Centric Routing:** It knows exactly where developers look (GitHub, NPM, NIST, arXiv).
-2. **Authority First:** It prioritizes official documentation over random SEO-optimized tutorials.
-3. **Self-Awareness:** It extracts structured features to know when it lacks information, safely triggering follow-up questions *before* returning an answer to the agent.
+`emet` is designed to stay out of the way:
+1. **Autonomous grounding:** the agent can decide when live verification is worth it.
+2. **Authority first:** it prefers official docs and strong sources.
+3. **Conflict-aware:** it surfaces contradictions instead of hiding them.
 
-Best of all? **Zero setup.** No external search API keys to configure, no heavy local LLMs to run, and no flaky browser automation scripts to maintain. It's built to run silently and reliably alongside your agent.
+Best of all? **Zero setup.** No external search API keys, no heavy local LLMs, and no brittle browser scripts.
+
+## ✅ What it does
+
+`emet` helps agents:
+- verify current facts against live sources
+- avoid hallucinated endpoints, versions, and CVE details
+- compare conflicting claims
+- ground answers in local repo context when needed
+
+## 🎯 Core use cases
+
+- Check library/API versions
+- Pull current official docs
+- Compare conflicting sources
+- Validate security/CVE claims
+- Ground repo-specific questions from local files
+- Retrieve code or README-backed documentation
 
 ---
 

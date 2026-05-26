@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.1.1
+
+### Added
+- **MCP Registry Manifest:** Added `server.json` for registry discovery and package publishing.
+- **Pi Preview Metadata:** Added gallery preview metadata to improve Pi discoverability.
+- **Discoverability Keywords:** Expanded plugin/package keywords for wider host and marketplace reach.
+
+### Changed
+- **README Positioning:** Refined the intro and use-case framing around autonomous grounding.
+- **Metadata Alignment:** Tightened package, marketplace, and host metadata to emphasize cited answers and current-doc lookup.
+- **Version Consistency:** Aligned package and bootstrap version references across the repo.
+
+### Fixed
+- **Publish Consistency:** Normalized package bin paths and release metadata for cleaner packaging.
+
 ## 1.1.0
 
 ### Added
