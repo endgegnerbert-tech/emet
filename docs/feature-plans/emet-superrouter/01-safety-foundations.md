@@ -47,6 +47,15 @@ guardrail_flags:
   primary_source_required
 ```
 
+## Phase 1 implementation status
+
+Completed as deterministic guardrail code in `lib/research-guardrails.js`:
+
+- Guardrail flags are detected before learned router calls.
+- Runtime config is raised to minimum evidence requirements for high-risk, official-source, primary-source, version, and recency-sensitive queries.
+- Tiny-router domain predictions cannot downgrade protected domains or authority-required routing to generic `web`.
+- Guardrail decisions are emitted as `guardrail_decision` events and copied into `runtimeTrace.guardrails`.
+
 ## Acceptance criteria
 
 - Existing high-risk tests still pass.

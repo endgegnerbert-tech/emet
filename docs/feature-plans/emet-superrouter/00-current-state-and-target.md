@@ -51,6 +51,14 @@ Keep the system hybrid:
 - TRM/HRM only for multi-step policy reasoning.
 - LLM reviewer only for uncertain/offline labels, not every runtime decision.
 
+## Phase 0 implementation status
+
+Completed in code as the baseline architecture inventory and traceable runtime boundary:
+
+- Current hybrid runtime remains intact: deterministic intent/domain rules, optional tiny-router classifiers, retrieval, evidence scoring, conflict, sufficiency, follow-up, synthesis.
+- Target seam is explicit: guardrails run before learned routing; runtime traces now carry the decision boundary needed by later phases.
+- No TRM/HRM or policy replacement is introduced in this phase.
+
 ## Expected gains
 
 | Area | Gain |

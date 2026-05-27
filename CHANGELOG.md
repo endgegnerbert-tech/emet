@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.2
+
+### Added
+- **Safety Foundations:** Added `lib/research-guardrails.js` to enforce non-negotiable safety rules for high-risk queries (security, medical, legal, finance, privacy).
+- **Minimum Evidence Requirements:** Automatically raised runtime config requirements (minimum sources, authoritative source requirements) based on detected guardrail flags.
+- **Trace Boundaries:** Emitted `guardrail_decision` events and included `guardrail_flags` and `guardrails` state in the final runtime trace to support future ML policy phases.
+
+### Changed
+- **Domain Router Veto:** Prevented the Tiny-Router ML models from downgrading protected domains (`security`, `papers`, `specs`, `changelog`) or authority-required queries to the generic `web` domain.
+- **Fast Mode Safeguards:** Refactored fast-mode source reduction logic out of `lib/web-research.js` into the guardrails layer, blocking single-source shortcuts when high-risk or authority requirements are present.
+- **Documentation Updates:** Marked Superrouter Phase 0 (current state) and Phase 1 (safety foundations) as completed in the feature plans.
+
 ## 1.1.1
 
 ### Added
