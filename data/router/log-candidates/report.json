@@ -1,0 +1,32 @@
+{
+  "totalSessions": 2077,
+  "keptSessions": 274,
+  "skipped": {
+    "not_ok": 22,
+    "internal_test_cwd": 1374,
+    "cache_hit": 407
+  },
+  "labels": {
+    "domain": {
+      "web": 223,
+      "github": 35,
+      "specs": 9,
+      "papers": 6,
+      "changelog": 1
+    },
+    "followup": {
+      "stop": 151,
+      "need_conflict_resolution": 13,
+      "need_authority": 10,
+      "need_recency": 1
+    },
+    "sufficiency": {
+      "sufficient": 100,
+      "insufficient": 174
+    },
+    "conflict": {
+      "no_conflict": 169,
+      "conflict": 96
+    }
+  }
+}

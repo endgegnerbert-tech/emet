@@ -207,6 +207,12 @@ def main():
     os.makedirs(os.path.dirname(METRICS_OUT), exist_ok=True)
 
     real_rows = load_rows()
+    label_counts = Counter(row["label"] for row in real_rows)
+    if len(label_counts) < 2:
+        raise SystemExit(
+            f"Refusing to train followup model: gold set has fewer than 2 labels ({dict(label_counts)}). "
+            "Review and merge labeled candidates before retraining."
+        )
     augmented_rows = augment_rows(real_rows)
     emb_model = load_embedding_model()
 

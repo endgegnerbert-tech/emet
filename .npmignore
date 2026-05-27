@@ -1,0 +1,7 @@
+experiments/
+.pi-context/
+.venv*/
+coverage/
+*.log
+.worktrees/
+.DS_Store

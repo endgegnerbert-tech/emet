@@ -6,3 +6,4 @@ coverage/
 .worktrees/
 .pi-context/
 .venv*/
+experiments/

@@ -33,6 +33,7 @@ export default function webResearchExtension(pi) {
 
     if (skip) {
       await logResearchEvent("tool_call", {
+        name: "emet",
         originalInput,
         finalInput: { ...event.input },
         queryHash: runtime.hashQuery(event.input.query || ""),
@@ -51,6 +52,7 @@ export default function webResearchExtension(pi) {
     event.input = modifiedInput;
 
     await logResearchEvent("tool_call", {
+      name: "emet",
       originalInput,
       finalInput: { ...event.input },
       queryHash: runtime.hashQuery(event.input.query || ""),

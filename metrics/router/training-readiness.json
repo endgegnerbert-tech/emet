@@ -1,0 +1,147 @@
+{
+  "generatedAt": "2026-05-26T22:28:28.439Z",
+  "promoteSafe": false,
+  "recommendation": "Do not train/promote with new log candidates yet. Review candidate labels, fix warnings, then rerun this audit.",
+  "tasks": {
+    "domain": {
+      "task": "domain",
+      "goldPath": "data/router/gold-domain.jsonl",
+      "candidatePath": "data/router/log-candidates/domain-pi-accepted.jsonl",
+      "goldRows": 90,
+      "candidateRows": 140,
+      "reviewedCandidateRows": 140,
+      "prelabelCandidateRows": 0,
+      "labelCounts": {
+        "security": 10,
+        "vendor-status": 10,
+        "papers": 10,
+        "specs": 10,
+        "package-registry": 10,
+        "github": 10,
+        "changelog": 10,
+        "forums": 10,
+        "web": 10
+      },
+      "candidateLabelCounts": {
+        "web": 96,
+        "papers": 9,
+        "github": 29,
+        "security": 2,
+        "specs": 3,
+        "changelog": 1
+      },
+      "candidateReviewSources": {
+        "pi_review": 140
+      },
+      "duplicateGoldQueries": [],
+      "missingRequiredLabels": [],
+      "minClassCount": 10,
+      "minClassCountRequired": 5,
+      "trainWithNewCandidates": true,
+      "promoteSafe": true,
+      "warnings": []
+    },
+    "followup": {
+      "task": "followup",
+      "goldPath": "data/followup/gold-followup.jsonl",
+      "candidatePath": "data/followup/log-candidates/followup-pi-accepted.jsonl",
+      "goldRows": 26,
+      "candidateRows": 18,
+      "reviewedCandidateRows": 18,
+      "prelabelCandidateRows": 0,
+      "labelCounts": {
+        "stop": 26
+      },
+      "candidateLabelCounts": {
+        "need_recency": 9,
+        "need_primary_source": 3,
+        "need_authority": 2,
+        "need_more_sources": 4
+      },
+      "candidateReviewSources": {
+        "pi_review": 18
+      },
+      "duplicateGoldQueries": [],
+      "missingRequiredLabels": [
+        "need_more_sources",
+        "need_authority",
+        "need_primary_source",
+        "need_recency",
+        "need_version_context",
+        "need_conflict_resolution"
+      ],
+      "minClassCount": 26,
+      "minClassCountRequired": 5,
+      "trainWithNewCandidates": true,
+      "promoteSafe": false,
+      "warnings": [
+        "single_class_gold",
+        "missing_required_labels"
+      ]
+    },
+    "conflict": {
+      "task": "conflict",
+      "goldPath": "data/router/gold-conflict-structured.jsonl",
+      "candidatePath": "data/router/log-candidates/conflict-pi-accepted.jsonl",
+      "goldRows": 80,
+      "candidateRows": 6,
+      "reviewedCandidateRows": 6,
+      "prelabelCandidateRows": 0,
+      "labelCounts": {
+        "needs_review": 11,
+        "no_conflict": 53,
+        "resolved_by_recency": 4,
+        "resolved_by_authority": 12
+      },
+      "candidateLabelCounts": {
+        "no_conflict": 6
+      },
+      "candidateReviewSources": {
+        "pi_review": 6
+      },
+      "duplicateGoldQueries": [],
+      "missingRequiredLabels": [],
+      "minClassCount": 4,
+      "minClassCountRequired": 5,
+      "trainWithNewCandidates": true,
+      "promoteSafe": false,
+      "warnings": [
+        "low_min_class_count"
+      ]
+    },
+    "sufficiency": {
+      "task": "sufficiency",
+      "goldPath": "data/router/gold-sufficiency-structured.jsonl",
+      "candidatePath": "data/router/log-candidates/sufficiency-pi-accepted.jsonl",
+      "goldRows": 78,
+      "candidateRows": 18,
+      "reviewedCandidateRows": 18,
+      "prelabelCandidateRows": 0,
+      "labelCounts": {
+        "need_authority": 17,
+        "sufficient": 54,
+        "need_more_sources": 5,
+        "need_version_context": 2
+      },
+      "candidateLabelCounts": {
+        "need_authority": 8,
+        "sufficient": 10
+      },
+      "candidateReviewSources": {
+        "pi_review": 18
+      },
+      "duplicateGoldQueries": [],
+      "missingRequiredLabels": [
+        "need_recency"
+      ],
+      "minClassCount": 2,
+      "minClassCountRequired": 5,
+      "trainWithNewCandidates": true,
+      "promoteSafe": false,
+      "warnings": [
+        "missing_required_labels",
+        "low_min_class_count"
+      ]
+    }
+  }
+}

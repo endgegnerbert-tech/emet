@@ -1,0 +1,92 @@
+{
+  "generatedAt": "2026-05-26T22:28:07.364Z",
+  "minConfidence": 0.85,
+  "tasks": {
+    "domain": {
+      "reviewed": 175,
+      "accepted": 140,
+      "needsHuman": 35,
+      "acceptedLabels": {
+        "web": 96,
+        "papers": 9,
+        "github": 29,
+        "security": 2,
+        "specs": 3,
+        "changelog": 1
+      },
+      "humanLabels": {
+        "papers": 1,
+        "web": 27,
+        "specs": 2,
+        "github": 4,
+        "changelog": 1
+      },
+      "files": {
+        "reviewed": "data/router/log-candidates/domain-pi-reviewed.jsonl",
+        "accepted": "data/router/log-candidates/domain-pi-accepted.jsonl",
+        "human": "data/router/log-candidates/domain-needs-human.jsonl"
+      }
+    },
+    "sufficiency": {
+      "reviewed": 175,
+      "accepted": 18,
+      "needsHuman": 157,
+      "acceptedLabels": {
+        "need_authority": 8,
+        "sufficient": 10
+      },
+      "humanLabels": {
+        "need_more_sources": 114,
+        "need_authority": 29,
+        "sufficient": 12,
+        "need_recency": 2
+      },
+      "files": {
+        "reviewed": "data/router/log-candidates/sufficiency-pi-reviewed.jsonl",
+        "accepted": "data/router/log-candidates/sufficiency-pi-accepted.jsonl",
+        "human": "data/router/log-candidates/sufficiency-needs-human.jsonl"
+      }
+    },
+    "conflict": {
+      "reviewed": 169,
+      "accepted": 6,
+      "needsHuman": 163,
+      "acceptedLabels": {
+        "no_conflict": 6
+      },
+      "humanLabels": {
+        "no_conflict": 19,
+        "needs_review": 144
+      },
+      "files": {
+        "reviewed": "data/router/log-candidates/conflict-pi-reviewed.jsonl",
+        "accepted": "data/router/log-candidates/conflict-pi-accepted.jsonl",
+        "human": "data/router/log-candidates/conflict-needs-human.jsonl"
+      }
+    },
+    "followup": {
+      "reviewed": 175,
+      "accepted": 18,
+      "needsHuman": 157,
+      "acceptedLabels": {
+        "need_recency": 9,
+        "need_primary_source": 3,
+        "need_authority": 2,
+        "need_more_sources": 4
+      },
+      "humanLabels": {
+        "need_recency": 26,
+        "need_more_sources": 71,
+        "need_authority": 50,
+        "need_primary_source": 8,
+        "need_version_context": 1,
+        "stop": 1
+      },
+      "files": {
+        "reviewed": "data/followup/log-candidates/followup-pi-reviewed.jsonl",
+        "accepted": "data/followup/log-candidates/followup-pi-accepted.jsonl",
+        "human": "data/followup/log-candidates/followup-needs-human.jsonl"
+      }
+    }
+  }
+}
