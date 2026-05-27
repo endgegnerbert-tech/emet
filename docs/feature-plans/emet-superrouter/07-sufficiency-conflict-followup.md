@@ -2,7 +2,17 @@
 
 ## Goal
 
-Replace brittle one-shot decisions with calibrated evidence-aware decisions.
+Replace brittle one-shot decisions with calibrated evidence-aware decisions over family + overlay aware evidence state.
+
+Routing context for all three models:
+
+```text
+query understanding outputs
+domain family
+overlays
+source-policy flags
+manual hint / forced override marker
+```
 
 ## Sufficiency model
 
@@ -72,6 +82,8 @@ need_conflict_resolution
 ask_clarifying_question
 ```
 
+Best-practice note: keep this action space evidence-oriented. Do not explode it into topic labels. If the next search needs a different retrieval policy, encode that as family/overlay updates in the trace first, then let Phase 8 policy decide whether to switch family or add overlays.
+
 ## Training data
 
 Only true emet labels should drive these models:
@@ -90,3 +102,4 @@ External datasets can provide features, not final labels.
 - Better than current heuristics on held-out emet traces.
 - Abstains when confidence is low.
 - High-risk queries require stronger evidence thresholds.
+- Family/overlay-aware features beat flat-domain-only baselines before promotion.

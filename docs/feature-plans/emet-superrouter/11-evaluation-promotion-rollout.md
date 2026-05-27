@@ -7,7 +7,7 @@ Prevent clever models from making emet worse.
 ## Required eval sets
 
 ```text
-domain gold holdout
+family + overlay aware domain holdout
 query-understanding holdout
 source-authority holdout
 sufficiency holdout
@@ -22,7 +22,7 @@ high-risk regression suite
 | Model | Primary metric | Safety metric |
 |---|---|---|
 | Query Understanding | macro-F1 / calibration | abstain on low confidence |
-| Domain Router | macro-F1 | high-risk downgrades = 0 |
+| Domain Router | family macro-F1 + overlay F1 / calibration | high-risk downgrades = 0 |
 | Source Authority | precision on authoritative | no primary-source false discard |
 | Page Quality | blocked/thin detection | no official-doc loss |
 | Sufficiency | action macro-F1 | premature-stop rate down |
@@ -40,6 +40,7 @@ high-risk downgrades are zero
 runtime latency budget holds
 rollback flag exists
 trace explains decision
+family/overlay outputs remain backwards-compatible with legacy flat aliases
 ```
 
 ## Rollout order
@@ -47,8 +48,8 @@ trace explains decision
 ```text
 shadow mode
 feature flag for internal runs
-low-risk domains only
-all domains with guardrail veto
+low-risk families only
+all families with guardrail veto
 production default
 ```
 
@@ -61,4 +62,5 @@ env flag disable
 rules fallback
 previous model artifact
 metrics comparison report
+family/overlay alias compatibility path
 ```

@@ -8,6 +8,8 @@ Test whether recursive reasoning improves emet's next-action policy.
 
 Start with TRM. Consider HRM only after TRM and baselines are measured.
 
+Do not use TRM to rediscover taxonomy. Family/overlay structure should already exist in the trace; TRM only refines next-action policy over that structured state.
+
 ```text
 Use TRM for: research policy refinement
 Do not use TRM for: simple domain routing, page quality, one-shot query type
@@ -36,7 +38,9 @@ evidence state_0
 ```text
 query embedding
 query_understanding logits
-domain one-hot
+domain-family one-hot
+overlay multi-hot
+source-policy flag vector
 guardrail flags
 source counts
 authority/primary/recent counts
@@ -59,7 +63,9 @@ fetch_primary_source
 fetch_recent
 fetch_version_context
 resolve_conflict
-switch_domain_pack
+switch_family
+add_overlay
+tighten_source_policy
 ask_clarifying_question
 ```
 

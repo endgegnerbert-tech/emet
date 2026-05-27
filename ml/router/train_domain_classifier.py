@@ -11,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.svm import LinearSVC
 
-HIGH_RISK_CLASSES = {"security", "papers", "specs"}
+HIGH_RISK_CLASSES = {"security", "papers", "specs", "changelog", "medical", "legal", "finance", "trading", "standards"}
 PRECISION_TARGETS = (0.95, 0.90, 0.85)
 MIN_DEFAULT_THRESHOLD = 0.35
 MIN_HIGH_RISK_THRESHOLD = 0.55

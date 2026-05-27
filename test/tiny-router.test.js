@@ -43,6 +43,10 @@ test("tiny router preserves high-risk heuristic domains over web downgrades", ()
   assert.equal(chooseTinyRouterDomain("web", "github"), "github");
 });
 
+test("tiny router keeps heuristic-only phase-4 domains until the model is retrained", () => {
+  assert.equal(chooseTinyRouterDomain("medical", "web", { supportedDomains: new Set(["web", "github", "security"]) }), "medical");
+});
+
 
 test("tiny router domain thresholds can be calibrated per domain", () => {
   const calibration = {

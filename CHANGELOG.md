@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.1.5
+
+### Added
+- **Phase 4 Family + Overlay Router:** Added a stable routing architecture built around domain families (`web`, `developer-docs`, `academic`, `regulated`, `current-events`, `commerce`, `community`, `local-government`) plus composable overlays such as `security`, `github`, `changelog`, `shopify`, `official-only`, `recency-required`, and `version-sensitive`.
+- **Manual Routing Controls:** Added optional `domainHint`, `familyHint`, `overlays`, `sourcePolicy`, and `forceDomain` tool options so expert users and host agents can guide retrieval policy without breaking automatic routing.
+- **Compatibility Guards:** Added runtime support that keeps legacy flat pack names working as aliases while preserving family/overlay structure internally and protecting heuristic-only domains until the tiny-router model is retrained.
+- **Phase Plan Alignment:** Updated Superrouter feature-plan docs for Phases 4–12 so later work now targets family/overlay/source-policy controls instead of flat pack sprawl.
+- **Regression Coverage:** Added tests for family/overlay routing, manual hint composition, forced domain overrides, and family-aware research config behavior.
+
+### Changed
+- **Domain Resolution Service Layer:** Centralized family/overlay selection in `lib/domains/index.js` so auto routing, hints, forced overrides, and policy composition share one implementation.
+- **Research Runtime Config:** `runWebResearch()` and `getResearchConfig()` now carry `domainFamily`, `overlays`, and `sourcePolicy` through runtime config, traces, and cache keys.
+- **Source Policy Heuristics:** Expanded follow-up queries, authority rules, and protected-domain handling to work with the new family/overlay architecture while keeping safety-first fallbacks.
+- **Domain Evaluation Assets:** Refreshed the gold domain draft set and baseline metrics for the expanded taxonomy; high-risk downgrades to `web` remain zero on the heuristic baseline.
+- **Package Metadata:** Bumped package/server metadata to `1.1.5` and refreshed README messaging around routing architecture and current test coverage.
+
 ## 1.1.4
 
 ### Added

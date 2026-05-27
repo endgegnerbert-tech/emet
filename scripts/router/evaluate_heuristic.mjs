@@ -43,7 +43,7 @@ function main() {
   const y_pred = [];
   
   let highRiskDowngrades = 0;
-  const highRiskClasses = new Set(["security", "papers", "specs"]);
+  const highRiskClasses = new Set(["security", "papers", "specs", "changelog", "medical", "legal", "finance", "trading", "standards"]);
   
   for (const ex of examples) {
     y_true.push(ex.label);

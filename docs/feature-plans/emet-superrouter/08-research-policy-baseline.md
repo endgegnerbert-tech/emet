@@ -20,7 +20,9 @@ fetch_primary_source
 fetch_recent
 fetch_version_context
 resolve_conflict
-switch_domain_pack
+switch_family
+add_overlay
+tighten_source_policy
 ask_clarifying_question
 ```
 
@@ -28,7 +30,9 @@ ask_clarifying_question
 
 ```text
 query understanding features
-domain pack
+domain family
+overlays
+source-policy flags
 turn index
 previous actions
 source count
@@ -44,6 +48,8 @@ high-risk guardrail flags
 ```
 
 ## Best baseline models
+
+Best-practice guardrail: keep the action space small and composable. Prefer `switch_family`, `add_overlay`, and `tighten_source_policy` over inventing many flat topic-specific actions.
 
 Train in this order:
 
@@ -62,3 +68,4 @@ TRM/HRM is only useful if recursive reasoning beats simple baselines. If a small
 - Lower unnecessary-fetch rate.
 - No high-risk downgrade.
 - Better action accuracy/F1 than separate heuristic routers.
+- Policy changes retrieval through family/overlay/source-policy controls, not by reintroducing flat pack sprawl.

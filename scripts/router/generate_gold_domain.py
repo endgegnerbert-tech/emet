@@ -1,123 +1,187 @@
 import json
 
-examples = [
-    # Security
-    ("CVE-2024-3094 xz utils", "security"),
-    ("recent openssh vulnerability", "security"),
-    ("log4j exploit mitigation", "security"),
-    ("CVE-2023-44487 details", "security"),
-    ("cisa advisory for ivanti", "security"),
-    ("spring framework RCE", "security"),
-    ("github security advisory GHSA-xxx", "security"),
-    ("mitre cve database search", "security"),
-    ("nvd severity for latest curl cve", "security"),
-    ("is my server vulnerable to heartbleed", "security"),
-    
-    # Vendor-Status
-    ("GitHub actions runner outage", "vendor-status"),
-    ("is AWS us-east-1 down", "vendor-status"),
-    ("cloudflare 502 bad gateway today", "vendor-status"),
-    ("slack status page", "vendor-status"),
-    ("npm registry incident report", "vendor-status"),
-    ("vercel deployment failing outage", "vendor-status"),
-    ("discord connection issues right now", "vendor-status"),
-    ("openai api status", "vendor-status"),
-    ("azure active directory degradation", "vendor-status"),
-    ("datadog intake delayed", "vendor-status"),
-
-    # Papers
-    ("attention is all you need paper", "papers"),
-    ("transformers arxiv 2017", "papers"),
-    ("llama 3 technical report", "papers"),
-    ("research paper on tokenization", "papers"),
-    ("doi 10.1145/3357384.3357396", "papers"),
-    ("scientific study on sleep and memory", "papers"),
-    ("semantic scholar graph neural networks", "papers"),
-    ("pubmed latest research on mrna", "papers"),
-    ("nature article on quantum computing", "papers"),
-    ("deepseek r1 math paper", "papers"),
-
-    # Specs
-    ("rfc 2616 http 1.1", "specs"),
-    ("html5 w3c specification", "specs"),
-    ("ecmascript 2024 language spec", "specs"),
-    ("css grid standard", "specs"),
-    ("whatwg fetch standard", "specs"),
-    ("json rfc 8259", "specs"),
-    ("oauth 2.0 specification", "specs"),
-    ("webgl 2.0 reference", "specs"),
-    ("openapi 3.1 standard", "specs"),
-    ("posix standard signals", "specs"),
-
-    # Package-Registry
-    ("npm install lodash", "package-registry"),
-    ("pypi requests package", "package-registry"),
-    ("cargo add serde", "package-registry"),
-    ("maven org.springframework", "package-registry"),
-    ("gem install rails", "package-registry"),
-    ("docker pull ubuntu", "package-registry"),
-    ("go get github.com/gin-gonic/gin", "package-registry"),
-    ("composer require guzzlehttp/guzzle", "package-registry"),
-    ("nuget newtonsoft.json", "package-registry"),
-    ("cran ggplot2 package", "package-registry"),
-
-    # Github
-    ("github pull request #123 on react", "github"),
-    ("issue 54 on facebook/react", "github"),
-    ("vercel next.js discussions", "github"),
-    ("how to open a github issue", "github"),
-    ("github repo torvalds/linux", "github"),
-    ("tensorflow github commits", "github"),
-    ("pytorch pull request review", "github"),
-    ("github source code for fastapi", "github"),
-    ("search github issues for bug", "github"),
-    ("kubernetes github repository", "github"),
-
-    # Changelog
-    ("react 19 release notes", "changelog"),
-    ("what is new in python 3.12", "changelog"),
-    ("next.js changelog version 14", "changelog"),
-    ("ubuntu 24.04 release history", "changelog"),
-    ("latest updates in vscode", "changelog"),
-    ("docker desktop release notes", "changelog"),
-    ("vue 3.4 changelog", "changelog"),
-    ("kubernetes v1.30 changelog", "changelog"),
-    ("rust 1.77 release notes", "changelog"),
-    ("postgres 16 version history", "changelog"),
-
-    # Forums
-    ("stackoverflow how to exit vim", "forums"),
-    ("reddit r/programming", "forums"),
-    ("discourse rust user forum", "forums"),
-    ("hacker news discussion on ai", "forums"),
-    ("stack overflow fix null pointer", "forums"),
-    ("quora why is python popular", "forums"),
-    ("reddit local llama fine tuning", "forums"),
-    ("swift forums generics", "forums"),
-    ("unity answers movement script", "forums"),
-    ("stackexchange physics quantum", "forums"),
-
-    # Web (General)
-    ("how to boil an egg", "web"),
-    ("best movies of 2023", "web"),
-    ("weather in new york today", "web"),
-    ("who is the ceo of microsoft", "web"),
-    ("history of the roman empire", "web"),
-    ("how does a car engine work", "web"),
-    ("capital of france", "web"),
-    ("population of tokyo", "web"),
-    ("what is the speed of light", "web"),
-    ("how to tie a tie", "web"),
-]
+DOMAIN_EXAMPLES = {
+    "security": [
+        "CVE-2024-3094 xz utils",
+        "recent openssh vulnerability",
+        "log4j exploit mitigation",
+        "CISA advisory for Ivanti",
+        "GitHub security advisory GHSA-xxxx",
+        "NVD severity for latest curl CVE",
+    ],
+    "vendor-status": [
+        "GitHub Actions runner outage",
+        "is AWS us-east-1 down",
+        "cloudflare degraded status today",
+        "Slack status page incident",
+        "OpenAI API status",
+        "Vercel outage right now",
+    ],
+    "package-registry": [
+        "npm install lodash",
+        "PyPI requests package",
+        "cargo add serde",
+        "maven org.springframework package",
+        "composer require guzzlehttp/guzzle",
+        "docker pull ubuntu",
+    ],
+    "github": [
+        "GitHub pull request 123 on react",
+        "issue 54 on facebook/react",
+        "Vercel next.js discussions",
+        "GitHub repo torvalds/linux",
+        "TensorFlow GitHub commits",
+        "search GitHub issues for bug",
+    ],
+    "changelog": [
+        "React 19 release notes",
+        "what is new in Python 3.12",
+        "Next.js changelog version 14",
+        "Docker Desktop release notes",
+        "Kubernetes v1.30 changelog",
+        "Postgres 16 version history",
+    ],
+    "papers": [
+        "attention is all you need paper",
+        "transformers arXiv 2017",
+        "LLama 3 technical report",
+        "DOI 10.1145/3357384.3357396",
+        "PubMed latest research on mRNA",
+        "scientific study on sleep and memory",
+    ],
+    "specs": [
+        "RFC 2616 HTTP 1.1",
+        "HTML5 W3C specification",
+        "ECMAScript 2024 language spec",
+        "WHATWG fetch standard",
+        "JSON RFC 8259",
+        "OpenAPI 3.1 specification",
+    ],
+    "forums": [
+        "Stack Overflow how to exit vim",
+        "Reddit r/programming",
+        "Rust discourse generics thread",
+        "Hacker News discussion on AI",
+        "Swift forums actor isolation",
+        "StackExchange physics quantum discussion",
+    ],
+    "legal": [
+        "GDPR data retention compliance requirements",
+        "official visa extension rules Germany",
+        "software copyright fair use case law",
+        "contract liability clause enforceability",
+        "HIPAA regulation update",
+        "EU trademark registration process",
+    ],
+    "medical": [
+        "clinical guideline for asthma treatment",
+        "drug dosage for amoxicillin official guidance",
+        "PubMed migraine prevention study",
+        "FDA warning for weight loss medication",
+        "WHO guidance for dengue treatment",
+        "contraindications for warfarin therapy",
+    ],
+    "finance": [
+        "ETF allocation for retirement portfolio",
+        "SEC filing for Tesla annual report",
+        "IRS guidance for RSU taxation",
+        "Federal Reserve interest rate decision",
+        "consumer finance mortgage disclosure rules",
+        "banking regulation capital requirements",
+    ],
+    "cloud-docs": [
+        "AWS IAM role trust policy reference",
+        "Azure Entra conditional access documentation",
+        "Google Cloud Run service account docs",
+        "Kubernetes deployment rollout strategy docs",
+        "Terraform provider alias reference",
+        "EKS load balancer controller docs",
+    ],
+    "ai-ml": [
+        "OpenAI embeddings model card",
+        "Anthropic tool use documentation",
+        "Hugging Face transformers benchmark",
+        "prompt engineering best practices for RAG",
+        "Gemini function calling docs",
+        "fine-tuning sentence transformer guide",
+    ],
+    "ecommerce": [
+        "best laptop under 1000 official pricing",
+        "Nike return policy official store",
+        "iPhone 16 price and shipping",
+        "compare vacuum cleaner product reviews",
+        "coupon code and discount for running shoes",
+        "official product page for DJI Mini",
+    ],
+    "trading": [
+        "Nasdaq premarket trading hours today",
+        "CME futures contract specs official",
+        "short interest reporting rules FINRA",
+        "options assignment risk official guidance",
+        "NYSE holiday market calendar",
+        "CFTC margin requirements for futures",
+    ],
+    "quantum": [
+        "quantum error correction roadmap IBM Research",
+        "qiskit surface code tutorial",
+        "quantum benchmark for trapped-ion systems",
+        "bosonic code practical roadmap",
+        "qLDPC decoding research overview",
+        "Google Quantum AI error correction update",
+    ],
+    "shopify": [
+        "Shopify admin API webhook docs",
+        "Shopify Liquid theme app extension guide",
+        "Shopify checkout extensibility migration",
+        "help.shopify.com order editing",
+        "Shopify Plus B2B setup docs",
+        "Shopify storefront API rate limits",
+    ],
+    "standards": [
+        "WCAG 2.2 color contrast requirements",
+        "NIST password guidelines latest",
+        "ISO 27001 control mapping official",
+        "PCI DSS 4.0 segmentation requirements",
+        "OWASP ASVS authentication standard",
+        "FedRAMP moderate baseline controls",
+    ],
+    "news-current-events": [
+        "latest OpenAI announcement headlines",
+        "breaking news on Nvidia earnings",
+        "current election headlines France",
+        "Reuters coverage of ECB rate decision",
+        "latest sanctions news Russia",
+        "official statement on major acquisition today",
+    ],
+    "local-howto": [
+        "parking permit city hall appointment near me",
+        "DMV vehicle registration office hours",
+        "trash pickup schedule county official",
+        "Bürgeramt Anmeldung appointment Berlin",
+        "local public transport fare card official",
+        "city business license application office",
+    ],
+    "web": [
+        "how to boil an egg",
+        "best movies of 2023",
+        "history of the roman empire",
+        "capital of France",
+        "population of Tokyo",
+        "how to tie a tie",
+    ],
+}
 
 with open("data/router/gold-domain.jsonl", "w") as f:
-    for query, label in examples:
-        d = {
-            "query": query,
-            "label": label,
-            "rationale": f"Synthetic gold example for {label}",
-            "inputText": query
-        }
-        f.write(json.dumps(d) + "\n")
+    total = 0
+    for label, queries in DOMAIN_EXAMPLES.items():
+        for query in queries:
+            row = {
+                "query": query,
+                "label": label,
+                "rationale": f"Synthetic gold example for {label}",
+                "inputText": query,
+            }
+            f.write(json.dumps(row) + "\n")
+            total += 1
 
-print(f"Generated {len(examples)} gold domain examples.")
+print(f"Generated {total} gold domain examples.")

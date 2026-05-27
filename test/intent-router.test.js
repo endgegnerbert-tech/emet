@@ -18,6 +18,31 @@ test("classifyQuestionDomain keeps outage reports out of github", () => {
   assert.equal(classifyQuestionDomain("Any outage or incident reported?"), "vendor-status");
 });
 
+test("classifyQuestionDomain routes medical guidance queries to medical", () => {
+  assert.equal(classifyQuestionDomain("clinical guideline for asthma treatment"), "medical");
+});
+
+test("classifyQuestionDomain routes legal compliance queries to legal", () => {
+  assert.equal(classifyQuestionDomain("GDPR data retention compliance requirements"), "legal");
+});
+
+test("classifyQuestionDomain distinguishes trading from broader finance", () => {
+  assert.equal(classifyQuestionDomain("nasdaq premarket trading hours today"), "trading");
+  assert.equal(classifyQuestionDomain("best ETF allocation for retirement portfolio"), "finance");
+});
+
+test("classifyQuestionDomain routes provider docs and model routing queries", () => {
+  assert.equal(classifyQuestionDomain("AWS IAM role trust policy reference"), "cloud-docs");
+  assert.equal(classifyQuestionDomain("OpenAI embeddings model card"), "ai-ml");
+  assert.equal(classifyQuestionDomain("Shopify admin API webhook docs"), "shopify");
+});
+
+test("classifyQuestionDomain adds standards, news, and local how-to domains", () => {
+  assert.equal(classifyQuestionDomain("WCAG 2.2 color contrast requirements"), "standards");
+  assert.equal(classifyQuestionDomain("latest OpenAI announcement headlines"), "news-current-events");
+  assert.equal(classifyQuestionDomain("parking permit city hall appointment near me"), "local-howto");
+});
+
 test("normalizeResearchMode keeps explicit mode and default fallback", () => {
   assert.equal(normalizeResearchMode({ mode: "academic" }, "fast"), "academic");
   assert.equal(normalizeResearchMode({}, "fast"), "fast");

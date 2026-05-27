@@ -44,6 +44,22 @@ test("getResearchConfig merges deep research options", () => {
   assert.equal(config.concurrentQueries, 2);
 });
 
+test("getResearchConfig composes manual family and overlay hints", () => {
+  const config = getResearchConfig({
+    mode: "deep",
+    query: "Shopify webhook migration",
+    familyHint: "developer-docs",
+    domainHint: "shopify",
+    overlays: ["changelog"],
+  });
+
+  assert.equal(config.domainFamily, "developer-docs");
+  assert.ok(config.overlays.includes("shopify"));
+  assert.ok(config.overlays.includes("changelog"));
+  assert.ok(config.allowedSources.includes("shopify.dev"));
+  assert.equal(config.requireAuthoritative, true);
+});
+
 test("evaluateSufficiency reports missing aspects and open questions", () => {
   const result = evaluateSufficiency({
     query: "DuckDB vs SQLite memory overhead",

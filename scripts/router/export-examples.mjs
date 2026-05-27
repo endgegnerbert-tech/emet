@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 import { classifyQuestionDomain } from "../../lib/research-intent.js";
 
-const HIGH_RISK_DOMAINS = new Set(["security", "papers", "specs"]);
+const HIGH_RISK_DOMAINS = new Set(["security", "papers", "specs", "changelog", "medical", "legal", "finance", "trading", "standards"]);
 
 function hashString(str) {
   return createHash("sha1").update(String(str || "")).digest("hex");

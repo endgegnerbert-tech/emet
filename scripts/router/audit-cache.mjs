@@ -16,7 +16,7 @@ const REQUIRED_FIELDS = [
   "sourceTypes",
 ];
 
-const HIGH_RISK_DOMAINS = new Set(["security", "papers", "specs"]);
+const HIGH_RISK_DOMAINS = new Set(["security", "papers", "specs", "changelog", "medical", "legal", "finance", "trading", "standards"]);
 
 function increment(map, key) {
   const normalized = key === undefined || key === null || key === "" ? "missing" : String(key);

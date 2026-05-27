@@ -102,6 +102,12 @@ export default function webResearchExtension(pi) {
       force: Type.Optional(Type.Boolean({ description: "Ignore cache" })),
       isolate: Type.Optional(Type.Boolean({ description: "No cache reuse" })),
       options: Type.Optional(Type.Object({
+        domain: Type.Optional(Type.String({ description: "Explicit domain/pack alias, or auto" })),
+        domainHint: Type.Optional(Type.String({ description: "Soft domain/pack hint; router may override" })),
+        familyHint: Type.Optional(Type.String({ description: "Soft routing family hint" })),
+        overlays: Type.Optional(Type.Array(Type.String(), { description: "Optional policy overlays" })),
+        sourcePolicy: Type.Optional(Type.String({ description: "Optional source-policy overlay" })),
+        forceDomain: Type.Optional(Type.Boolean({ description: "Treat domain as explicit override" })),
         allowedSources: Type.Optional(Type.Array(Type.String())),
         maxTurns: Type.Optional(Type.Number()),
         maxSites: Type.Optional(Type.Number()),

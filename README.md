@@ -3,7 +3,7 @@
 ![emet logo](docs/assets/emet-logo.png)
 
 [![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
-[![tests](https://img.shields.io/badge/tests-121%2F121-brightgreen)](https://github.com/endgegnerbert-tech/emet)
+[![tests](https://img.shields.io/badge/tests-187%2F187-brightgreen)](https://github.com/endgegnerbert-tech/emet)
 [![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
 
 **The Zero-Setup Research Engine for Autonomous AI Agents.**
@@ -51,7 +51,7 @@ Best of all? **Zero setup.** No external search API keys, no heavy local LLMs, a
 - 🚀 **Lightning Fast:** Powered by a Hybrid Tiny-Router Architecture (Model2Vec + SVC), routing queries in **< 0.6 milliseconds**.
 - 🛡️ **Anti-Hallucination:** Built-in Veto-Power for high-risk queries. If a security question only finds blog posts, the system forces a follow-up to find authoritative NIST/CVE data.
 - 🕸️ **Resilient Fetching:** Pre-emptively escalates blocked, JS-heavy, or thin pages through an integrated, robust Python `Scrapling` daemon (via IPC JSON-RPC 2.0).
-- 🧩 **Domain Packs:** Built-in heuristics for `github`, `security`, `papers`, `package-registry`, and more.
+- 🧩 **Domain Families + Overlays:** Routes through stable retrieval families with composable overlays such as `security`, `github`, `changelog`, `shopify`, and `official-only`.
 - 📊 **Structured Outputs:** Returns citations, code blocks, missing aspects, confidence scores, and conflict summaries (e.g., "Source A contradicts Source B").
 - 📂 **Local Context:** Ingests local files (`options.files`) to ground web research in your current repository context.
 

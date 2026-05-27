@@ -14,8 +14,10 @@ Build in small slices. Every slice must be testable, measurable, and reversible.
 ## Slice 2: stronger domain router
 
 - Merge safe reviewed domain rows.
-- Add 5-10 new domain packs only where source policy changes.
-- Train calibrated Model2Vec + SVC/LR.
+- Stabilize a small set of domain families.
+- Add overlays only where source policy changes.
+- Keep legacy flat labels as compatibility aliases.
+- Train calibrated Model2Vec + SVC/LR for family routing first; add overlay heads/rules second.
 - Promote only if high-risk downgrade = 0.
 
 ## Slice 3: query-understanding model
@@ -26,7 +28,7 @@ Build in small slices. Every slice must be testable, measurable, and reversible.
 
 ## Slice 4: source authority + page quality
 
-- Convert existing authority rules into weak labels.
+- Convert existing family + overlay authority rules into weak labels.
 - Review uncertain source examples.
 - Add source score trace output.
 - Use for ranking first, not hard rejection.
@@ -34,6 +36,7 @@ Build in small slices. Every slice must be testable, measurable, and reversible.
 ## Slice 5: evidence graph
 
 - Serialize source/claim/version/evidence state per turn.
+- Preserve domain family, overlays, and source-policy flags per turn.
 - Use the same state for sufficiency/conflict/follow-up.
 - Add replay script for traces.
 
@@ -47,6 +50,7 @@ Build in small slices. Every slice must be testable, measurable, and reversible.
 ## Slice 7: unified research policy baseline
 
 - Train next-action model over evidence states.
+- Let it operate on family + overlay + source-policy controls.
 - Compare with separate routers.
 - Shadow mode first.
 
@@ -81,4 +85,6 @@ models understand queries and sources
 policy decides next actions
 TRM optionally refines multi-step decisions
 logs keep improving the system
+families stay stable
+overlays stay composable
 ```

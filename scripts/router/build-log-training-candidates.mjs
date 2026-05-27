@@ -14,7 +14,7 @@ import {
   sourceMetaFromPages,
 } from "./followup-log-utils.js";
 
-const HIGH_RISK_DOMAINS = new Set(["security", "papers", "specs"]);
+const HIGH_RISK_DOMAINS = new Set(["security", "papers", "specs", "changelog", "medical", "legal", "finance", "trading", "standards"]);
 const DEFAULT_FIXTURE_QUERIES = new Set([
   "cache probe unique",
   "topic guidance",
