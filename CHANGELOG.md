@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.3
+
+### Added
+- **Canonical Training Schema:** Added a unified, versioned JSON schema and JS validation layer for all router machine learning examples (`docs/schemas/router-training-row.schema.json`, `lib/router-training-schema.js`).
+- **Data Governance Audit:** Added `scripts/router/audit-data-governance.mjs` to validate Phase 2 governance rules (split separation, valid schemas, review thresholds, privacy opt-ins).
+- **Review Provenance Service:** Extracted a shared `summarizeReviewProvenance` service to reliably parse review quality and confidence across pipeline stages.
+
+### Changed
+- **Training Readiness Gate:** Upgraded the training-readiness audit script to block candidate promotion when data lacks minimum confidence, provenance, or requires human review.
+- **Documentation Updates:** Marked Superrouter Phase 2 (Data Governance, Schemas, and Labels) as completed in the feature plans.
+
 ## 1.1.2
 
 ### Added

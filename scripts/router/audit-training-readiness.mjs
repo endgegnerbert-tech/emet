@@ -3,6 +3,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { summarizeReviewProvenance } from "../../lib/router-training-schema.js";
+
 const DEFAULT_TASKS = {
   domain: {
     gold: "data/router/gold-domain.jsonl",
@@ -29,9 +31,6 @@ const DEFAULT_TASKS = {
     requiredLabels: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context"],
   },
 };
-
-const REVIEWED_SOURCES = new Set(["human_gold", "human_review", "ai_accepted", "reviewed", "pi_review", "llm_review"]);
-const PRELABEL_SOURCES = new Set(["ai_prelabel", "heuristic_prelabel", "observed_prelabel", "candidate_heuristic"]);
 
 function readJsonl(path) {
   if (!path || !existsSync(path)) return [];
@@ -65,9 +64,7 @@ export function auditTask(name, config = {}) {
   const candidates = readJsonl(config.candidates);
   const labelCounts = countBy(gold, "label");
   const candidateLabelCounts = countBy(candidates, "label");
-  const candidateReviewSources = countBy(candidates, "reviewSource");
-  const reviewedCandidates = candidates.filter((row) => REVIEWED_SOURCES.has(row.reviewSource));
-  const prelabelCandidates = candidates.filter((row) => PRELABEL_SOURCES.has(row.reviewSource));
+  const reviewSummary = summarizeReviewProvenance(candidates);
   const duplicates = duplicateQueries(gold);
   const minCount = minClassCount(labelCounts);
   const presentLabels = new Set(Object.keys(labelCounts).filter((label) => label !== "<missing>"));
@@ -81,8 +78,11 @@ export function auditTask(name, config = {}) {
   if (missingRequiredLabels.length) warnings.push("missing_required_labels");
   if (duplicates.length) warnings.push("duplicate_gold_queries");
   if (minCount < Number(config.minClassCount || 5)) warnings.push("low_min_class_count");
-  if (candidates.length && reviewedCandidates.length === 0) warnings.push("new_candidates_not_human_reviewed");
-  if (prelabelCandidates.length) warnings.push("prelabels_must_not_be_promoted_without_review");
+  if (candidates.length && reviewSummary.reviewedRows === 0) warnings.push("new_candidates_not_human_reviewed");
+  if (reviewSummary.prelabelRows) warnings.push("prelabels_must_not_be_promoted_without_review");
+  if (reviewSummary.missingReviewRows) warnings.push("candidate_missing_review_source");
+  if (reviewSummary.missingConfidenceRows) warnings.push("candidate_missing_review_confidence");
+  if (reviewSummary.needsHumanRows) warnings.push("candidate_needs_human_review");
 
   return {
     task: name,
@@ -90,16 +90,19 @@ export function auditTask(name, config = {}) {
     candidatePath: config.candidates,
     goldRows: gold.length,
     candidateRows: candidates.length,
-    reviewedCandidateRows: reviewedCandidates.length,
-    prelabelCandidateRows: prelabelCandidates.length,
+    reviewedCandidateRows: reviewSummary.reviewedRows,
+    prelabelCandidateRows: reviewSummary.prelabelRows,
+    missingReviewCandidateRows: reviewSummary.missingReviewRows,
+    missingConfidenceCandidateRows: reviewSummary.missingConfidenceRows,
+    needsHumanCandidateRows: reviewSummary.needsHumanRows,
     labelCounts,
     candidateLabelCounts,
-    candidateReviewSources,
+    candidateReviewSources: reviewSummary.reviewSources,
     duplicateGoldQueries: duplicates.slice(0, 20),
     missingRequiredLabels,
     minClassCount: minCount,
     minClassCountRequired: Number(config.minClassCount || 5),
-    trainWithNewCandidates: reviewedCandidates.length > 0 && !warnings.includes("duplicate_gold_queries"),
+    trainWithNewCandidates: reviewSummary.reviewedRows > 0 && !warnings.includes("duplicate_gold_queries"),
     promoteSafe: warnings.length === 0,
     warnings,
   };

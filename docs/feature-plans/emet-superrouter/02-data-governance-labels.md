@@ -60,9 +60,30 @@ Tier 3: human reviewed
 Tier 4: gold eval holdout
 ```
 
+## Phase 2 implementation status
+
+Completed as the router data-governance layer:
+
+- Canonical training row helpers live in `lib/router-training-schema.js`.
+- The machine-readable schema is `docs/schemas/router-training-row.schema.json`.
+- The governance audit is `scripts/router/audit-data-governance.mjs` and writes `metrics/router/data-governance.json` by default.
+- `scripts/router/audit-training-readiness.mjs` now blocks train/promote when reviewed candidates lack provenance, confidence, or still need human review.
+- External dataset inventory remains in `experiments/emet-superrouter/manifests/datasets.json`; AOL logs stay opt-in only and uncommitted.
+
+## Operational gate
+
+Run before any router train/promote pass:
+
+```bash
+node scripts/router/audit-data-governance.mjs
+node scripts/router/audit-training-readiness.mjs
+```
+
+Treat a non-zero exit code as a hard stop for training.
+
 ## Acceptance criteria
 
-- One schema for all future training rows.
-- No raw/prelabel data enters training without `review.source` and `confidence`.
-- Separate train/dev/test/gold holdout.
-- No privacy-sensitive external log data committed.
+- One schema for all future training rows. ✅
+- No raw/prelabel data enters training without `review.source` and `confidence`. ✅
+- Separate train/dev/test/gold holdout. ✅
+- No privacy-sensitive external log data committed. ✅

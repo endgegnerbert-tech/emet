@@ -29,6 +29,24 @@ test("auditTask blocks prelabel-only candidates from promotion", () => {
   assert.ok(report.warnings.includes("prelabels_must_not_be_promoted_without_review"));
 });
 
+test("auditTask blocks reviewed candidates without confidence", () => {
+  const dir = mkdtempSync(join(tmpdir(), "emet-audit-confidence-"));
+  const gold = join(dir, "gold.jsonl");
+  const candidates = join(dir, "candidates.jsonl");
+  writeJsonl(gold, [
+    { query: "a", label: "x" },
+    { query: "b", label: "x" },
+    { query: "c", label: "y" },
+    { query: "d", label: "y" },
+  ]);
+  writeJsonl(candidates, [{ query: "new", label: "x", reviewSource: "pi_review" }]);
+
+  const report = auditTask("demo", { gold, candidates, minClassCount: 2 });
+  assert.equal(report.promoteSafe, false);
+  assert.equal(report.missingConfidenceCandidateRows, 1);
+  assert.ok(report.warnings.includes("candidate_missing_review_confidence"));
+});
+
 test("auditTrainingReadiness passes only when every task is clean", () => {
   const dir = mkdtempSync(join(tmpdir(), "emet-audit-all-"));
   const tasks = {};
