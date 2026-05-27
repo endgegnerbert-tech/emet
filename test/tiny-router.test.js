@@ -34,6 +34,7 @@ test("tiny router config keeps structured tasks off by default", () => {
   assert.equal(config.tasks.followup, true);
   assert.equal(config.tasks.conflict, false);
   assert.equal(config.tasks.sufficiency, false);
+  assert.equal(config.tasks.queryUnderstanding, false);
 });
 
 

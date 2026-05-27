@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.1.4
+
+### Added
+- **Query-Understanding Heuristics:** Added `lib/query-understanding.js` to classify query shape, answer shape, source family, recency need, and ambiguity with conservative heuristic fallback.
+- **Query-Understanding Training Pipeline:** Added Phase 3 multi-head training code and daemon support for optional tiny-router inference (`ml/router/query_understanding.py`, `ml/router/train_query_understanding.py`, `ml/router/daemon.py`, `ml/router/features.py`).
+- **Query-Understanding Datasets:** Added a weak-label export and a hand-labeled holdout set for Phase 3 evaluation (`scripts/router/export_query_understanding_examples.mjs`, `data/router/query-understanding-weak.jsonl`, `data/router/query-understanding-holdout.jsonl`).
+- **Regression Coverage:** Added focused tests for heuristic classification, planner feature merging, runtime trace output, and tiny-router config behavior (`test/query-understanding.test.js`, updated runtime tests).
+
+### Changed
+- **Planner Features:** Query-understanding now feeds recency, query hints, and search breadth into research planning as non-veto features with heuristic fallback.
+- **Runtime Trace Metadata:** `runWebResearch` now records query-understanding decisions in result metadata and runtime traces for future evaluation and promotion gates.
+- **Training Runbook:** Extended `ml/router/README.md` with a dedicated Phase 3 training flow and planner-only rollout guidance.
+
 ## 1.1.3
 
 ### Added

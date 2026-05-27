@@ -486,6 +486,8 @@ test("runWebResearch in deep mode performs follow-up research and finalizes resu
     assert.ok(Array.isArray(result.codeBlocks));
     assert.equal(result.runtimeTrace.schemaVersion, 2);
     assert.equal(typeof result.runtimeTrace.domainDecision.finalDomain, "string");
+    assert.equal(typeof result.meta.queryUnderstanding.query_shape, "string");
+    assert.equal(typeof result.runtimeTrace.queryUnderstandingDecision.final.query_shape, "string");
     assert.ok(result.runtimeTrace.turns.length >= 1);
     assert.ok(result.runtimeTrace.turns[0].searchResults.length >= 1);
     assert.equal(typeof result.runtimeTrace.turns[0].pageCandidates[0]?.text, "string");

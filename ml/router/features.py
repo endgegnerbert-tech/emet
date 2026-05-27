@@ -1,3 +1,5 @@
+import re
+
 import numpy as np
 from model2vec import StaticModel
 
@@ -57,4 +59,42 @@ def extract_followup_features(queries: list, modes: list, conflicts: list, sourc
     modes_np = encode_modes(modes)
     meta_np = encode_followup_meta(conflicts, sources_list)
     
+    return np.hstack([emb, modes_np, meta_np])
+
+
+def encode_query_understanding_meta(queries: list) -> np.ndarray:
+    """Encodes lightweight lexical/rule features for query-understanding heads."""
+    encoded = []
+    for query in queries:
+        q = str(query or "").strip().lower()
+        tokens = [token for token in re.split(r"[^a-z0-9]+", q) if token]
+        token_count = float(len(tokens))
+        row = [
+            1.0 if re.search(r"\b(vs\.?|versus|compare|comparison|better than|difference between)\b", q) else 0.0,
+            1.0 if re.search(r"\b(how to|how do i|guide|tutorial|walkthrough|setup|install|configure|migrate|upgrade)\b", q) else 0.0,
+            1.0 if re.search(r"\b(error|fix|debug|issue|problem|broken|fails?|failing|not working|exception)\b", q) else 0.0,
+            1.0 if re.search(r"\b(paper|papers|study|studies|survey|literature review|arxiv|doi|research|benchmark)\b", q) else 0.0,
+            1.0 if re.search(r"\b(current|latest|today|right now|currently|status|outage|incident|release|changelog|pricing|202[4-9])\b", q) else 0.0,
+            1.0 if re.search(r"\b(symptom|diagnosis|dosage|side effects?|treatment|medical|drug|medicine|disease|therapy|legal|law|regulation|gdpr|tax|contract|visa|immigration|compliance|policy|finance|financial|invest(?:ing|ment)?|loan|mortgage|insurance|retirement|credit score)\b", q) else 0.0,
+            1.0 if re.search(r"\b(buy|price|pricing|cost|cheap|cheapest|deal|shop|review|under \$?\d+|under \d+)\b", q) else 0.0,
+            1.0 if re.search(r"\b(github|readme|docs|documentation|api|reference|release notes?|npm|pypi|cargo)\b", q) else 0.0,
+            1.0 if re.search(r"\b(reddit|forum|stackoverflow|community|discourse)\b", q) else 0.0,
+            1.0 if re.search(r"\b(news|headline|announced|launch|earnings)\b", q) else 0.0,
+            1.0 if re.search(r"^(who|what|when|where|why|how|which)\b", q) else 0.0,
+            1.0 if re.search(r"\b(it|they|them|this|that|these|those|he|she)\b", q) else 0.0,
+            min(token_count / 20.0, 1.0),
+            min(float(sum(ch.isdigit() for ch in q)) / 8.0, 1.0),
+        ]
+        encoded.append(row)
+    return np.array(encoded, dtype=np.float32)
+
+
+def extract_query_understanding_features(queries: list, modes: list, emb_model: StaticModel = None, show_progress_bar: bool = False) -> np.ndarray:
+    """Extracts features for query-understanding heads."""
+    if emb_model is None:
+        emb_model = load_embedding_model()
+
+    emb = emb_model.encode(queries, show_progress_bar=show_progress_bar)
+    modes_np = encode_modes(modes)
+    meta_np = encode_query_understanding_meta(queries)
     return np.hstack([emb, modes_np, meta_np])

@@ -70,6 +70,32 @@ Outputs:
 - `metrics/router/conflict-structured-models.json`
 - `metrics/router/sufficiency-structured-models.json`
 
+## Phase 3 — query-understanding model
+
+Prepare auxiliary and weak in-domain rows:
+
+```bash
+python3 experiments/emet-superrouter/scripts/prepare_auxiliary_examples.py
+node scripts/router/export_query_understanding_examples.mjs
+```
+
+Train the multi-head query-understanding bundle on auxiliary data plus weak emet queries, then score it on the hand-labeled holdout:
+
+```bash
+python ml/router/train_query_understanding.py \
+  --input experiments/emet-superrouter/datasets/processed/auxiliary-query-understanding.jsonl data/router/query-understanding-weak.jsonl \
+  --holdout data/router/query-understanding-holdout.jsonl \
+  --out-dir .cache/models/emet-router/query-understanding \
+  --model-type auto
+```
+
+Outputs:
+
+- `.cache/models/emet-router/query-understanding/`
+- `metrics/router/query-understanding-models.json`
+
+Best-practice guardrail: keep this model planner-only. Let it add query hints, recency preference, and extra search breadth, but never let it veto safety rules or domain guardrails.
+
 ## Runtime flags
 
 ```bash
@@ -78,11 +104,12 @@ EMET_TINY_ROUTER_MODEL=.cache/models/emet-router
 EMET_TINY_ROUTER_TIMEOUT_MS=50
 EMET_TINY_ROUTER_DOMAIN=1
 EMET_TINY_ROUTER_FOLLOWUP=1
+EMET_TINY_ROUTER_QUERY_UNDERSTANDING=0
 EMET_TINY_ROUTER_CONFLICT=0
 EMET_TINY_ROUTER_SUFFICIENCY=0
 ```
 
-Keep conflict/sufficiency off until metrics are reviewed.
+Keep query-understanding/conflict/sufficiency off until metrics are reviewed. Query-understanding is safe to shadow or planner-only enable first.
 
 ## Server deploy
 
