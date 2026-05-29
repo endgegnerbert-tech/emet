@@ -10,7 +10,7 @@ export const REVIEW_LABELS = {
   domain: ["security", "vendor-status", "papers", "specs", "package-registry", "github", "changelog", "forums", "web"],
   followup: ["stop", "need_more_sources", "need_authority", "need_primary_source", "need_recency", "need_version_context", "need_conflict_resolution"],
   conflict: ANNOTATION_LABELS.conflict,
-  sufficiency: ANNOTATION_LABELS.sufficiency,
+  sufficiency: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context", "insufficient"],
   source_authority: ["primary_source", "authoritative", "secondary_but_good", "community_context", "weak_source", "unusable"],
   page_quality: ["usable", "thin", "blocked", "placeholder", "off_topic", "duplicate", "low_query_overlap"],
 };

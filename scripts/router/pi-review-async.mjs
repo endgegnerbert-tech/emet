@@ -9,7 +9,7 @@ const REVIEW_LABELS = {
   source_authority: ["primary_source", "authoritative", "secondary_but_good", "community_context", "weak_source", "unusable"],
   page_quality: ["usable", "thin", "blocked", "placeholder", "off_topic", "duplicate", "low_query_overlap"],
   conflict: ["no_conflict", "resolved_by_authority", "resolved_by_recency", "needs_review"],
-  sufficiency: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context"],
+  sufficiency: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context", "insufficient"],
   followup: ["stop", "need_more_sources", "need_authority", "need_primary_source", "need_recency", "need_version_context", "need_conflict_resolution"],
 };
 
