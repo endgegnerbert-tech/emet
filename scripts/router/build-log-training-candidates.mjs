@@ -215,7 +215,7 @@ export function buildCandidateSets(sessions = [], options = {}) {
     totalSessions: sessions.length,
     keptSessions: 0,
     skipped: {},
-    labels: { domain: {}, followup: {}, sufficiency: {}, conflict: {} },
+    labels: { domain: {}, followup: {}, sufficiency: {}, conflict: {}, source_authority: {}, page_quality: {} },
   };
   const examples = [];
   const followup = [];
@@ -232,6 +232,7 @@ export function buildCandidateSets(sessions = [], options = {}) {
     const query = String(session.query || "").trim();
     const mode = session.mode || run.mode || "fast";
     const sources = Array.isArray(run.sources) ? run.sources : [];
+    const firstTurnPages = Array.isArray(session.firstTurnPages) ? session.firstTurnPages : [];
     const sourceCount = sources.length;
     const domain = classifyQuestionDomain(query);
     const risk = HIGH_RISK_DOMAINS.has(domain) ? "high" : "low";
@@ -248,6 +249,37 @@ export function buildCandidateSets(sessions = [], options = {}) {
       meta: baseMeta,
     });
     report.labels.domain[domain] = (report.labels.domain[domain] || 0) + 1;
+
+    // Generate phase 5 synthetic candidates from the actual pages observed in this session
+    const allPages = [...firstTurnPages, ...sources];
+    const uniquePages = new Map();
+    for (const page of allPages) {
+      if (page && page.url) uniquePages.set(page.url, page);
+    }
+
+    for (const page of uniquePages.values()) {
+      const pageId = hashString(`log:page:${query}:${page.url}`);
+      examples.push({
+        id: hashString(`log:source_authority:${pageId}`),
+        task: "source_authority",
+        query,
+        inputText: `URL: ${page.url}\nTitle: ${page.title || ""}\nSnippet: ${page.snippet || page.text || ""}`,
+        label: "needs_review", // Placeholder for actual LLM review
+        labelSource: "candidate_only",
+        risk,
+        meta: { ...baseMeta, url: page.url, pageData: page },
+      });
+      examples.push({
+        id: hashString(`log:page_quality:${pageId}`),
+        task: "page_quality",
+        query,
+        inputText: `URL: ${page.url}\nTitle: ${page.title || ""}\nSnippet: ${page.snippet || page.text || ""}`,
+        label: "needs_review", // Placeholder for actual LLM review
+        labelSource: "candidate_only",
+        risk,
+        meta: { ...baseMeta, url: page.url, pageData: page },
+      });
+    }
 
     if (sourceCount > 0 && typeof run.sufficient === "boolean") {
       const label = run.sufficient ? "sufficient" : "insufficient";
@@ -336,6 +368,20 @@ export function buildCandidateSets(sessions = [], options = {}) {
       inputText: row.inputText,
       meta: { ...row.meta, labelSource: row.labelSource },
     })),
+    sourceAuthorityDraft: dedupedExamples.filter((row) => row.task === "source_authority").map((row) => ({
+      query: row.query,
+      candidateLabel: row.label,
+      rationale: "",
+      inputText: row.inputText,
+      meta: { ...row.meta, labelSource: row.labelSource },
+    })),
+    pageQualityDraft: dedupedExamples.filter((row) => row.task === "page_quality").map((row) => ({
+      query: row.query,
+      candidateLabel: row.label,
+      rationale: "",
+      inputText: row.inputText,
+      meta: { ...row.meta, labelSource: row.labelSource },
+    })),
     followupDraft: dedupedFollowup,
     report,
   };
@@ -351,6 +397,17 @@ export function prelabelRows(task, rows = []) {
       candidateLabel: row.candidateLabel || row.suggestedLabel || "",
       meta: row.meta || {},
       reviewSource: "heuristic_prelabel",
+    }));
+  }
+  if (task === "source_authority" || task === "page_quality") {
+    return rows.map((row) => ({
+      query: row.query,
+      label: "needs_review", // Require human/LLM to run through it
+      rationale: "Requires AI or Human review",
+      inputText: row.inputText || "",
+      candidateLabel: row.candidateLabel || "",
+      meta: row.meta || {},
+      reviewSource: "candidate_heuristic",
     }));
   }
 
@@ -438,6 +495,10 @@ async function main() {
   writeJsonl(join(args.outDir, "sufficiency-ai-reviewed.jsonl"), prelabelRows("sufficiency", candidates.sufficiencyDraft));
   writeJsonl(join(args.outDir, "conflict-draft.jsonl"), candidates.conflictDraft);
   writeJsonl(join(args.outDir, "conflict-ai-reviewed.jsonl"), prelabelRows("conflict", candidates.conflictDraft));
+  writeJsonl(join(args.outDir, "source_authority-draft.jsonl"), candidates.sourceAuthorityDraft);
+  writeJsonl(join(args.outDir, "source_authority-ai-reviewed.jsonl"), prelabelRows("source_authority", candidates.sourceAuthorityDraft));
+  writeJsonl(join(args.outDir, "page_quality-draft.jsonl"), candidates.pageQualityDraft);
+  writeJsonl(join(args.outDir, "page_quality-ai-reviewed.jsonl"), prelabelRows("page_quality", candidates.pageQualityDraft));
   writeJsonl(join(args.followupOutDir, "followup-draft.jsonl"), candidates.followupDraft);
   writeJsonl(join(args.followupOutDir, "followup-ai-reviewed.jsonl"), prelabelRows("followup", candidates.followupDraft));
   writeJson(join(args.outDir, "report.json"), candidates.report);

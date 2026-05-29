@@ -11,6 +11,8 @@ export const REVIEW_LABELS = {
   followup: ["stop", "need_more_sources", "need_authority", "need_primary_source", "need_recency", "need_version_context", "need_conflict_resolution"],
   conflict: ANNOTATION_LABELS.conflict,
   sufficiency: ANNOTATION_LABELS.sufficiency,
+  source_authority: ["primary_source", "authoritative", "secondary_but_good", "community_context", "weak_source", "unusable"],
+  page_quality: ["usable", "thin", "blocked", "placeholder", "off_topic", "duplicate", "low_query_overlap"],
 };
 
 function stableId(task, row = {}) {
@@ -80,6 +82,25 @@ export function buildReviewPrompt(task, row = {}) {
       "need_more_sources: evidence is too thin or too few independent sources.",
       "need_recency: current/latest/status query lacks fresh evidence.",
       "need_version_context: version/migration/compatibility query lacks exact version evidence.",
+    ],
+    source_authority: [
+      "Judge the authority and relevance of a source for a given query.",
+      "primary_source: the absolute primary publisher of this specific concept or fact.",
+      "authoritative: a highly credible, official, or peer-reviewed source.",
+      "secondary_but_good: a reputable aggregator, major blog, or high-quality news.",
+      "community_context: a forum, reddit, or stackoverflow post providing context.",
+      "weak_source: random unverified blog or SEO spam.",
+      "unusable: explicitly broken, irrelevant, or known-bad source.",
+    ],
+    page_quality: [
+      "Judge the usability and readability of the fetched page text.",
+      "usable: clear, relevant text that is long enough to read.",
+      "thin: too short or lacks substantive information.",
+      "blocked: explicitly blocked by a WAF, 403, or 429.",
+      "placeholder: captcha, turnstile, or 'attention required' pages.",
+      "off_topic: text does not match the query intent at all.",
+      "duplicate: exact duplicate of another processed source.",
+      "low_query_overlap: very few query terms appear in the text.",
     ],
   }[task];
 
