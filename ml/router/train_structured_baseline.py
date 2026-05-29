@@ -17,11 +17,15 @@ from sklearn.preprocessing import StandardScaler
 TASK_INPUTS = {
     "conflict": os.path.join("data", "router", "gold-conflict-structured.jsonl"),
     "sufficiency": os.path.join("data", "router", "gold-sufficiency-structured.jsonl"),
+    "source_authority": os.path.join("data", "router", "gold-source-authority-structured.jsonl"),
+    "page_quality": os.path.join("data", "router", "gold-page-quality-structured.jsonl"),
 }
 
 TASK_BASELINES = {
     "conflict": os.path.join("metrics", "router", "conflict-baseline-provisional.json"),
     "sufficiency": os.path.join("metrics", "router", "sufficiency-baseline-provisional.json"),
+    "source_authority": os.path.join("metrics", "router", "source-authority-baseline.json"),
+    "page_quality": os.path.join("metrics", "router", "page-quality-baseline.json"),
 }
 
 MODEL_BUILDERS = {
@@ -121,7 +125,7 @@ def load_baseline_metrics(task: str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--task", choices=["conflict", "sufficiency"], required=True)
+    parser.add_argument("--task", choices=["conflict", "sufficiency", "source_authority", "page_quality"], required=True)
     parser.add_argument("--input")
     parser.add_argument("--out-dir")
     args = parser.parse_args()

@@ -151,6 +151,40 @@ def main():
                     "confidence": confidence
                 }), flush=True)
 
+            elif task == "source_authority":
+                model_path = os.path.join(model_dir, "source_authority-structured", "model.joblib")
+                feature_names_path = os.path.join(model_dir, "source_authority-structured", "feature-names.json")
+                if not os.path.exists(model_path) or not os.path.exists(feature_names_path):
+                    print(json.dumps({"id": req_id, "error": "Source authority model not loaded"}), flush=True)
+                    continue
+
+                clf = load_model(model_path)
+                f_names = load_feature_names(feature_names_path)
+                feats = vectorize_structured_features(f_names, req.get("features", {}))
+                pred, confidence = predict_proba_like(clf, feats)
+                print(json.dumps({
+                    "id": req_id,
+                    "decision": str(pred),
+                    "confidence": confidence
+                }), flush=True)
+
+            elif task == "page_quality":
+                model_path = os.path.join(model_dir, "page_quality-structured", "model.joblib")
+                feature_names_path = os.path.join(model_dir, "page_quality-structured", "feature-names.json")
+                if not os.path.exists(model_path) or not os.path.exists(feature_names_path):
+                    print(json.dumps({"id": req_id, "error": "Page quality model not loaded"}), flush=True)
+                    continue
+
+                clf = load_model(model_path)
+                f_names = load_feature_names(feature_names_path)
+                feats = vectorize_structured_features(f_names, req.get("features", {}))
+                pred, confidence = predict_proba_like(clf, feats)
+                print(json.dumps({
+                    "id": req_id,
+                    "decision": str(pred),
+                    "confidence": confidence
+                }), flush=True)
+
             else:
                 print(json.dumps({"id": req_id, "error": f"Unknown task: {task}"}), flush=True)
 
