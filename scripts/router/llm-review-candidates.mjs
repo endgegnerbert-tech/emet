@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { ANNOTATION_LABELS } from "../../lib/router-annotation.js";
 
 export const REVIEW_LABELS = {
-  domain: ["security", "vendor-status", "papers", "specs", "package-registry", "github", "changelog", "forums", "web"],
+  domain: ["security", "medical", "legal", "trading", "finance", "vendor-status", "changelog", "github", "package-registry", "shopify", "papers", "news-current-events", "quantum", "ai-ml", "cloud-docs", "standards", "specs", "forums", "local-howto", "ecommerce", "web"],
   followup: ["stop", "need_more_sources", "need_authority", "need_primary_source", "need_recency", "need_version_context", "need_conflict_resolution"],
   conflict: ANNOTATION_LABELS.conflict,
   sufficiency: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context", "insufficient"],
@@ -48,14 +48,26 @@ export function buildReviewPrompt(task, row = {}) {
   const taskGuide = {
     domain: [
       "Choose the best domain for the query only.",
-      "Use security for vulnerabilities/CVEs/advisories.",
-      "Use vendor-status for outages/status pages/incidents.",
+      "Use security for vulnerabilities/CVEs.",
+      "Use medical for diagnosis/drugs/clinical.",
+      "Use legal for law/liability/contracts.",
+      "Use trading for forex/options/market hours.",
+      "Use finance for banking/investments/mortgage.",
+      "Use vendor-status for outages/status pages.",
+      "Use changelog for release notes/version history.",
+      "Use github for GitHub repos/issues/PRs.",
+      "Use package-registry for npm/PyPI/cargo.",
+      "Use shopify for liquid/shopify apps.",
       "Use papers for academic papers, arXiv, DOI, PubMed, studies.",
-      "Use specs for standards/RFC/W3C/WHATWG/language specifications.",
-      "Use package-registry for npm/PyPI/package metadata/version availability.",
-      "Use github for GitHub repos/issues/PRs/actions/API docs.",
-      "Use changelog for release notes, migration, breaking changes, version history.",
+      "Use news-current-events for breaking news/headlines.",
+      "Use quantum for qubits/quantum error correction.",
+      "Use ai-ml for LLMs/machine learning/neural networks/rag.",
+      "Use cloud-docs for AWS/Azure/GCP/k8s.",
+      "Use standards for NIST/ISO/SOC2/OWASP.",
+      "Use specs for RFC/OpenAPI/W3C.",
       "Use forums for Reddit/StackOverflow/community discussions.",
+      "Use local-howto for city hall/dmv/parking.",
+      "Use ecommerce for pricing/shipping/return policy.",
       "Use web for general web research not fitting another class.",
     ],
     followup: [

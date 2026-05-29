@@ -5,7 +5,7 @@ import { dirname } from "node:path";
 import { spawn } from "node:child_process";
 
 const REVIEW_LABELS = {
-  domain: ["security", "vendor-status", "papers", "specs", "package-registry", "github", "changelog", "forums", "web"],
+  domain: ["security", "medical", "legal", "trading", "finance", "vendor-status", "changelog", "github", "package-registry", "shopify", "papers", "news-current-events", "quantum", "ai-ml", "cloud-docs", "standards", "specs", "forums", "local-howto", "ecommerce", "web"],
   source_authority: ["primary_source", "authoritative", "secondary_but_good", "community_context", "weak_source", "unusable"],
   page_quality: ["usable", "thin", "blocked", "placeholder", "off_topic", "duplicate", "low_query_overlap"],
   conflict: ["no_conflict", "resolved_by_authority", "resolved_by_recency", "needs_review"],
@@ -14,7 +14,7 @@ const REVIEW_LABELS = {
 };
 
 const GUIDELINES = {
-  domain: `Use security for vulnerabilities/CVEs/advisories. Use vendor-status for outages/status pages. Use papers for academic/arxiv. Use specs for standards/RFCs. Use package-registry for npm/PyPI. Use github for repos/issues. Use changelog for release notes. Use forums for reddit/SO. Use web for general research.`,
+  domain: `Use security for vulnerabilities/CVEs. Use medical for diagnosis/drugs. Use legal for law/liability. Use trading for forex/options/market hours. Use finance for banking/investments. Use vendor-status for outages/status pages. Use changelog for release notes/version history. Use github for repos/issues. Use package-registry for npm/PyPI. Use shopify for liquid/shopify apps. Use papers for academic/arxiv. Use news-current-events for breaking news/headlines. Use quantum for qubits/quantum error correction. Use ai-ml for LLMs/rag. Use cloud-docs for AWS/Azure/GCP/k8s. Use standards for NIST/ISO/SOC2. Use specs for RFC/OpenAPI. Use forums for reddit/SO. Use local-howto for city hall/dmv. Use ecommerce for pricing/shipping. Use web for general research.`,
   source_authority: `primary_source: absolute primary publisher. authoritative: highly credible/official. secondary_but_good: reputable aggregator. community_context: forum/social. weak_source: random unverified blog. unusable: explicitly broken/irrelevant.`,
   page_quality: `usable: clear text. thin: too short. blocked: WAF/403/429. placeholder: captcha. off_topic: irrelevant. duplicate: exact copy. low_query_overlap: lacks query terms.`,
 };
