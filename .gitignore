@@ -7,3 +7,10 @@ coverage/
 .pi-context/
 .venv*/
 experiments/
+
+# Generated local artifacts
+ml/router/__pycache__/
+*.pyc
+data/followup/log-candidates/*.jsonl
+data/router/log-candidates/*.jsonl
+data/router/experiment-candidates/*.jsonl
