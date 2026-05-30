@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.6
+
+### Added
+- **Evidence Graph and Claim State:** Added serializable per-turn evidence state with explicit nodes and edges for queries, sources, claims, versions, publishers/domains, and actions/turns.
+- **Evidence Replay Utility:** Added `scripts/router/replay-evidence-trace.mjs` to replay runtime traces or JSONL logs into compact evidence-state summaries.
+- **Regression Coverage:** Added tests for evidence schema serialization, trace replay, and runtime trace evidence-state wiring.
+
+### Changed
+- **Runtime Trace Provenance:** `runWebResearch()` now attaches evidence state to turn traces and final traces so sufficiency, conflict, and follow-up decisions can be replayed deterministically.
+- **Structured Source Context:** Source serialization now preserves family, overlays, source-policy flags, authority/quality/version scores, and text hashes for downstream graph building.
+- **Source Feature Compatibility:** Structured feature extraction now accepts `text_sample` from serialized source snapshots.
+- **Service-Layer Cleanup:** Extracted reusable evidence-state builders into `lib/research-evidence.js` so the main research loop keeps policy decisions separate from serialization mechanics.
+- **Package Metadata:** Bumped package, lockfile, and MCP registry metadata to `1.1.6`.
+
 ## 1.1.5
 
 ### Added

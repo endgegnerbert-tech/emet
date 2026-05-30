@@ -508,6 +508,11 @@ test("runWebResearch in deep mode performs follow-up research and finalizes resu
     assert.ok(result.runtimeTrace.turns[0].searchResults.length >= 1);
     assert.equal(typeof result.runtimeTrace.turns[0].pageCandidates[0]?.text, "string");
     assert.ok(Array.isArray(result.runtimeTrace.final.mergedPages));
+    assert.equal(result.runtimeTrace.turns[0].evidenceState.schemaVersion, 1);
+    assert.equal(result.runtimeTrace.turns[0].evidenceState.domain_family, "web");
+    assert.ok(Array.isArray(result.runtimeTrace.turns[0].evidenceState.sources));
+    assert.ok(Array.isArray(result.runtimeTrace.final.evidenceState.edges));
+    assert.deepEqual(result.runtimeTrace.final.evidenceState.overlays, []);
     assert.equal(result.runtimeTrace.final.synthesis.answer, result.answer);
   } finally {
     globalThis.fetch = previousFetch;

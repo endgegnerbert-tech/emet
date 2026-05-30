@@ -1,6 +1,6 @@
 {
   "name": "@black-knight.dev/emet",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "private": false,
   "type": "module",
   "description": "Zero-setup grounded web research MCP server and Pi extension for AI coding agents.",
