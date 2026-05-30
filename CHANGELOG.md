@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.1.7
+
+### Added
+- **Phase 7 Evidence-Aware Router:** Added sufficiency, conflict, and follow-up routing models that operate on family/overlay/source-policy aware evidence state instead of flat domain labels.
+- **Shared Routing Context Service:** Added `lib/router-policy-context.js` to centralize routing families, overlays, policy flags, and risk markers for feature extraction and runtime decisioning.
+- **Selective Training Metrics:** Added selective coverage, abstention, and high-risk false-sufficient promotion reporting to structured model training outputs.
+
+### Changed
+- **Runtime Evidence Context:** Updated research traces, source metadata, and follow-up planning to preserve domain family, overlays, source-policy flags, and query-understanding signals end to end.
+- **Structured Review Labels:** Centralized review label sets and expanded them to include `resolved_by_version`, `open_conflict`, `need_primary_source`, `need_conflict_resolution`, and `ask_clarifying_question`.
+- **Structured Model Training:** Updated conflict and sufficiency structured training to use stricter confidence thresholds on high-risk evidence and to evaluate models with selective abstention metrics.
+- **Phase Plan Docs:** Refreshed the Superrouter Phase 7 plan to reflect the implemented evidence-aware training and promotion approach.
+- **Package Metadata:** Bumped package, lockfile, server registry, and MCP metadata to `1.1.7`.
+
+### Fixed
+- **Backward-Compatible Inference:** Kept runtime inference compatible with previously promoted structured models while the new feature space rolls out.
+- **Evidence-Aware Follow-Up:** Prevented follow-up and sufficiency decisions from collapsing back to flat-domain-only heuristics.
+- **Metadata Consistency:** Aligned version metadata across `package.json`, `package-lock.json`, and `server.json`.
+
 ## 1.1.6
 
 ### Added

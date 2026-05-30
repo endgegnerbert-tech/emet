@@ -6,7 +6,9 @@ export function normalizeReviewedRow(task, row = {}) {
   if (task !== "sufficiency") return row;
   if (row.label !== "insufficient") return row;
   const rationale = String(row.rationale || "").toLowerCase();
-  if (/authoritative|official|primary/.test(rationale)) return { ...row, label: "need_authority" };
+  if (/conflict|contradict|disagree|disagreement/.test(rationale)) return { ...row, label: "need_conflict_resolution" };
+  if (/primary|paper|doi|publisher|advisory|standard|regulator/.test(rationale)) return { ...row, label: "need_primary_source" };
+  if (/authoritative|official/.test(rationale)) return { ...row, label: "need_authority" };
   if (/version|build flag|compatible|migration|upgrade/.test(rationale)) return { ...row, label: "need_version_context" };
   if (/current|latest|status|lts|release/.test(rationale)) return { ...row, label: "need_recency" };
   return { ...row, label: "need_more_sources" };

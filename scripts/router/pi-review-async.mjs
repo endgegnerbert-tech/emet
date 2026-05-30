@@ -4,19 +4,24 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { spawn } from "node:child_process";
 
+import { ANNOTATION_LABELS } from "../../lib/router-annotation.js";
+
 const REVIEW_LABELS = {
   domain: ["security", "medical", "legal", "trading", "finance", "vendor-status", "changelog", "github", "package-registry", "shopify", "papers", "news-current-events", "quantum", "ai-ml", "cloud-docs", "standards", "specs", "forums", "local-howto", "ecommerce", "web"],
   source_authority: ["primary_source", "authoritative", "secondary_but_good", "community_context", "weak_source", "unusable"],
   page_quality: ["usable", "thin", "blocked", "placeholder", "off_topic", "duplicate", "low_query_overlap"],
-  conflict: ["no_conflict", "resolved_by_authority", "resolved_by_recency", "needs_review"],
-  sufficiency: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context", "insufficient"],
-  followup: ["stop", "need_more_sources", "need_authority", "need_primary_source", "need_recency", "need_version_context", "need_conflict_resolution"],
+  conflict: ANNOTATION_LABELS.conflict,
+  sufficiency: ANNOTATION_LABELS.sufficiency,
+  followup: ANNOTATION_LABELS.followup,
 };
 
 const GUIDELINES = {
   domain: `Use security for vulnerabilities/CVEs. Use medical for diagnosis/drugs. Use legal for law/liability. Use trading for forex/options/market hours. Use finance for banking/investments. Use vendor-status for outages/status pages. Use changelog for release notes/version history. Use github for repos/issues. Use package-registry for npm/PyPI. Use shopify for liquid/shopify apps. Use papers for academic/arxiv. Use news-current-events for breaking news/headlines. Use quantum for qubits/quantum error correction. Use ai-ml for LLMs/rag. Use cloud-docs for AWS/Azure/GCP/k8s. Use standards for NIST/ISO/SOC2. Use specs for RFC/OpenAPI. Use forums for reddit/SO. Use local-howto for city hall/dmv. Use ecommerce for pricing/shipping. Use web for general research.`,
   source_authority: `primary_source: absolute primary publisher. authoritative: highly credible/official. secondary_but_good: reputable aggregator. community_context: forum/social. weak_source: random unverified blog. unusable: explicitly broken/irrelevant.`,
   page_quality: `usable: clear text. thin: too short. blocked: WAF/403/429. placeholder: captcha. off_topic: irrelevant. duplicate: exact copy. low_query_overlap: lacks query terms.`,
+  conflict: `no_conflict: no contradiction. resolved_by_authority/recency/version: contradiction has a clear resolver. open_conflict: unresolved contradiction. needs_review: ambiguous signal.`,
+  sufficiency: `sufficient only when evidence is enough. need_authority/primary_source/more_sources/recency/version_context/conflict_resolution describe the missing evidence.`,
+  followup: `Choose the next evidence-oriented action. stop only when enough evidence is present. ask_clarifying_question only when ambiguity prevents safe retrieval.`,
 };
 
 function stableId(task, row = {}) {
@@ -117,7 +122,7 @@ async function processQueue(items, concurrency, processor) {
 
 async function main() {
   const args = process.argv.slice(2);
-  let task = "domain", input = "", out = "", failuresOut = "", model = "google/gemini-2.5-flash", limit = 1000, concurrency = 10;
+  let task = "domain", input = "", out = "", failuresOut = "", model = "google/gemini-3.5-flash", limit = 1000, concurrency = 10;
   
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--task") task = args[++i];

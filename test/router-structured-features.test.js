@@ -82,6 +82,31 @@ test("page-based structured features match runtime pages", () => {
 });
 
 
+test("structured features preserve family, overlays, source policy, and query understanding", () => {
+  const features = extractSufficiencyStructuredFeaturesFromPages("CVE-2026-1234 mitigation", [
+    {
+      title: "Vendor advisory",
+      sourceType: "official_doc",
+      authoritative: true,
+      text: "Official advisory and mitigation.",
+      domain_family: "regulated",
+      overlays: ["security", "official-only"],
+      source_policy_flags: ["official-only"],
+    },
+  ], {
+    queryUnderstandingDecision: { source_family: "primary_source", recency_need: "required" },
+  });
+
+  assert.equal(features.domain_family_regulated, 1);
+  assert.equal(features.overlay_security, 1);
+  assert.equal(features.source_policy_official_only, 1);
+  assert.equal(features.high_risk_family, 1);
+  assert.equal(features.requires_authority, 1);
+  assert.equal(features.query_understanding_source_family_primary_source, 1);
+  assert.equal(features.query_understanding_recency_required, 1);
+});
+
+
 test("page-based structured features capture version coverage and changelog hints", () => {
   const features = extractSufficiencyStructuredFeaturesFromPages("GitHub REST apiVersion 2022-11-28 deprecated endpoint", [
     {

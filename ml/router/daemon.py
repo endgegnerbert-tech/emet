@@ -40,6 +40,17 @@ def vectorize_structured_features(feature_names, features):
     return np.array([row], dtype=np.float32)
 
 
+def align_feature_count(clf, features):
+    """Keep runtime backward-compatible with older promoted model snapshots."""
+    expected = getattr(clf, "n_features_in_", None)
+    if expected is None or features.shape[1] == expected:
+        return features
+    if features.shape[1] > expected:
+        return features[:, :expected]
+    pad = np.zeros((features.shape[0], expected - features.shape[1]), dtype=features.dtype)
+    return np.hstack([features, pad])
+
+
 def main():
     if len(sys.argv) < 2:
         print(json.dumps({"error": "Missing model path"}))
@@ -97,6 +108,7 @@ def main():
                 sources = req.get("sources", {})
 
                 feats = extract_followup_features([query], [mode], [conflict], [sources], emb_model=emb_model, show_progress_bar=False)
+                feats = align_feature_count(followup_clf, feats)
                 pred, confidence = predict_proba_like(followup_clf, feats)
 
                 print(json.dumps({

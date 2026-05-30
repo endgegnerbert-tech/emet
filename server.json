@@ -14,13 +14,13 @@
       "mimeType": "image/png"
     }
   ],
-  "version": "1.1.6",
+  "version": "1.1.7",
   "packages": [
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@black-knight.dev/emet",
-      "version": "1.1.6",
+      "version": "1.1.7",
       "runtimeHint": "npx",
       "transport": {
         "type": "stdio"

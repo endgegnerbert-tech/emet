@@ -8,9 +8,9 @@ import { ANNOTATION_LABELS } from "../../lib/router-annotation.js";
 
 export const REVIEW_LABELS = {
   domain: ["security", "medical", "legal", "trading", "finance", "vendor-status", "changelog", "github", "package-registry", "shopify", "papers", "news-current-events", "quantum", "ai-ml", "cloud-docs", "standards", "specs", "forums", "local-howto", "ecommerce", "web"],
-  followup: ["stop", "need_more_sources", "need_authority", "need_primary_source", "need_recency", "need_version_context", "need_conflict_resolution"],
+  followup: ANNOTATION_LABELS.followup,
   conflict: ANNOTATION_LABELS.conflict,
-  sufficiency: ["sufficient", "need_authority", "need_more_sources", "need_recency", "need_version_context", "insufficient"],
+  sufficiency: ANNOTATION_LABELS.sufficiency,
   source_authority: ["primary_source", "authoritative", "secondary_but_good", "community_context", "weak_source", "unusable"],
   page_quality: ["usable", "thin", "blocked", "placeholder", "off_topic", "duplicate", "low_query_overlap"],
 };
@@ -78,22 +78,27 @@ export function buildReviewPrompt(task, row = {}) {
       "need_primary_source: academic/paper query needs primary paper/DOI/publisher/arXiv.",
       "need_recency: current/latest/status query lacks current evidence.",
       "need_version_context: version/migration/compatibility query lacks exact version evidence.",
-      "need_conflict_resolution: sources conflict or need resolving by authority/recency.",
+      "need_conflict_resolution: sources conflict or need resolving by authority/recency/version.",
+      "ask_clarifying_question: the query is too ambiguous to target evidence safely.",
     ],
     conflict: [
       "Judge whether source disagreement is real and how to resolve it.",
       "no_conflict: no clear factual contradiction on the same claim.",
       "resolved_by_authority: contradiction exists but authoritative source wins.",
       "resolved_by_recency: time-sensitive contradiction resolved by newer/current source.",
-      "needs_review: unresolved conflict, insufficient evidence, or ambiguous contradiction.",
+      "resolved_by_version: version-specific contradiction resolved by exact version evidence.",
+      "open_conflict: contradiction remains unresolved after checking authority, recency, and version.",
+      "needs_review: ambiguous contradiction that should not train a final resolver label yet.",
     ],
     sufficiency: [
       "Judge whether the sources are enough to answer reliably.",
       "sufficient: enough authoritative/current/version-correct evidence.",
       "need_authority: sources are not authoritative enough.",
       "need_more_sources: evidence is too thin or too few independent sources.",
+      "need_primary_source: needs an original paper, advisory, standard, regulator, or publisher source.",
       "need_recency: current/latest/status query lacks fresh evidence.",
       "need_version_context: version/migration/compatibility query lacks exact version evidence.",
+      "need_conflict_resolution: sources conflict or need resolving before answering.",
     ],
     source_authority: [
       "Judge the authority and relevance of a source for a given query.",

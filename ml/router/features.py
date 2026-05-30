@@ -31,9 +31,16 @@ def extract_domain_features(queries: list, modes: list, emb_model: StaticModel =
     return np.hstack([emb, modes_np])
 
 def encode_followup_meta(conflicts: list, sources_list: list) -> np.ndarray:
-    """Encodes conflict and source metadata into a feature array for followup classification."""
+    """Encodes conflict, family, overlay, and source metadata for followup classification."""
+    families = ["web", "developer-docs", "academic", "regulated", "current-events", "commerce", "community", "local-government"]
     encoded = []
     for conflict, sources in zip(conflicts, sources_list):
+        overlays = set(sources.get("overlays", []) or [])
+        policy_flags = set(sources.get("source_policy_flags", []) or []) | {overlay for overlay in overlays if overlay in ["official-only", "primary-source-required", "recency-required", "version-sensitive"]}
+        family = str(sources.get("domain_family", "web") or "web")
+        source_count = min(float(sources.get("source_count", 3) or 0) / 10.0, 1.0)
+        authority_count = min(float(sources.get("authoritative_source_count", 1 if sources.get("has_authority", False) else 0) or 0) / 5.0, 1.0)
+        recent_count = min(float(sources.get("recent_source_count", 1 if sources.get("has_recent", False) else 0) or 0) / 5.0, 1.0)
         row = [
             1.0 if conflict == "severe" else 0.0,
             1.0 if conflict == "minor" else 0.0,
@@ -43,9 +50,18 @@ def encode_followup_meta(conflicts: list, sources_list: list) -> np.ndarray:
             1.0 if sources.get("has_forum", False) else 0.0,
             1.0 if sources.get("has_news", False) else 0.0,
             1.0 if sources.get("has_recent", False) else 0.0,
-            
-            # Normalize source count (cap at 10)
-            min(float(sources.get("source_count", 3)) / 10.0, 1.0)
+            source_count,
+            1.0 if sources.get("has_version_match", False) else 0.0,
+            1.0 if sources.get("has_changelog", False) else 0.0,
+            1.0 if sources.get("has_migration", False) else 0.0,
+            1.0 if (sources.get("has_official_only", False) or "official-only" in policy_flags) else 0.0,
+            1.0 if (sources.get("has_primary_source_required", False) or "primary-source-required" in policy_flags) else 0.0,
+            1.0 if (sources.get("has_recency_required", False) or "recency-required" in policy_flags) else 0.0,
+            1.0 if (sources.get("has_version_sensitive", False) or "version-sensitive" in policy_flags) else 0.0,
+            authority_count,
+            recent_count,
+            1.0 if (family == "regulated" or any(flag in policy_flags for flag in ["official-only", "primary-source-required"])) else 0.0,
+            *[1.0 if family == item else 0.0 for item in families],
         ]
         encoded.append(row)
     return np.array(encoded, dtype=np.float32)

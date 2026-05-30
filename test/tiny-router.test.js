@@ -9,6 +9,9 @@ import {
   classifyDomainWithTinyRouter,
   classifyFollowupWithTinyRouter,
   classifySufficiencyWithTinyRouter,
+  resolveConflictDecisionThreshold,
+  resolveFollowupDecisionThreshold,
+  resolveSufficiencyDecisionThreshold,
   resolveTinyRouterConfig,
   resolveTinyRouterDomainThreshold,
   stopTinyRouterDaemon,
@@ -129,7 +132,7 @@ test("tiny router followup classifier works when explicitly enabled", async () =
 });
 
 
-test("structured conflict classifier returns a conservative label when enabled", async () => {
+test("structured conflict classifier returns a conservative label or abstains when enabled", async () => {
   try {
     const result = await classifyConflictWithTinyRouter(
       "Python 3.12 support status",
@@ -140,7 +143,7 @@ test("structured conflict classifier returns a conservative label when enabled",
       undefined,
       { ...TEST_ENV, EMET_TINY_ROUTER_CONFLICT: "1" },
     );
-    assert.ok(["no_conflict", "needs_review", "resolved_by_authority", "resolved_by_recency", "open_conflict"].includes(result));
+    assert.ok(result === null || ["no_conflict", "needs_review", "resolved_by_authority", "resolved_by_recency", "resolved_by_version", "open_conflict"].includes(result));
   } finally {
     stopTinyRouterDaemon();
   }
@@ -180,4 +183,12 @@ test("sufficiency model alone cannot flip insufficient to sufficient in V1", () 
 test("sufficiency decision may veto a premature sufficient result", () => {
   const result = applySufficiencyTinyRouterDecision(true, "need_authority");
   assert.equal(result, false);
+});
+
+test("structured decision thresholds are stricter for high-risk stop or sufficient decisions", () => {
+  const highRiskPages = [{ domain_family: "regulated", overlays: ["security", "official-only"], source_policy_flags: ["official-only"] }];
+  assert.equal(resolveSufficiencyDecisionThreshold("sufficient", "CVE-2026-1234 mitigation", highRiskPages), 0.90);
+  assert.equal(resolveSufficiencyDecisionThreshold("need_authority", "CVE-2026-1234 mitigation", highRiskPages), 0.65);
+  assert.equal(resolveConflictDecisionThreshold("resolved_by_authority", "CVE-2026-1234 mitigation", highRiskPages), 0.85);
+  assert.equal(resolveFollowupDecisionThreshold("stop", "CVE-2026-1234 mitigation", { domain_family: "regulated" }), 0.90);
 });

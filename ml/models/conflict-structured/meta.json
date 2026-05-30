@@ -1,5 +1,5 @@
 {
   "task": "conflict",
-  "bestModel": "lr",
+  "bestModel": "svc",
   "rows": 80
 }

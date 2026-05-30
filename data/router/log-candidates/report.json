@@ -1,18 +1,26 @@
 {
-  "totalSessions": 2077,
+  "totalSessions": 2311,
   "keptSessions": 274,
   "skipped": {
     "not_ok": 22,
-    "internal_test_cwd": 1374,
-    "cache_hit": 407
+    "internal_test_cwd": 1563,
+    "cache_hit": 452
   },
   "labels": {
     "domain": {
-      "web": 223,
+      "quantum": 12,
+      "web": 100,
       "github": 35,
-      "specs": 9,
-      "papers": 6,
-      "changelog": 1
+      "trading": 44,
+      "shopify": 58,
+      "papers": 4,
+      "finance": 3,
+      "specs": 3,
+      "ai-ml": 4,
+      "ecommerce": 4,
+      "changelog": 1,
+      "legal": 3,
+      "standards": 3
     },
     "followup": {
       "stop": 151,
@@ -27,6 +35,8 @@
     "conflict": {
       "no_conflict": 169,
       "conflict": 96
-    }
+    },
+    "source_authority": {},
+    "page_quality": {}
   }
 }

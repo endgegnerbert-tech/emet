@@ -2,7 +2,17 @@
 
 ## Goal
 
-Replace brittle one-shot decisions with calibrated evidence-aware decisions.
+Replace brittle one-shot decisions with calibrated evidence-aware decisions over family + overlay aware evidence state.
+
+Routing context for all three models:
+
+```text
+query understanding outputs
+domain family
+overlays
+source-policy flags
+manual hint / forced override marker
+```
 
 ## Sufficiency model
 
@@ -72,6 +82,8 @@ need_conflict_resolution
 ask_clarifying_question
 ```
 
+Best-practice note: keep this action space evidence-oriented. Do not explode it into topic labels. If the next search needs a different retrieval policy, encode that as family/overlay updates in the trace first, then let Phase 8 policy decide whether to switch family or add overlays.
+
 ## Training data
 
 Only true emet labels should drive these models:
@@ -90,3 +102,16 @@ External datasets can provide features, not final labels.
 - Better than current heuristics on held-out emet traces.
 - Abstains when confidence is low.
 - High-risk queries require stronger evidence thresholds.
+- Family/overlay-aware features beat flat-domain-only baselines before promotion.
+
+## Implementation notes
+
+Phase 7 is implemented as conservative, evidence-aware infrastructure:
+
+- sufficiency/conflict structured features now preserve domain family, overlays, source-policy flags, and query-understanding signals;
+- follow-up classifier inputs carry the same routing context while remaining backward-compatible with promoted model snapshots;
+- low-confidence model outputs abstain to heuristics, with stricter thresholds for high-risk `sufficient`, `stop`, and conflict-resolution decisions;
+- review label spaces match the Phase 7 action sets, while legacy `insufficient` remains only a candidate label that is normalized before training;
+- structured training reports include selective coverage, abstentions, false-sufficient counts, and high-risk false-sufficient promotion gates; macro-F1 is the primary comparison for imbalanced conflict labels.
+
+Best-practice basis from current RAG evidence-verification work: treat sufficiency as a set-level evidence decision, use auditable coverage/disagreement/uncertainty features, calibrate selective answering, and choose next retrieval actions from explicit evidence gaps rather than broad topic labels.
