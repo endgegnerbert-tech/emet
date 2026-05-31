@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>emet Superrouter Feature Plans</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 0; line-height: 1.5; }
+    header { padding: 24px; border-bottom: 1px solid #8884; background: #8881; position: sticky; top: 0; backdrop-filter: blur(8px); }
+    main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .toc { columns: 2 320px; gap: 24px; }
+    .toc a { text-decoration: none; }
+    .card { margin: 24px 0; padding: 20px; border: 1px solid #8884; border-radius: 12px; background: #8881; overflow-x: auto; }
+    pre { white-space: pre-wrap; word-break: break-word; margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; }
+    h1,h2 { margin-top: 0; }
+    .note { color: #666; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>emet Superrouter Feature Plans</strong>
+    <div class="note">Single HTML view of the full plan. Markdown content is shown verbatim, file by file.</div>
+  </header>
+  <main>
+    <section class="card" id="toc">
+      <h1>Table of contents</h1>
+      <ul class="toc">
+        <li><a href="#readme">README.md</a></li><li><a href="#00-current-state-and-target">00-current-state-and-target.md</a></li><li><a href="#01-safety-foundations">01-safety-foundations.md</a></li><li><a href="#02-data-governance-labels">02-data-governance-labels.md</a></li><li><a href="#03-query-understanding-model">03-query-understanding-model.md</a></li><li><a href="#04-expanded-domain-router">04-expanded-domain-router.md</a></li><li><a href="#05-source-authority-page-quality">05-source-authority-page-quality.md</a></li><li><a href="#06-evidence-graph">06-evidence-graph.md</a></li><li><a href="#07-sufficiency-conflict-followup">07-sufficiency-conflict-followup.md</a></li><li><a href="#08-research-policy-baseline">08-research-policy-baseline.md</a></li><li><a href="#09-trm-hrm-policy-experiment">09-trm-hrm-policy-experiment.md</a></li><li><a href="#10-active-learning-review-loop">10-active-learning-review-loop.md</a></li><li><a href="#11-evaluation-promotion-rollout">11-evaluation-promotion-rollout.md</a></li><li><a href="#12-implementation-roadmap">12-implementation-roadmap.md</a></li>
+      </ul>
+    </section>
+    
+<section class="card" id="readme">
+  <h2>README.md</h2>
+  <pre># emet Superrouter Feature Plans
+
+Goal: evolve emet from a generic web-search helper into an evidence-routing engine.
+
+Core idea:
+
+```text
+safety rules
++ query understanding
++ expanded domain packs
++ source authority scoring
++ evidence graph
++ research policy
++ active learning
++ optional TRM/HRM recursive policy
+```
+
+Use these files in order. Each phase is intentionally small enough to build, test, and roll back independently.
+
+## Phases
+
+0. [Current state and target architecture](./00-current-state-and-target.md)
+1. [Safety foundations and non-negotiable guardrails](./01-safety-foundations.md)
+2. [Data governance, schemas, and labels](./02-data-governance-labels.md)
+3. [Query Understanding model](./03-query-understanding-model.md)
+4. [Expanded Domain Pack Router](./04-expanded-domain-router.md)
+5. [Source Authority and Page Quality models](./05-source-authority-page-quality.md)
+6. [Evidence Graph and claim state](./06-evidence-graph.md)
+7. [Sufficiency, Conflict, and Follow-up models](./07-sufficiency-conflict-followup.md)
+8. [Research Policy baseline](./08-research-policy-baseline.md)
+9. [TRM/HRM recursive policy experiment](./09-trm-hrm-policy-experiment.md)
+10. [Active Learning and review loop](./10-active-learning-review-loop.md)
+11. [Evaluation, promotion, and rollout gates](./11-evaluation-promotion-rollout.md)
+12. [Implementation roadmap](./12-implementation-roadmap.md)
+
+## Rule of thumb
+
+Do not replace a simple rule or calibrated classifier with TRM/HRM unless the recursive policy beats the simpler baseline on held-out emet traces and preserves zero high-risk downgrades.
+</pre>
+</section>
+<section class="card" id="00-current-state-and-target">
+  <h2>00-current-state-and-target.md</h2>
+  <pre># Phase 0: Current State and Target Architecture
+
+## Current architecture
+
+Current emet has three user-visible decisions and one extra internal one:
+
+```text
+Query
+  -&gt; deterministic rules
+  -&gt; Domain Router
+  -&gt; search/fetch/rank
+  -&gt; evidence features
+  -&gt; Conflict Router
+  -&gt; Sufficiency Router
+  -&gt; Follow-up Router
+  -&gt; answer or fetch more
+```
+
+Current routers:
+
+| Router | Current job | Current weakness |
+|---|---|---|
+| Domain | pick broad source pack | many queries collapse to `web` |
+| Sufficiency | decide if evidence is enough | label imbalance, weak minority classes |
+| Conflict | detect/resolve source disagreement | too few real conflict examples |
+| Follow-up | stop or fetch more/better sources | weak gold data, too heuristic-heavy |
+
+## Target architecture
+
+```text
+User query
+  -&gt; Safety guardrails
+  -&gt; Query Understanding model
+  -&gt; Expanded Domain Pack Router
+  -&gt; Retrieval planner
+  -&gt; Retrieval/page adapter/cache
+  -&gt; Evidence graph
+  -&gt; Research Policy model
+  -&gt; optional TRM recursive policy refinement
+  -&gt; Answer composer
+  -&gt; Trace logger and active learning
+```
+
+## Best-practice decision
+
+Keep the system hybrid:
+
+- Rules for safety and obvious high-risk routing.
+- Small models for cheap classification.
+- Evidence-state models for source-aware decisions.
+- TRM/HRM only for multi-step policy reasoning.
+- LLM reviewer only for uncertain/offline labels, not every runtime decision.
+
+## Expected gains
+
+| Area | Gain |
+|---|---|
+| Domain routing | fewer wrong source packs, less generic `web` fallback |
+| Source quality | more official/primary sources, less blogspam |
+| Recency/version | fewer stale answers |
+| Sufficiency | fewer premature answers and less over-fetching |
+| Conflict handling | clearer disagreement detection and resolution |
+| Cost/latency | stop earlier when evidence is genuinely enough |
+</pre>
+</section>
+<section class="card" id="01-safety-foundations">
+  <h2>01-safety-foundations.md</h2>
+  <pre># Phase 1: Safety Foundations and Non-Negotiable Guardrails
+
+## Goal
+
+Make sure future ML cannot weaken high-risk behavior.
+
+## Best-practice decision
+
+ML can recommend; guardrails can veto. High-risk rules stay deterministic.
+
+## Guardrail domains
+
+Always preserve rule-first handling for:
+
+```text
+security / CVE / vulnerability
+medical
+legal
+finance
+version / changelog / migration
+official docs required
+package security advisories
+privacy-sensitive inputs
+```
+
+## Runtime decisions
+
+Before any learned model:
+
+1. Detect high-risk domain flags.
+2. Detect recency/version sensitivity.
+3. Detect source-authority requirements.
+4. Detect whether the user asks for current facts.
+5. Set minimum evidence requirements.
+
+## Labels to log
+
+```text
+guardrail_flags:
+  security_sensitive
+  medical_sensitive
+  legal_sensitive
+  finance_sensitive
+  version_sensitive
+  recency_required
+  official_source_required
+  primary_source_required
+```
+
+## Acceptance criteria
+
+- Existing high-risk tests still pass.
+- ML cannot downgrade `security`, `papers`, `specs`, `changelog`, or official-doc requirements to generic `web` unless confidence and calibration allow it and a guardrail accepts it.
+- Every guardrail decision is trace-logged.
+
+## Not in scope
+
+- No TRM/HRM here.
+- No model should override safety rules in this phase.
+</pre>
+</section>
+<section class="card" id="02-data-governance-labels">
+  <h2>02-data-governance-labels.md</h2>
+  <pre># Phase 2: Data Governance, Schemas, and Labels
+
+## Goal
+
+Create clean training data before training more models.
+
+## Best-practice decision
+
+External datasets are auxiliary. Real emet traces are authoritative for emet policy labels.
+
+## Dataset roles
+
+| Dataset | Use | Do not use for |
+|---|---|---|
+| emet reviewed logs | true domain/sufficiency/conflict/follow-up labels | none; this is primary data |
+| Natural Questions | query shape, answer shape, factoid pretraining | direct sufficiency labels |
+| ASQA | ambiguity and multi-answer coverage | direct authority/conflict labels |
+| DL-HARD | hard-query, intent, answer type, topic domain | direct emet stop/fetch labels |
+| QueryClassification/NTRS | scholar/academic intent | all-domain router alone |
+| Kaggle domain data | optional broad topic pretraining | source authority |
+| AOL query log | avoid by default; privacy-sensitive | default training |
+
+## Canonical example schema
+
+```json
+{
+  &quot;query&quot;: &quot;...&quot;,
+  &quot;mode&quot;: &quot;fast|deep|code|academic&quot;,
+  &quot;labels&quot;: {
+    &quot;query_shape&quot;: &quot;short_fact|explanation|comparison|ambiguous|...&quot;,
+    &quot;domain&quot;: &quot;github|papers|security|web|...&quot;,
+    &quot;sufficiency&quot;: &quot;sufficient|need_authority|...&quot;,
+    &quot;conflict&quot;: &quot;no_conflict|needs_review|...&quot;,
+    &quot;next_action&quot;: &quot;stop|fetch_more|fetch_authority|...&quot;
+  },
+  &quot;source_state&quot;: {
+    &quot;source_count&quot;: 0,
+    &quot;authority_count&quot;: 0,
+    &quot;primary_count&quot;: 0,
+    &quot;recent_count&quot;: 0,
+    &quot;distinct_domain_count&quot;: 0,
+    &quot;conflict_score&quot;: 0,
+    &quot;version_match_score&quot;: 0
+  },
+  &quot;review&quot;: {
+    &quot;source&quot;: &quot;human|pi_review|llm_review|weak_label|synthetic&quot;,
+    &quot;confidence&quot;: 0.0,
+    &quot;needs_human_review&quot;: false
+  }
+}
+```
+
+## Label quality tiers
+
+```text
+Tier 0: raw/untrusted
+Tier 1: weak external auxiliary label
+Tier 2: LLM/Pi reviewed high confidence
+Tier 3: human reviewed
+Tier 4: gold eval holdout
+```
+
+## Acceptance criteria
+
+- One schema for all future training rows.
+- No raw/prelabel data enters training without `review.source` and `confidence`.
+- Separate train/dev/test/gold holdout.
+- No privacy-sensitive external log data committed.
+</pre>
+</section>
+<section class="card" id="03-query-understanding-model">
+  <h2>03-query-understanding-model.md</h2>
+  <pre># Phase 3: Query Understanding Model
+
+## Goal
+
+Predict what kind of research the query needs before fetching pages.
+
+## Questions this model answers
+
+```text
+What kind of question is this?
+Is it ambiguous?
+Does it need current sources?
+Does it need official/primary sources?
+What answer shape is expected?
+```
+
+## Labels
+
+```text
+query_shape:
+  short_fact
+  explanation
+  comparison
+  howto
+  troubleshooting
+  ambiguous_factoid
+  current_or_version_sensitive
+  academic_review
+  shopping_or_ecommerce
+  legal_medical_finance_sensitive
+
+answer_shape:
+  short_answer
+  list
+  long_explanation
+  step_by_step
+  comparison_table
+  citation_heavy
+
+source_family:
+  encyclopedia
+  official_docs
+  academic
+  primary_source
+  recent_news
+  government_or_legal
+  community
+  product_or_ecommerce
+  general_web
+
+recency_need:
+  none
+  helpful
+  required
+
+ambiguity:
+  low
+  medium
+  high
+```
+
+## Best model choice
+
+Start simple:
+
+1. Model2Vec/static embedding + logistic regression/SVC.
+2. Add small MLP if feature interactions matter.
+3. Avoid TRM here; query understanding is a one-shot classification problem.
+
+## Training data
+
+```text
+NQ -&gt; factoid/short-answer/encyclopedia priors
+ASQA -&gt; ambiguity and multi-answer priors
+DL-HARD -&gt; hard query, intent, answer type, topic priors
+emet logs -&gt; production query distribution
+```
+
+## Runtime output
+
+The model returns calibrated probabilities and may abstain:
+
+```json
+{
+  &quot;query_shape&quot;: &quot;comparison&quot;,
+  &quot;recency_need&quot;: &quot;helpful&quot;,
+  &quot;source_family&quot;: &quot;official_docs&quot;,
+  &quot;ambiguity&quot;: &quot;low&quot;,
+  &quot;confidence&quot;: 0.82
+}
+```
+
+## Acceptance criteria
+
+- Beats keyword baseline on held-out query-understanding set.
+- Calibrated confidence; low-confidence output can abstain.
+- Used only as planner features until proven safe.
+</pre>
+</section>
+<section class="card" id="04-expanded-domain-router">
+  <h2>04-expanded-domain-router.md</h2>
+  <pre># Phase 4: Expanded Domain Pack Router
+
+## Goal
+
+Route queries to source policies that actually change retrieval behavior.
+
+## Best-practice decision
+
+Only add a domain if it changes source authority, allowed sources, query expansion, or eval expectations.
+
+## Target labels
+
+```text
+security
+vendor-status
+package-registry
+github
+changelog
+papers
+specs
+forums
+web
+legal
+medical
+finance
+cloud-docs
+ai-ml
+ecommerce
+trading
+quantum
+shopify
+standards
+news-current-events
+local-howto
+```
+
+## Model choice
+
+Best first production model:
+
+```text
+Model2Vec/static embedding + calibrated SVC or logistic regression
+```
+
+Why:
+
+- Fast.
+- Cheap.
+- Easy to inspect.
+- Good enough for one-shot routing.
+- Safer than large opaque models.
+
+## Training data
+
+```text
+existing gold-domain
+pi-reviewed domain accepted rows
+human-reviewed needs-human rows
+DL-HARD topic domain as auxiliary only
+QueryClassification for papers/scholar auxiliary signal
+optional Kaggle broad-domain data after license/auth
+```
+
+## Decision rules
+
+- High-risk heuristic domains can veto ML downgrades.
+- Model confidence must exceed per-domain calibration threshold.
+- Ambiguous or low-confidence queries fall back to rules or `web` plus stronger source checks.
+
+## Acceptance criteria
+
+- Macro-F1 improves over current rules on gold holdout.
+- High-risk downgrades = 0.
+- `web` fallback rate decreases without source-quality regression.
+</pre>
+</section>
+<section class="card" id="05-source-authority-page-quality">
+  <h2>05-source-authority-page-quality.md</h2>
+  <pre># Phase 5: Source Authority and Page Quality Models
+
+## Goal
+
+Score fetched sources before they influence the answer.
+
+## Model A: Source Authority Scorer
+
+### Question
+
+```text
+Is this source authoritative for this query/domain?
+```
+
+### Labels
+
+```text
+primary_source
+authoritative
+secondary_but_good
+community_context
+weak_source
+unusable
+```
+
+### Features
+
+```text
+query
+domain
+url host
+source type
+title/snippet
+page text sample
+publisher signals
+freshness/version signals
+```
+
+### Training
+
+- Start with domain authority rules as weak labels.
+- Review uncertain/high-impact examples with Pi/human.
+- Keep allowlist/denylist reasons in the trace.
+
+## Model B: Page Quality/Relevance Scorer
+
+### Question
+
+```text
+Is this fetched page usable and relevant?
+```
+
+### Labels
+
+```text
+usable
+thin
+blocked
+placeholder
+off_topic
+duplicate
+low_query_overlap
+```
+
+### Features
+
+```text
+text length
+query term overlap
+HTTP status
+content type
+placeholder patterns
+source type
+title/snippet match
+```
+
+## Best-practice decision
+
+Keep page-quality rules as primary. Use ML to rank/boost, not to accept blocked garbage.
+
+## Acceptance criteria
+
+- Fewer low-quality pages reach answer synthesis.
+- No primary/official sources are incorrectly discarded without fallback review.
+- Source score is explainable in trace.
+</pre>
+</section>
+<section class="card" id="06-evidence-graph">
+  <h2>06-evidence-graph.md</h2>
+  <pre># Phase 6: Evidence Graph and Claim State
+
+## Goal
+
+Represent the research state explicitly so later models reason over evidence, not just query text.
+
+## Evidence graph nodes
+
+```text
+query
+source
+claim
+version
+publisher/domain
+action/turn
+```
+
+## Evidence graph edges
+
+```text
+source_supports_claim
+source_contradicts_claim
+source_mentions_version
+source_is_primary_for_domain
+source_is_recent_for_query
+claim_requires_more_evidence
+```
+
+## Per-source fields
+
+```json
+{
+  &quot;url&quot;: &quot;...&quot;,
+  &quot;host&quot;: &quot;...&quot;,
+  &quot;source_type&quot;: &quot;official_doc|paper|github_repo|news|forum|other&quot;,
+  &quot;authority_score&quot;: 0.0,
+  &quot;quality_score&quot;: 0.0,
+  &quot;freshness&quot;: &quot;today|this_week|this_year|older|unknown&quot;,
+  &quot;version_match_score&quot;: 0.0,
+  &quot;claims&quot;: [],
+  &quot;text_hash&quot;: &quot;...&quot;
+}
+```
+
+## Best-practice decision
+
+Do not ask policy models to infer evidence quality from raw text every time. Precompute structured evidence state.
+
+## Acceptance criteria
+
+- Every research turn has a serializable evidence state.
+- Sufficiency/conflict/follow-up models use this state.
+- Trace logs can recreate why emet fetched more or stopped.
+</pre>
+</section>
+<section class="card" id="07-sufficiency-conflict-followup">
+  <h2>07-sufficiency-conflict-followup.md</h2>
+  <pre># Phase 7: Sufficiency, Conflict, and Follow-up Models
+
+## Goal
+
+Replace brittle one-shot decisions with calibrated evidence-aware decisions.
+
+## Sufficiency model
+
+### Question
+
+```text
+Can emet answer safely with current evidence?
+```
+
+### Labels
+
+```text
+sufficient
+need_more_sources
+need_authority
+need_primary_source
+need_recency
+need_version_context
+need_conflict_resolution
+```
+
+### Best model
+
+Start with structured features + logistic regression/SVC/MLP. No TRM yet.
+
+## Conflict model
+
+### Question
+
+```text
+Do sources disagree, and can the disagreement be resolved?
+```
+
+### Labels
+
+```text
+no_conflict
+needs_review
+resolved_by_authority
+resolved_by_recency
+resolved_by_version
+open_conflict
+```
+
+### Best model
+
+Structured features first. Add claim-pair model later if needed.
+
+## Follow-up model
+
+### Question
+
+```text
+What missing evidence should the next search target?
+```
+
+### Labels
+
+```text
+stop
+need_more_sources
+need_authority
+need_primary_source
+need_recency
+need_version_context
+need_conflict_resolution
+ask_clarifying_question
+```
+
+## Training data
+
+Only true emet labels should drive these models:
+
+```text
+reviewed emet traces
+Pi/LLM-reviewed uncertain traces
+human-reviewed high-risk traces
+synthetic edge cases for tests only
+```
+
+External datasets can provide features, not final labels.
+
+## Acceptance criteria
+
+- Better than current heuristics on held-out emet traces.
+- Abstains when confidence is low.
+- High-risk queries require stronger evidence thresholds.
+</pre>
+</section>
+<section class="card" id="08-research-policy-baseline">
+  <h2>08-research-policy-baseline.md</h2>
+  <pre># Phase 8: Research Policy Baseline
+
+## Goal
+
+Unify sufficiency/follow-up/conflict into one next-action policy.
+
+## Policy question
+
+```text
+Given the current research state, what is the next best action?
+```
+
+## Action labels
+
+```text
+stop
+fetch_more
+fetch_authority
+fetch_primary_source
+fetch_recent
+fetch_version_context
+resolve_conflict
+switch_domain_pack
+ask_clarifying_question
+```
+
+## Input state
+
+```text
+query understanding features
+domain pack
+turn index
+previous actions
+source count
+authority count
+primary source count
+recent source count
+distinct domain count
+quality stats
+conflict score
+version match score
+recency requirement
+high-risk guardrail flags
+```
+
+## Best baseline models
+
+Train in this order:
+
+1. Rule baseline.
+2. Logistic regression/SVC over structured features.
+3. Small MLP over structured features + query embedding.
+4. Sequence-aware baseline using last N actions.
+
+## Why baseline first
+
+TRM/HRM is only useful if recursive reasoning beats simple baselines. If a small MLP performs equally well, use the simpler model.
+
+## Acceptance criteria
+
+- Lower premature-stop rate.
+- Lower unnecessary-fetch rate.
+- No high-risk downgrade.
+- Better action accuracy/F1 than separate heuristic routers.
+</pre>
+</section>
+<section class="card" id="09-trm-hrm-policy-experiment">
+  <h2>09-trm-hrm-policy-experiment.md</h2>
+  <pre># Phase 9: TRM/HRM Recursive Policy Experiment
+
+## Goal
+
+Test whether recursive reasoning improves emet&#x27;s next-action policy.
+
+## Recommendation
+
+Start with TRM. Consider HRM only after TRM and baselines are measured.
+
+```text
+Use TRM for: research policy refinement
+Do not use TRM for: simple domain routing, page quality, one-shot query type
+```
+
+## Why TRM first
+
+- Simpler than HRM.
+- Fewer parameters.
+- Easier to debug.
+- Better fit for limited trace data.
+
+## Where TRM sits
+
+```text
+evidence state_0
+  -&gt; recursive refine
+  -&gt; evidence state_1
+  -&gt; recursive refine
+  -&gt; evidence state_2
+  -&gt; next action
+```
+
+## TRM input vector
+
+```text
+query embedding
+query_understanding logits
+domain one-hot
+guardrail flags
+source counts
+authority/primary/recent counts
+quality stats
+conflict score
+version score
+turn index
+previous action embedding
+```
+
+## TRM output
+
+Same action space as policy baseline:
+
+```text
+stop
+fetch_more
+fetch_authority
+fetch_primary_source
+fetch_recent
+fetch_version_context
+resolve_conflict
+switch_domain_pack
+ask_clarifying_question
+```
+
+## HRM option
+
+HRM may be useful when traces become long and hierarchical:
+
+```text
+high-level module: research strategy
+low-level module: next retrieval/action decision
+```
+
+Do not start with HRM unless we have enough multi-turn trace labels.
+
+## Training setup
+
+1. Freeze query encoder or use static embeddings.
+2. Train TRM on reviewed traces.
+3. Compare against logistic/SVC/MLP baselines.
+4. Calibrate confidence.
+5. Deploy only as advisory behind feature flag.
+
+## Acceptance criteria
+
+- Beats MLP baseline on action macro-F1.
+- Reduces premature stops and over-fetching.
+- No high-risk downgrade.
+- Provides an abstain/low-confidence path.
+- Guardrails can veto all actions.
+</pre>
+</section>
+<section class="card" id="10-active-learning-review-loop">
+  <h2>10-active-learning-review-loop.md</h2>
+  <pre># Phase 10: Active Learning and Review Loop
+
+## Goal
+
+Make emet improve from real usage without poisoning training data.
+
+## Runtime logging
+
+Every research run should log:
+
+```text
+query
+mode/options
+router predictions + confidence
+sources fetched
+source quality/authority scores
+evidence state per turn
+actions taken
+final answer metadata
+user-visible confidence
+```
+
+## Candidate selection
+
+Review examples with:
+
+```text
+low model confidence
+model/rule disagreement
+high-risk domain
+premature stop suspicion
+conflict detected
+many fetches before stop
+user correction/negative feedback
+new domain vocabulary
+```
+
+## Review tiers
+
+```text
+Pi/LLM review -&gt; high-volume first pass
+human review -&gt; high-risk and disagreement cases
+gold holdout -&gt; never train on it
+```
+
+## Best-practice decision
+
+Never train on raw logs directly. Use accepted reviewed rows only.
+
+## Acceptance criteria
+
+- Automatic split into accepted vs needs-human.
+- Audit detects imbalance and missing labels.
+- Training only uses rows with review provenance.
+</pre>
+</section>
+<section class="card" id="11-evaluation-promotion-rollout">
+  <h2>11-evaluation-promotion-rollout.md</h2>
+  <pre># Phase 11: Evaluation, Promotion, and Rollout Gates
+
+## Goal
+
+Prevent clever models from making emet worse.
+
+## Required eval sets
+
+```text
+domain gold holdout
+query-understanding holdout
+source-authority holdout
+sufficiency holdout
+conflict holdout
+follow-up/action holdout
+end-to-end research eval cases
+high-risk regression suite
+```
+
+## Metrics
+
+| Model | Primary metric | Safety metric |
+|---|---|---|
+| Query Understanding | macro-F1 / calibration | abstain on low confidence |
+| Domain Router | macro-F1 | high-risk downgrades = 0 |
+| Source Authority | precision on authoritative | no primary-source false discard |
+| Page Quality | blocked/thin detection | no official-doc loss |
+| Sufficiency | action macro-F1 | premature-stop rate down |
+| Conflict | conflict recall | open conflicts not hidden |
+| Research Policy/TRM | next-action F1 + cost/quality | high-risk downgrade = 0 |
+
+## Promotion rules
+
+A model can promote only if:
+
+```text
+held-out eval improves
+calibration is acceptable
+high-risk downgrades are zero
+runtime latency budget holds
+rollback flag exists
+trace explains decision
+```
+
+## Rollout order
+
+```text
+shadow mode
+feature flag for internal runs
+low-risk domains only
+all domains with guardrail veto
+production default
+```
+
+## Rollback
+
+Every model must have:
+
+```text
+env flag disable
+rules fallback
+previous model artifact
+metrics comparison report
+```
+</pre>
+</section>
+<section class="card" id="12-implementation-roadmap">
+  <h2>12-implementation-roadmap.md</h2>
+  <pre># Phase 12: Implementation Roadmap
+
+## Principle
+
+Build in small slices. Every slice must be testable, measurable, and reversible.
+
+## Implementation
+
+Run the Phase 12 roadmap audit to verify that every slice has concrete evidence artifacts, rollback hooks, and safety reports before continuing rollout:
+
+```bash
+node scripts/router/audit-implementation-roadmap.mjs
+```
+
+The audit writes `metrics/router/implementation-roadmap.json` and fails closed when a slice is missing required implementation evidence.
+
+## Slice 1: schemas and docs
+
+- Finalize canonical training row schema.
+- Add trace schema.
+- Add dataset manifest.
+- Add audit checks for review provenance.
+
+## Slice 2: stronger domain router
+
+- Merge safe reviewed domain rows.
+- Stabilize a small set of domain families.
+- Add overlays only where source policy changes.
+- Keep legacy flat labels as compatibility aliases.
+- Train calibrated Model2Vec + SVC/LR for family routing first; add overlay heads/rules second.
+- Promote only if high-risk downgrade = 0.
+
+## Slice 3: query-understanding model
+
+- Train on NQ/ASQA/DL-HARD auxiliary examples.
+- Add predictions to trace and planner as non-veto features.
+- Evaluate against hand-labeled emet queries.
+
+## Slice 4: source authority + page quality
+
+- Convert existing family + overlay authority rules into weak labels.
+- Review uncertain source examples.
+- Add source score trace output.
+- Use for ranking first, not hard rejection.
+
+## Slice 5: evidence graph
+
+- Serialize source/claim/version/evidence state per turn.
+- Preserve domain family, overlays, and source-policy flags per turn.
+- Use the same state for sufficiency/conflict/follow-up.
+- Add replay script for traces.
+
+## Slice 6: sufficiency/conflict/follow-up models
+
+- Label more real emet traces.
+- Train structured-feature baselines.
+- Keep heuristics as fallback.
+- Promote only when safer than rules.
+
+## Slice 7: unified research policy baseline
+
+- Train next-action model over evidence states.
+- Let it operate on family + overlay + source-policy controls.
+- Compare with separate routers.
+- Shadow mode first.
+
+## Slice 8: TRM policy experiment
+
+- Implement TRM only for next-action policy.
+- Train on reviewed multi-turn traces.
+- Compare against MLP baseline.
+- Do not promote unless it clearly wins.
+
+## Slice 9: active-learning loop
+
+- Queue uncertain traces.
+- Pi/LLM review high-volume cases.
+- Human review high-risk/disagreement cases.
+- Audit before every train run.
+
+## Slice 10: production hardening
+
+- Add dashboards/reports.
+- Add rollback flags.
+- Add eval gate to release process.
+- Document model cards for every promoted model.
+
+## Final target
+
+```text
+emet = evidence-routing engine
+
+rules protect safety
+models understand queries and sources
+policy decides next actions
+TRM optionally refines multi-step decisions
+logs keep improving the system
+families stay stable
+overlays stay composable
+```
+
+</pre>
+</section>
+  </main>
+</body>
+</html>

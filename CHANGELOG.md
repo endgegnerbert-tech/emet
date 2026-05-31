@@ -1,5 +1,42 @@
 # Changelog
 
+## 1.2.0
+
+### Added
+- **Plan Archive Cleanup:** Moved completed plans into `docs/archive/plans/`, removed the duplicate uploaded Superrouter plan copy, and documented the archive rules.
+- **Scrapling Integration Notes:** Documented the active Scrapling fallback path and restored the missing submodule declaration for the local checkout.
+- **Pipeline Check Scripts:** Added npm scripts for roadmap gates, promotion gates, package dry-runs, and a standard non-promotion `check` pipeline.
+- **Structured Router Scripts:** Split router pipeline scripts into `audit/`, `export/`, `review/`, `train/`, `eval/`, `tools/`, `deploy/`, and `utils/` groups with compatibility shims at the old paths.
+- **Research Trace Service:** Extracted trace snapshot, hashing, version-signal, and source-summary helpers from `lib/web-research.js` into `lib/research-trace.js`.
+- **Review Utility Service:** Extracted shared Pi-review JSON parsing, retry, queue, stable ID, and JSONL append helpers into `scripts/router/review/review-utils.mjs`.
+- **Canonical CLI Bins:** Pointed npm `bin` aliases at the canonical `bin/` entrypoints while keeping root shims for compatibility.
+- **Package Lock Metadata:** Aligned `package-lock.json` root package names with the scoped npm package name.
+- **Dependency Ranges:** Replaced wildcard runtime/peer dependency ranges with current compatible semver ranges.
+- **Model Artifact Cleanup:** Removed the redundant `ml/models/domain-lr` package artifact and kept promoted packaged router artifacts to domain, preflight, follow-up, conflict, and sufficiency.
+- **Release Metadata:** Prepared the accumulated unreleased Superrouter, pipeline, archive, and packaging cleanup work as version `1.2.0`.
+- **Phase 12 Roadmap Audit:** Added `scripts/router/audit/audit-implementation-roadmap.mjs` to verify that each Superrouter roadmap slice has concrete artifacts, reports, and rollback evidence before further rollout.
+- **Phase 8 Research Policy Baseline:** Added a unified next-action policy baseline that chooses stop/fetch/conflict/clarification/routing-control actions from explicit evidence-state features instead of separate one-off follow-up rules.
+- **Policy Eval Script:** Added `scripts/router/eval/eval_research_policy_baseline.mjs` for evaluating labeled research-policy rows against the baseline action picker.
+- **Phase 11 Promotion Gate Audit:** Added `scripts/router/audit/audit-promotion-gates.mjs` to fail closed on missing eval sets, missing rollback hooks, unsafe metrics, missing artifacts, or missing promotion evidence.
+- **Preflight Superrouter Bundle:** Added a new shared pre-query multi-head model (`ml/router/preflight.py`, `ml/router/train_preflight_router.py`) that predicts `domain`, `query_shape`, `answer_shape`, `source_family`, `recency_need`, and `ambiguity` from a single query encoder.
+- **Preflight Runtime Path:** Added daemon and tiny-router support for an opt-in `preflight` task so one model call can provide both domain and query-understanding signals.
+- **Preflight Metrics Output:** Added `metrics/router/preflight-superrouter.json` as the training/eval report for the new preflight bundle.
+- **Packaged Preflight Artifact:** Added `ml/models/preflight/` as the single packaged pre-query bundle for domain plus query-understanding signals.
+
+### Changed
+- **Runtime Policy Routing:** Updated `runWebResearch()` to record `turn.policy`, apply policy controls through `activeConfig`, and centralize follow-up planning behind the unified policy layer while keeping legacy follow-up as a shadow signal.
+- **Preflight-First Query Routing:** Updated `runWebResearch()` and `resolveQuestionDomain()` so `EMET_TINY_ROUTER_PREFLIGHT=1` uses the new preflight bundle first, while keeping heuristic fallback and guardrail vetoes intact.
+- **Best-Practice Multi-Task Training:** Trained the new preflight bundle from reviewed experiment labels and emet query-understanding rows with separate heads, confidence thresholds, abstain behavior, deduping, and class-imbalance handling instead of collapsing everything into one giant label space.
+- **Training Runbook:** Extended `ml/router/README.md` with the Phase 3.5 preflight-superrouter workflow, rollout guidance, and safety constraints.
+- **Phase Plan Docs:** Refreshed the Phase 8 and Phase 11 plan notes with the implemented runtime, evaluation, and rollout details.
+
+### Fixed
+- **Promotion Gate Pathing:** Corrected the Phase 11 audit so query-understanding metrics resolve from the real training output path.
+- **Preflight Data Hygiene:** Prevented non-domain legacy example rows from leaking into preflight domain training and capped overrepresented domain labels to reduce `web` dominance.
+- **Package Hygiene:** Excluded Python `__pycache__` and `*.pyc` artifacts from npm package dry-runs.
+- **Promotion Gate Robustness:** Tightened rollback detection so a generic `return null` no longer counts as an explicit rules fallback.
+- **Auditable Policy Traces:** Narrowed policy trace summaries to the fields that should be recorded and kept version-controlled runtime metadata aligned across repo manifests.
+
 ## 1.1.7
 
 ### Added

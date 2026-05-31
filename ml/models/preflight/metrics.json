@@ -1,0 +1,407 @@
+{
+  "task": "preflight",
+  "modelType": "lr",
+  "trainRows": 2551,
+  "rawDomainRows": 10925,
+  "reviewedDomainRows": 10901,
+  "rawMultitaskRows": 609,
+  "reviewedMultitaskRows": 606,
+  "queryRows": 176,
+  "multitaskQueryRows": 0,
+  "cappedDomainRows": 2383,
+  "maxDomainRowsPerLabel": 600,
+  "domainHoldoutRows": 126,
+  "queryHoldoutRows": 24,
+  "targets": {
+    "domain": {
+      "threshold": 0.9907823555539285,
+      "labels": [
+        "ai-ml",
+        "changelog",
+        "cloud-docs",
+        "ecommerce",
+        "finance",
+        "forums",
+        "github",
+        "legal",
+        "local-howto",
+        "medical",
+        "news-current-events",
+        "package-registry",
+        "papers",
+        "quantum",
+        "security",
+        "specs",
+        "standards",
+        "trading",
+        "vendor-status",
+        "web"
+      ]
+    },
+    "query_shape": {
+      "threshold": 0.9729307973779229,
+      "labels": [
+        "academic_review",
+        "ambiguous_factoid",
+        "comparison",
+        "current_or_version_sensitive",
+        "explanation",
+        "howto",
+        "legal_medical_finance_sensitive",
+        "shopping_or_ecommerce",
+        "short_fact",
+        "troubleshooting"
+      ]
+    },
+    "answer_shape": {
+      "threshold": 0.45,
+      "labels": [
+        "citation_heavy",
+        "comparison_table",
+        "list",
+        "long_explanation",
+        "short_answer",
+        "step_by_step"
+      ]
+    },
+    "source_family": {
+      "threshold": 0.9670704148668109,
+      "labels": [
+        "academic",
+        "community",
+        "encyclopedia",
+        "general_web",
+        "government_or_legal",
+        "official_docs",
+        "primary_source",
+        "product_or_ecommerce",
+        "recent_news"
+      ]
+    },
+    "recency_need": {
+      "threshold": 0.8679604683447314,
+      "labels": [
+        "helpful",
+        "none",
+        "required"
+      ]
+    },
+    "ambiguity": {
+      "threshold": 0.70664838957413,
+      "labels": [
+        "high",
+        "low",
+        "medium"
+      ]
+    }
+  },
+  "summary": {
+    "domain_macro_f1": 0.4485356957161468,
+    "query_understanding_macro_f1": 0.5889858519513692
+  },
+  "targetMetrics": {
+    "domain": {
+      "train_support": {
+        "web": 600,
+        "specs": 45,
+        "legal": 384,
+        "local-howto": 116,
+        "security": 46,
+        "news-current-events": 329,
+        "papers": 79,
+        "medical": 316,
+        "finance": 178,
+        "changelog": 38,
+        "standards": 13,
+        "ai-ml": 13,
+        "quantum": 2,
+        "ecommerce": 39,
+        "trading": 2,
+        "forums": 33,
+        "cloud-docs": 1,
+        "vendor-status": 34,
+        "github": 68,
+        "package-registry": 39
+      },
+      "train_rows": 2375,
+      "resampled_train_rows": 12000,
+      "labels": [
+        "ai-ml",
+        "changelog",
+        "cloud-docs",
+        "ecommerce",
+        "finance",
+        "forums",
+        "github",
+        "legal",
+        "local-howto",
+        "medical",
+        "news-current-events",
+        "package-registry",
+        "papers",
+        "quantum",
+        "security",
+        "specs",
+        "standards",
+        "trading",
+        "vendor-status",
+        "web"
+      ],
+      "raw": {
+        "accuracy": 0.5396825396825397,
+        "macro_f1": 0.4485356957161468,
+        "support": 126
+      },
+      "accepted": {
+        "accuracy": 0.03968253968253968,
+        "macro_f1": 0.06168831168831169,
+        "support": 126
+      },
+      "threshold": {
+        "threshold": 0.9907823555539285,
+        "coverage": 0.03968253968253968,
+        "accuracy": 1.0
+      },
+      "holdout_support": {
+        "security": 6,
+        "vendor-status": 6,
+        "package-registry": 6,
+        "github": 6,
+        "changelog": 6,
+        "papers": 6,
+        "specs": 6,
+        "forums": 6,
+        "legal": 6,
+        "medical": 6,
+        "finance": 6,
+        "cloud-docs": 6,
+        "ai-ml": 6,
+        "ecommerce": 6,
+        "trading": 6,
+        "quantum": 6,
+        "shopify": 6,
+        "standards": 6,
+        "news-current-events": 6,
+        "local-howto": 6,
+        "web": 6
+      }
+    },
+    "query_shape": {
+      "train_support": {
+        "short_fact": 43,
+        "legal_medical_finance_sensitive": 15,
+        "current_or_version_sensitive": 106,
+        "explanation": 53,
+        "ambiguous_factoid": 7,
+        "troubleshooting": 7,
+        "comparison": 4,
+        "academic_review": 6,
+        "howto": 9,
+        "shopping_or_ecommerce": 3
+      },
+      "train_rows": 253,
+      "resampled_train_rows": 1060,
+      "labels": [
+        "academic_review",
+        "ambiguous_factoid",
+        "comparison",
+        "current_or_version_sensitive",
+        "explanation",
+        "howto",
+        "legal_medical_finance_sensitive",
+        "shopping_or_ecommerce",
+        "short_fact",
+        "troubleshooting"
+      ],
+      "raw": {
+        "accuracy": 0.5416666666666666,
+        "macro_f1": 0.6022222222222222,
+        "support": 24
+      },
+      "accepted": {
+        "accuracy": 0.125,
+        "macro_f1": 0.18181818181818182,
+        "support": 24
+      },
+      "threshold": {
+        "threshold": 0.9729307973779229,
+        "coverage": 0.125,
+        "accuracy": 1.0
+      },
+      "holdout_support": {
+        "short_fact": 2,
+        "explanation": 6,
+        "comparison": 2,
+        "howto": 1,
+        "troubleshooting": 1,
+        "current_or_version_sensitive": 4,
+        "academic_review": 2,
+        "shopping_or_ecommerce": 2,
+        "legal_medical_finance_sensitive": 2,
+        "ambiguous_factoid": 2
+      }
+    },
+    "answer_shape": {
+      "train_support": {
+        "short_answer": 75,
+        "citation_heavy": 8,
+        "list": 16,
+        "long_explanation": 134,
+        "step_by_step": 16,
+        "comparison_table": 4
+      },
+      "train_rows": 253,
+      "resampled_train_rows": 804,
+      "labels": [
+        "citation_heavy",
+        "comparison_table",
+        "list",
+        "long_explanation",
+        "short_answer",
+        "step_by_step"
+      ],
+      "raw": {
+        "accuracy": 0.75,
+        "macro_f1": 0.7558201058201058,
+        "support": 24
+      },
+      "accepted": {
+        "accuracy": 0.625,
+        "macro_f1": 0.5865166579452293,
+        "support": 24
+      },
+      "threshold": {
+        "threshold": 0.45,
+        "coverage": 0.8333333333333334,
+        "accuracy": 0.8
+      },
+      "holdout_support": {
+        "short_answer": 5,
+        "long_explanation": 7,
+        "comparison_table": 3,
+        "step_by_step": 2,
+        "citation_heavy": 4,
+        "list": 3
+      }
+    },
+    "source_family": {
+      "train_support": {
+        "government_or_legal": 31,
+        "primary_source": 15,
+        "recent_news": 13,
+        "academic": 8,
+        "encyclopedia": 29,
+        "official_docs": 23,
+        "general_web": 130,
+        "product_or_ecommerce": 3,
+        "community": 1
+      },
+      "train_rows": 253,
+      "resampled_train_rows": 1170,
+      "labels": [
+        "academic",
+        "community",
+        "encyclopedia",
+        "general_web",
+        "government_or_legal",
+        "official_docs",
+        "primary_source",
+        "product_or_ecommerce",
+        "recent_news"
+      ],
+      "raw": {
+        "accuracy": 0.4583333333333333,
+        "macro_f1": 0.39480519480519477,
+        "support": 24
+      },
+      "accepted": {
+        "accuracy": 0.125,
+        "macro_f1": 0.13131313131313133,
+        "support": 24
+      },
+      "threshold": {
+        "threshold": 0.9670704148668109,
+        "coverage": 0.125,
+        "accuracy": 1.0
+      },
+      "holdout_support": {
+        "encyclopedia": 3,
+        "official_docs": 10,
+        "academic": 2,
+        "product_or_ecommerce": 2,
+        "primary_source": 3,
+        "government_or_legal": 1,
+        "general_web": 2,
+        "community": 1
+      }
+    },
+    "recency_need": {
+      "train_support": {
+        "none": 121,
+        "helpful": 84,
+        "required": 48
+      },
+      "train_rows": 253,
+      "resampled_train_rows": 363,
+      "labels": [
+        "helpful",
+        "none",
+        "required"
+      ],
+      "raw": {
+        "accuracy": 0.6666666666666666,
+        "macro_f1": 0.6851851851851851,
+        "support": 24
+      },
+      "accepted": {
+        "accuracy": 0.125,
+        "macro_f1": 0.19047619047619047,
+        "support": 24
+      },
+      "threshold": {
+        "threshold": 0.8679604683447314,
+        "coverage": 0.125,
+        "accuracy": 1.0
+      },
+      "holdout_support": {
+        "none": 6,
+        "helpful": 13,
+        "required": 5
+      }
+    },
+    "ambiguity": {
+      "train_support": {
+        "low": 144,
+        "medium": 98,
+        "high": 11
+      },
+      "train_rows": 253,
+      "resampled_train_rows": 432,
+      "labels": [
+        "high",
+        "low",
+        "medium"
+      ],
+      "raw": {
+        "accuracy": 0.5416666666666666,
+        "macro_f1": 0.5068965517241378,
+        "support": 24
+      },
+      "accepted": {
+        "accuracy": 0.375,
+        "macro_f1": 0.3653846153846154,
+        "support": 24
+      },
+      "threshold": {
+        "threshold": 0.70664838957413,
+        "coverage": 0.5833333333333334,
+        "accuracy": 0.6428571428571429
+      },
+      "holdout_support": {
+        "low": 18,
+        "medium": 4,
+        "high": 2
+      }
+    }
+  }
+}

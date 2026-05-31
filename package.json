@@ -1,16 +1,17 @@
 {
   "name": "@black-knight.dev/emet",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "private": false,
   "type": "module",
   "description": "Zero-setup grounded web research MCP server and Pi extension for AI coding agents.",
   "license": "MIT",
   "main": "./index.js",
   "bin": {
-    "emet": "./emet.js",
-    "emet-mcp": "./emet-mcp.js"
+    "emet": "./bin/emet.js",
+    "emet-mcp": "./bin/emet-mcp.js"
   },
   "files": [
+    ".agents",
     ".claude-plugin",
     ".codex-plugin",
     "bin",
@@ -21,6 +22,7 @@
     "ml",
     "mcp",
     "mcp-server.js",
+    "plugins",
     "emet.js",
     "emet-mcp.js",
     "README.md",
@@ -58,16 +60,21 @@
   "scripts": {
     "test": "node --test",
     "eval": "node --test test/eval-runner.test.js",
+    "audit:roadmap": "node scripts/router/audit/audit-implementation-roadmap.mjs",
+    "audit:promotion": "node scripts/router/audit/audit-promotion-gates.mjs",
+    "pack:dry": "npm pack --dry-run",
+    "check": "npm test && npm run audit:roadmap && npm run pack:dry",
+    "check:promotion": "npm run audit:promotion",
     "mcp": "node ./mcp/server.js"
   },
   "dependencies": {
-    "@mariozechner/pi-ai": "*",
-    "typebox": "*"
+    "@mariozechner/pi-ai": "^0.73.1",
+    "typebox": "^1.1.38"
   },
   "peerDependencies": {
-    "@mariozechner/pi-ai": "*",
-    "@mariozechner/pi-coding-agent": "*",
-    "typebox": "*"
+    "@mariozechner/pi-ai": "^0.73.1",
+    "@mariozechner/pi-coding-agent": "^0.73.1",
+    "typebox": "^1.1.38"
   },
   "pi": {
     "extensions": [

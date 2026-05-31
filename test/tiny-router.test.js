@@ -8,6 +8,7 @@ import {
   classifyConflictWithTinyRouter,
   classifyDomainWithTinyRouter,
   classifyFollowupWithTinyRouter,
+  classifyPreflightWithTinyRouter,
   classifySufficiencyWithTinyRouter,
   resolveConflictDecisionThreshold,
   resolveFollowupDecisionThreshold,
@@ -35,9 +36,15 @@ test("tiny router config keeps structured tasks off by default", () => {
   const config = resolveTinyRouterConfig(TEST_ENV);
   assert.equal(config.tasks.domain, true);
   assert.equal(config.tasks.followup, true);
+  assert.equal(config.tasks.preflight, false);
   assert.equal(config.tasks.conflict, false);
   assert.equal(config.tasks.sufficiency, false);
   assert.equal(config.tasks.queryUnderstanding, false);
+});
+
+test("preflight classifier is opt-in and returns null unless enabled", async () => {
+  const result = await classifyPreflightWithTinyRouter("CVE-2024-3094 xz utils", "fast", undefined, TEST_ENV);
+  assert.equal(result, null);
 });
 
 

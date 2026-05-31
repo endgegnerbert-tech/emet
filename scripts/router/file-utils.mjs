@@ -1,11 +1,10 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+#!/usr/bin/env node
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 
-export function readJsonl(path) {
-  return readFileSync(path, "utf8").split("\n").filter(Boolean).map((line) => JSON.parse(line));
-}
+export * from "./utils/file-utils.mjs";
 
-export function writeJsonl(path, rows) {
-  mkdirSync(dirname(path), { recursive: true });
-  writeFileSync(path, `${rows.map((row) => JSON.stringify(row)).join("\n")}\n`);
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  const result = spawnSync(process.execPath, [fileURLToPath(new URL("./utils/file-utils.mjs", import.meta.url)), ...process.argv.slice(2)], { stdio: "inherit" });
+  process.exitCode = result.status ?? (result.signal ? 1 : 0);
 }

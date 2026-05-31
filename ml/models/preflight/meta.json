@@ -1,0 +1,98 @@
+{
+  "task": "preflight",
+  "modelType": "lr",
+  "trainRows": 2551,
+  "rawDomainRows": 10925,
+  "reviewedDomainRows": 10901,
+  "rawMultitaskRows": 609,
+  "reviewedMultitaskRows": 606,
+  "queryRows": 176,
+  "multitaskQueryRows": 0,
+  "cappedDomainRows": 2383,
+  "maxDomainRowsPerLabel": 600,
+  "domainHoldoutRows": 126,
+  "queryHoldoutRows": 24,
+  "targets": {
+    "domain": {
+      "threshold": 0.9907823555539285,
+      "labels": [
+        "ai-ml",
+        "changelog",
+        "cloud-docs",
+        "ecommerce",
+        "finance",
+        "forums",
+        "github",
+        "legal",
+        "local-howto",
+        "medical",
+        "news-current-events",
+        "package-registry",
+        "papers",
+        "quantum",
+        "security",
+        "specs",
+        "standards",
+        "trading",
+        "vendor-status",
+        "web"
+      ]
+    },
+    "query_shape": {
+      "threshold": 0.9729307973779229,
+      "labels": [
+        "academic_review",
+        "ambiguous_factoid",
+        "comparison",
+        "current_or_version_sensitive",
+        "explanation",
+        "howto",
+        "legal_medical_finance_sensitive",
+        "shopping_or_ecommerce",
+        "short_fact",
+        "troubleshooting"
+      ]
+    },
+    "answer_shape": {
+      "threshold": 0.45,
+      "labels": [
+        "citation_heavy",
+        "comparison_table",
+        "list",
+        "long_explanation",
+        "short_answer",
+        "step_by_step"
+      ]
+    },
+    "source_family": {
+      "threshold": 0.9670704148668109,
+      "labels": [
+        "academic",
+        "community",
+        "encyclopedia",
+        "general_web",
+        "government_or_legal",
+        "official_docs",
+        "primary_source",
+        "product_or_ecommerce",
+        "recent_news"
+      ]
+    },
+    "recency_need": {
+      "threshold": 0.8679604683447314,
+      "labels": [
+        "helpful",
+        "none",
+        "required"
+      ]
+    },
+    "ambiguity": {
+      "threshold": 0.70664838957413,
+      "labels": [
+        "high",
+        "low",
+        "medium"
+      ]
+    }
+  }
+}

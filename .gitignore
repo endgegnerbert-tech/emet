@@ -5,6 +5,7 @@ coverage/
 .cache/
 .worktrees/
 .pi-context/
+.sem/
 .venv*/
 experiments/
 
@@ -14,3 +15,6 @@ ml/router/__pycache__/
 data/followup/log-candidates/*.jsonl
 data/router/log-candidates/*.jsonl
 data/router/experiment-candidates/*.jsonl
+
+# npm pack artifacts
+*.tgz

@@ -1,0 +1,445 @@
+{
+  "generatedAt": "2026-05-31T17:08:56.192Z",
+  "allSlicesReady": true,
+  "slices": [
+    {
+      "id": "slice-1",
+      "title": "schemas and docs",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "canonical_training_row_schema",
+          "path": "docs/schemas/router-training-row.schema.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "training_schema_validator",
+          "path": "lib/router-training-schema.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "data_governance_audit",
+          "path": "scripts/router/audit/audit-data-governance.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "training_readiness_audit",
+          "path": "scripts/router/audit/audit-training-readiness.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "training_schema_tests",
+          "path": "test/router-training-schema.test.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "evidence_trace_schema_tests",
+          "path": "test/evidence-schema.test.js",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-2",
+      "title": "stronger domain router",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "family_overlay_router",
+          "path": "lib/domains/index.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "family_overlay_tests",
+          "path": "test/research-policy-domain.test.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "domain_model_report",
+          "path": "metrics/router/domain-model2vec-svc.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "json_number_equals",
+          "name": "zero_high_risk_domain_downgrades",
+          "path": "metrics/router/domain-model2vec-svc.json",
+          "fieldPath": [
+            "high_risk_downgrades"
+          ],
+          "expected": 0,
+          "actual": 0,
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "domain_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_DOMAIN",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-3",
+      "title": "query-understanding model",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "query_understanding_runtime",
+          "path": "lib/query-understanding.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "query_understanding_trainer",
+          "path": "ml/router/train_query_understanding.py",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "jsonl_min_rows",
+          "name": "query_understanding_holdout",
+          "path": "data/router/query-understanding-holdout.jsonl",
+          "minRows": 1,
+          "rows": 24,
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "name": "query_understanding_or_preflight_metrics",
+          "kind": "any",
+          "pass": true,
+          "alternatives": [
+            {
+              "kind": "file",
+              "name": "query_understanding_metrics",
+              "path": "metrics/router/query-understanding-models.json",
+              "pass": false,
+              "warnings": [
+                "missing_file"
+              ]
+            },
+            {
+              "kind": "file",
+              "name": "preflight_superrouter_metrics",
+              "path": "metrics/router/preflight-superrouter.json",
+              "pass": true,
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "query_understanding_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_QUERY_UNDERSTANDING",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-4",
+      "title": "source authority + page quality",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "structured_feature_extractor",
+          "path": "lib/router-structured-features.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "structured_baseline_trainer",
+          "path": "ml/router/train_structured_baseline.py",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "source_authority_report",
+          "path": "metrics/router/source_authority-structured-models.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "page_quality_report",
+          "path": "metrics/router/page_quality-structured-models.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "source_authority_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_SOURCE_AUTHORITY",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "page_quality_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_PAGE_QUALITY",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-5",
+      "title": "evidence graph",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "evidence_state_builder",
+          "path": "lib/research-evidence.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "evidence_replay_script",
+          "path": "scripts/router/tools/replay-evidence-trace.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "evidence_schema_tests",
+          "path": "test/evidence-schema.test.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "evidence_replay_tests",
+          "path": "test/evidence-replay.test.js",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-6",
+      "title": "sufficiency/conflict/follow-up models",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "sufficiency_report",
+          "path": "metrics/router/sufficiency-structured-models.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "conflict_report",
+          "path": "metrics/router/conflict-structured-models.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "followup_report",
+          "path": "metrics/router/followup-model-gold.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "sufficiency_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_SUFFICIENCY",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "conflict_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_CONFLICT",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "followup_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER_FOLLOWUP",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-7",
+      "title": "unified research policy baseline",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "next_action_policy_runtime",
+          "path": "lib/research-next-action-policy.js",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "next_action_policy_eval",
+          "path": "scripts/router/eval/eval_research_policy_baseline.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "next_action_policy_tests",
+          "path": "test/research-next-action-policy.test.js",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-8",
+      "title": "TRM policy experiment",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "trm_experiment_plan",
+          "path": "docs/archive/plans/feature-plans/emet-superrouter/09-trm-hrm-policy-experiment.md",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "trm_not_promoted_without_win",
+          "path": "docs/archive/plans/feature-plans/emet-superrouter/09-trm-hrm-policy-experiment.md",
+          "text": "Do not use TRM",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "baseline_policy_before_trm",
+          "path": "lib/research-next-action-policy.js",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-9",
+      "title": "active-learning loop",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "pi_review_candidates",
+          "path": "scripts/router/review/pi-review-candidates.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "llm_review_candidates",
+          "path": "scripts/router/review/llm-review-candidates.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "split_reviewed_candidates",
+          "path": "scripts/router/review/split-reviewed-candidates.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "review_summary_report",
+          "path": "metrics/router/pi-review-summary.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "training_readiness_report",
+          "path": "metrics/router/training-readiness.json",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    },
+    {
+      "id": "slice-10",
+      "title": "production hardening",
+      "pass": true,
+      "checks": [
+        {
+          "kind": "file",
+          "name": "promotion_gate_audit",
+          "path": "scripts/router/audit/audit-promotion-gates.mjs",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "promotion_gate_report",
+          "path": "metrics/router/promotion-gates.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "latency_report",
+          "path": "metrics/router/latency.json",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "contains",
+          "name": "global_router_rollback_flag",
+          "path": "lib/tiny-router.js",
+          "text": "EMET_TINY_ROUTER",
+          "pass": true,
+          "warnings": []
+        },
+        {
+          "kind": "file",
+          "name": "router_runbook",
+          "path": "ml/router/README.md",
+          "pass": true,
+          "warnings": []
+        }
+      ]
+    }
+  ]
+}

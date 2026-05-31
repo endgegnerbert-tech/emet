@@ -10,6 +10,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from features import load_embedding_model, extract_domain_features, extract_followup_features, extract_query_understanding_features
 from query_understanding import predict_bundle
+from preflight import predict_preflight_bundle
 
 logging.basicConfig(level=logging.ERROR)
 
@@ -63,6 +64,7 @@ def main():
         domain_clf = load_model(os.path.join(model_dir, "domain", "model.joblib"))
         followup_clf = load_model(os.path.join(model_dir, "followup", "model.joblib"))
         query_understanding_clf = load_model(os.path.join(model_dir, "query-understanding", "model.joblib"))
+        preflight_clf = load_model(os.path.join(model_dir, "preflight", "model.joblib"))
         conflict_clf = load_model(os.path.join(model_dir, "conflict-structured", "model.joblib"))
         sufficiency_clf = load_model(os.path.join(model_dir, "sufficiency-structured", "model.joblib"))
         conflict_feature_names = load_feature_names(os.path.join(model_dir, "conflict-structured", "feature-names.json"))
@@ -135,6 +137,27 @@ def main():
                     "abstainedLabels": prediction.get("abstainedLabels", []),
                     "confidences": prediction.get("confidences", {}),
                     "predictedLabels": prediction.get("predicted_labels", {}),
+                }), flush=True)
+
+            elif task == "preflight":
+                if not preflight_clf:
+                    print(json.dumps({"id": req_id, "error": "Preflight model not loaded"}), flush=True)
+                    continue
+
+                feats = extract_query_understanding_features([query], [mode], emb_model=emb_model, show_progress_bar=False)
+                prediction = predict_preflight_bundle(preflight_clf, feats, queries=[query])[0]
+                print(json.dumps({
+                    "id": req_id,
+                    "domain": prediction.get("domain"),
+                    "query_shape": prediction.get("query_shape"),
+                    "answer_shape": prediction.get("answer_shape"),
+                    "source_family": prediction.get("source_family"),
+                    "recency_need": prediction.get("recency_need"),
+                    "ambiguity": prediction.get("ambiguity"),
+                    "confidence": prediction.get("confidence", 0.0),
+                    "abstainedLabels": prediction.get("abstainedLabels", []),
+                    "confidences": prediction.get("confidences", {}),
+                    "predictedLabels": prediction.get("predictedLabels", {}),
                 }), flush=True)
 
             elif task == "conflict":
