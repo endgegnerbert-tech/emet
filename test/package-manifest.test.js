@@ -9,8 +9,8 @@ test("package manifest exposes the pi extension entrypoint", () => {
 });
 
 test("package manifest exposes MCP CLI aliases", () => {
-  assert.equal(pkg.bin["emet"], "./bin/emet.js");
-  assert.equal(pkg.bin["emet-mcp"], "./bin/emet-mcp.js");
+  assert.equal(pkg.bin["emet"], "bin/emet.js");
+  assert.equal(pkg.bin["emet-mcp"], "bin/emet-mcp.js");
   assert.equal(existsSync("bin/emet.js"), true);
   assert.equal(existsSync("bin/emet-mcp.js"), true);
 });

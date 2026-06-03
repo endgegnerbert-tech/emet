@@ -1,6 +1,6 @@
 import { defaultMode } from "../../lib/research.js";
 import { runWebResearch } from "../../lib/web-research.js";
-import { trackEmetEvent } from "../../lib/analytics.js";
+import { trackEmetEvent, trackEmetRunOnce } from "../../lib/analytics.js";
 import { buildToolDefinition, TOOL_NAME } from "../../lib/tool-schema.js";
 import { applyHostProfileToTool } from "../hosts/profiles.js";
 
@@ -24,12 +24,13 @@ export async function handleToolsCall(message, deps) {
   // Make sure we have an object to mutate if needed
   let input = { ...args };
   if (!input.mode) input.mode = defaultMode(input.query || "");
-  trackEmetEvent("tool:call", { mode: input.mode, host: deps.hostProfile?.id || "unknown" });
+  await trackEmetRunOnce({ host: deps.hostProfile?.id || "unknown" });
+  void trackEmetEvent("tool:call", { mode: input.mode, host: deps.hostProfile?.id || "unknown" });
 
   if (runtime) {
     const { skip, reason, modifiedInput } = runtime.interceptCall(input);
     if (skip) {
-      trackEmetEvent("tool:skip", { mode: input.mode, reason });
+      await trackEmetEvent("tool:skip", { mode: input.mode, reason });
       return {
         content: [{ type: "text", text: JSON.stringify({ skip: true, reason }, null, 2) }],
         structuredContent: { skip: true, reason },
@@ -52,9 +53,9 @@ export async function handleToolsCall(message, deps) {
       isolate: input.isolate,
       ...(input.options || {}),
     });
-    trackEmetEvent(payload?.ok ? "tool:success" : "tool:error", { mode: input.mode });
+    await trackEmetEvent(payload?.ok ? "tool:success" : "tool:error", { mode: input.mode });
   } catch (error) {
-    trackEmetEvent("tool:error", { mode: input.mode });
+    await trackEmetEvent("tool:error", { mode: input.mode });
     throw error;
   }
 

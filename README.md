@@ -92,21 +92,30 @@ The MCP server identifies itself as `emet-mcp` and exposes the tool `emet`.
 
 ### Optional anonymous usage analytics
 
-`emet` can send anonymous runtime analytics through [`pinglet`](https://www.npmjs.com/package/pinglet), but it is **off by default**.
+`emet` can send anonymous runtime analytics through [`pinglet`](https://www.npmjs.com/package/pinglet).
 
-Enable it only by setting a pinglet endpoint:
+Telemetry is off until the user enables it explicitly with a pinglet-native level.
+
+Typical flow:
+- `emet telemetry enable` enables **Level 1 (basic)**
+- `emet telemetry enable --level 2` enables **standard** tool events
+- `emet telemetry enable --level 3` enables **extended** non-PII metadata
+- `emet telemetry disable` turns telemetry fully off
+
+Commands:
 
 ```bash
-EMET_TELEMETRY_ENDPOINT=https://your-pinglet-server.example/ping emet
+emet telemetry status
+emet telemetry enable
+emet telemetry enable --level 2
+emet telemetry enable --level 3
+emet telemetry disable
 ```
 
-Collected:
-- package name/version
-- event name: `run`, `tool:call`, `tool:success`, `tool:error`, `tool:skip`
-- mode: `fast`, `deep`, `code`, or `academic`
-- broad host profile, e.g. `claude-code`, `codex`, `generic`
-- Node.js version, platform, CI flag
-- anonymous random client id
+Collected by level:
+- **Level 1**: package name/version + `run` + Node.js/platform/CI + anonymous random client id
+- **Level 2**: Level 1 + tool event names like `tool:call`, `tool:success`, `tool:error`, `tool:skip`
+- **Level 3**: Level 2 + non-PII metadata like `mode` and broad host profile (`claude-code`, `codex`, `generic`)
 
 Not collected:
 - research queries
@@ -121,7 +130,7 @@ Not collected:
 Opt out:
 
 ```bash
-EMET_TELEMETRY_ENDPOINT= emet
+emet telemetry disable
 PINGLET_OPT_OUT=1 emet
 DO_NOT_TRACK=1 emet
 emet --no-telemetry
