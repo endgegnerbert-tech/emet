@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 
 import { runWebResearch } from "../lib/web-research.js";
 import { EmetRuntime } from "../lib/emet-runtime.js";
+import { setupTelemetry, trackEmetEvent } from "../lib/analytics.js";
 
 import { handleInitialize } from "./handlers/initialize.js";
 import { handlePromptsList, handlePromptsGet } from "./handlers/prompts.js";
@@ -117,6 +118,9 @@ export function startMcpServer({
   env = process.env,
 } = {}) {
   const server = new McpServer({ input, output, errorOutput, runWebResearchFn, hostId, env });
+  setupTelemetry().then(() => {
+    trackEmetEvent("run", { host: server.deps.hostProfile?.id || hostId || "unknown" });
+  });
   server.start();
   return server;
 }

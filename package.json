@@ -69,6 +69,7 @@
   },
   "dependencies": {
     "@mariozechner/pi-ai": "^0.73.1",
+    "pinglet": "file:../pingu",
     "typebox": "^1.1.38"
   },
   "peerDependencies": {

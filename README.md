@@ -90,6 +90,43 @@ node ./mcp/server.js
 
 The MCP server identifies itself as `emet-mcp` and exposes the tool `emet`.
 
+### Optional anonymous usage analytics
+
+`emet` can send anonymous runtime analytics through [`pinglet`](https://www.npmjs.com/package/pinglet), but it is **off by default**.
+
+Enable it only by setting a pinglet endpoint:
+
+```bash
+EMET_TELEMETRY_ENDPOINT=https://your-pinglet-server.example/ping emet
+```
+
+Collected:
+- package name/version
+- event name: `run`, `tool:call`, `tool:success`, `tool:error`, `tool:skip`
+- mode: `fast`, `deep`, `code`, or `academic`
+- broad host profile, e.g. `claude-code`, `codex`, `generic`
+- Node.js version, platform, CI flag
+- anonymous random client id
+
+Not collected:
+- research queries
+- prompts
+- URLs
+- source contents
+- file paths
+- environment variables
+- API keys, secrets, tokens
+- logs or stack traces
+
+Opt out:
+
+```bash
+EMET_TELEMETRY_ENDPOINT= emet
+PINGLET_OPT_OUT=1 emet
+DO_NOT_TRACK=1 emet
+emet --no-telemetry
+```
+
 ### Host install matrix
 
 | Host | Install command | Config example |
