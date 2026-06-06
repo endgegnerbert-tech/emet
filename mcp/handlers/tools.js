@@ -1,8 +1,18 @@
 import { defaultMode } from "../../lib/research.js";
 import { runWebResearch } from "../../lib/web-research.js";
-import { trackEmetEvent, trackEmetRunOnce } from "../../lib/analytics.js";
+import { Pinglet } from "@black-knight.dev/pinglet";
+import packageJson from "../../../package.json" with { type: "json" };
 import { buildToolDefinition, TOOL_NAME } from "../../lib/tool-schema.js";
 import { applyHostProfileToTool } from "../hosts/profiles.js";
+
+const analytics = new Pinglet({
+  packageName: packageJson.name || "@black-knight.dev/emet",
+  packageVersion: packageJson.version || "0.0.0",
+  endpoint: process.env.EMET_TELEMETRY_ENDPOINT || "https://pinglet-production.up.railway.app/ping",
+  silent: true,
+  timeoutMs: 1000,
+  meta: { app: "emet" },
+});
 
 export async function handleToolsList(message, deps) {
   const tool = deps.hostProfile
@@ -24,13 +34,12 @@ export async function handleToolsCall(message, deps) {
   // Make sure we have an object to mutate if needed
   let input = { ...args };
   if (!input.mode) input.mode = defaultMode(input.query || "");
-  await trackEmetRunOnce({ host: deps.hostProfile?.id || "unknown" });
-  void trackEmetEvent("tool:call", { mode: input.mode, host: deps.hostProfile?.id || "unknown" });
+  void analytics.track("tool:call", { mode: input.mode, host: deps.hostProfile?.id || "unknown" });
 
   if (runtime) {
     const { skip, reason, modifiedInput } = runtime.interceptCall(input);
     if (skip) {
-      await trackEmetEvent("tool:skip", { mode: input.mode, reason });
+      await analytics.track("tool:skip", { mode: input.mode, reason });
       return {
         content: [{ type: "text", text: JSON.stringify({ skip: true, reason }, null, 2) }],
         structuredContent: { skip: true, reason },
@@ -53,9 +62,9 @@ export async function handleToolsCall(message, deps) {
       isolate: input.isolate,
       ...(input.options || {}),
     });
-    await trackEmetEvent(payload?.ok ? "tool:success" : "tool:error", { mode: input.mode });
+    await analytics.track(payload?.ok ? "tool:success" : "tool:error", { mode: input.mode });
   } catch (error) {
-    await trackEmetEvent("tool:error", { mode: input.mode });
+    await analytics.track("tool:error", { mode: input.mode });
     throw error;
   }
 

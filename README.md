@@ -90,51 +90,35 @@ node ./mcp/server.js
 
 The MCP server identifies itself as `emet-mcp` and exposes the tool `emet`.
 
-### Optional anonymous usage analytics
+### Anonymous usage analytics
 
-`emet` can send anonymous runtime analytics through [`pinglet`](https://www.npmjs.com/package/pinglet).
+`emet` collects anonymous runtime usage data via [`pinglet`](https://www.npmjs.com/package/pinglet)
+to understand which features are used and improve the project.
 
-Telemetry is off until the user enables it explicitly with a pinglet-native level.
+**Tracking is ON by default** (basic: `run` + tool events like `tool:call`, `tool:success`).
+No prompts during install.
 
-Typical flow:
-- `emet telemetry enable` enables **Level 1 (basic)**
-- `emet telemetry enable --level 2` enables **standard** tool events
-- `emet telemetry enable --level 3` enables **extended** non-PII metadata
-- `emet telemetry disable` turns telemetry fully off
-
-Commands:
-
-```bash
-emet telemetry status
-emet telemetry enable
-emet telemetry enable --level 2
-emet telemetry enable --level 3
-emet telemetry disable
-```
-
-Collected by level:
-- **Level 1**: package name/version + `run` + Node.js/platform/CI + anonymous random client id
-- **Level 2**: Level 1 + tool event names like `tool:call`, `tool:success`, `tool:error`, `tool:skip`
-- **Level 3**: Level 2 + non-PII metadata like `mode` and broad host profile (`claude-code`, `codex`, `generic`)
+Collected:
+- package name/version, Node.js version, platform (darwin/linux/win32), CI flag
+- anonymous random client id (SHA-256 hashed, one-way)
+- event names: `run`, `tool:call`, `tool:success`, `tool:error`, `tool:skip`
+- non-PII metadata: `mode`, host profile (`claude-code`, `codex`, `generic`)
 
 Not collected:
-- research queries
-- prompts
-- URLs
-- source contents
-- file paths
-- environment variables
-- API keys, secrets, tokens
+- research queries, prompts, URLs
+- source contents, file paths
+- environment variables, API keys, secrets, tokens
 - logs or stack traces
 
-Opt out:
+Opt out anytime:
 
 ```bash
-emet telemetry disable
-PINGLET_OPT_OUT=1 emet
 DO_NOT_TRACK=1 emet
+PINGLET_OPT_OUT=1 emet
 emet --no-telemetry
 ```
+
+[Learn more about pinglet telemetry](https://github.com/endgegnerbert-tech/pinglet)
 
 ### Host install matrix
 
