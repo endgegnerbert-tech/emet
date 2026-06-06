@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.5
+
+### Fixed
+- **evaluateSufficiency Claims Gap (High):** `detectCoverageGaps()` now falls back to source-authoritative check when no claims are passed, eliminating the contradiction where `sufficient=true` but `missingAspects` always contained "authoritative sources" (73/201 cached queries affected).
+- **Synthesis Fallback Boilerplate (High):** `fallbackSynthesis()` now extracts real page content (top 400 chars per source) instead of returning "I found X relevant sources" template, giving agents usable content even when LLM synthesis is unavailable.
+- **Mode Routing Agent Override (High):** `runWebResearch()` now re-evaluates mode from query intent via `defaultMode()` and upgrades `fast` to `academic`/`deep`/`versioned` when the query demands it, preventing paper and comparison queries from landing in generic fast mode.
+- **Options Propagation in Mode Override:** Fixed `isolate`, `files`, and other option fields being lost when the mode-override path reconstructed the research config without spreading original options.
+
+### Changed
+- **Tool Schema Default:** Added `default: "fast"` and improved description for the `mode` field so MCP hosts display the correct default.
+
 ## 1.2.0
 
 ### Added
