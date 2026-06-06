@@ -1,25 +1,35 @@
 # Changelog
 
-## 1.2.6
+## 1.3.0
+
+### Removed
+- **Scrapling Integration (343MB):** Removed the Python Scrapling daemon (`.venv-scrapling/` + `Scrapling/`, ~350 lines of Python). Page quality assessment utilities are preserved; blocked/dynamic pages now fall through to Jina Reader directly. Eliminates Python dependency, 5 failure modes, and 343MB of disk usage.
 
 ### Added
-- **Full Page Text in Response (`options.rawPages`):** New `rawPages: true` option on the emet tool. When set, the response includes a `pageTexts` array with the full raw text of each fetched page (not truncated to 4k/8k chars). Agents no longer need `browser_harness`, `curl`, or custom fetch to inspect full page content. Works in all modes (`fast`, `deep`, `code`, `academic`).
-- **`fullText` in Page Cache:** `pageFromText()` now stores both `text` (truncated for synthesis) and `fullText` (complete page) in the page cache. Full text is reused across queries, reducing re-fetches.
-- **`webFetch()` export:** New exported function in `lib/web-research.js` for fetching a single URL with effectively unlimited page text limit. Usable by Pi extensions and direct API consumers.
+- **SQLite Research Cache (`emet-context.db`):** Replaced the single `research-cache.json` file with a `better-sqlite3` backed SQLite database (WAL mode, FTS5-ready schema). Automatic one-shot migration from old JSON cache. Slim cache entries: `runtimeTrace`, `contentText`, and `pageTexts` are stripped before writing, eliminating ~98% cache bloat.
+- **Context-Aware Cache Path:** Pi extensions store cache in `~/.pi/agent/lazy-modules/emet/.cache/`, standalone users get XDG-compatible paths (`~/Library/Caches/emet/` on macOS, `~/.cache/emet/` on Linux). Overridable via `EMET_CONTEXT_PATH`.
+- **Article Extraction:** Integrated `@extractus/article-extractor` for semantic content extraction from HTML pages, with `turndown` for HTML-to-Markdown conversion. Falls back to regex-based extraction when article extraction fails.
+- **PDF Text Extraction:** Added `pdfjs-dist` integration for extracting full text from PDF documents in academic, code, and deep research modes.
+- **Full Page Text in Response (`options.rawPages`):** New `rawPages: true` option on the emet tool. When set, the response includes a `pageTexts` array with the full raw text of each fetched page (not truncated to 4k/8k chars). Works in all modes (`fast`, `deep`, `code`, `academic`).
+- **`fullText` in Page Cache:** `pageFromText()` now stores both `text` (truncated for synthesis) and `fullText` (complete page) in the page cache, reducing re-fetches.
+- **`webFetch()` export:** New exported function in `lib/web-research.js` for fetching a single URL with effectively unlimited page text limit.
+- **User-Agent Rotation:** Three rotating User-Agent strings per request to reduce blocking.
+- **Domain-Specific Timeouts:** `arxiv.org` (15s), `github.com` (5s) for faster failover.
+- **Cache Size Limits:** In-memory caches capped at 200 (search) and 100 (pages), preventing unbounded memory growth.
+- **JSON Safety Helpers:** `safeJsonStringify` and `safeJsonParse` wrappers prevent crashes from circular or non-serializable values.
 
 ### Fixed
-- **Plugin Manifest Version Alignment:** Updated `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, and `plugins/emet/.codex-plugin/plugin.json` to match package version 1.2.5.
-
-## 1.2.5
-
-### Fixed
-- **evaluateSufficiency Claims Gap (High):** `detectCoverageGaps()` now falls back to source-authoritative check when no claims are passed, eliminating the contradiction where `sufficient=true` but `missingAspects` always contained "authoritative sources" (73/201 cached queries affected).
-- **Synthesis Fallback Boilerplate (High):** `fallbackSynthesis()` now extracts real page content (top 400 chars per source) instead of returning "I found X relevant sources" template, giving agents usable content even when LLM synthesis is unavailable.
-- **Mode Routing Agent Override (High):** `runWebResearch()` now re-evaluates mode from query intent via `defaultMode()` and upgrades `fast` to `academic`/`deep`/`versioned` when the query demands it, preventing paper and comparison queries from landing in generic fast mode.
-- **Options Propagation in Mode Override:** Fixed `isolate`, `files`, and other option fields being lost when the mode-override path reconstructed the research config without spreading original options.
+- **evaluateSufficiency Claims Gap (High):** `detectCoverageGaps()` now falls back to source-authoritative check when no claims are passed (73/201 cached queries affected).
+- **Synthesis Fallback Boilerplate (High):** `fallbackSynthesis()` now extracts real page content instead of returning a generic template.
+- **Mode Routing Agent Override (High):** `runWebResearch()` upgrades `fast` to `academic`/`deep`/`versioned` when the query demands it.
+- **Options Propagation in Mode Override:** Fixed `isolate`, `files`, and other option fields being lost during mode-override config reconstruction.
+- **Infinite Recursion in Cache Migration:** Fixed `migrateFromJsonIfNeeded` calling `getDb()` before DB initialization (stack overflow on first access).
+- **Duplicate `stripTags`:** Centralized HTML tag stripping into `lib/article-extractor.js`.
+- **Plugin Manifest Versions:** Aligned `.claude-plugin`, `.codex-plugin`, and `plugins/emet/.codex-plugin` manifests to package version.
 
 ### Changed
-- **Tool Schema Default:** Added `default: "fast"` and improved description for the `mode` field so MCP hosts display the correct default.
+- **Cache Key Format:** New `emet:v1:` prefix with stable config fields. Old cache entries from JSON migration are preserved but naturally expire.
+- **Tool Schema Default:** Added `default: "fast"` and improved description for the `mode` field.
 
 ## 1.2.0
 

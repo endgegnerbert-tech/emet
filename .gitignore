@@ -7,6 +7,7 @@ coverage/
 .pi-context/
 .sem/
 .venv*/
+Scrapling/
 experiments/
 
 # Generated local artifacts
