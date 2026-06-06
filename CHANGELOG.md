@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.6
+
+### Added
+- **Full Page Text in Response (`options.rawPages`):** New `rawPages: true` option on the emet tool. When set, the response includes a `pageTexts` array with the full raw text of each fetched page (not truncated to 4k/8k chars). Agents no longer need `browser_harness`, `curl`, or custom fetch to inspect full page content. Works in all modes (`fast`, `deep`, `code`, `academic`).
+- **`fullText` in Page Cache:** `pageFromText()` now stores both `text` (truncated for synthesis) and `fullText` (complete page) in the page cache. Full text is reused across queries, reducing re-fetches.
+- **`webFetch()` export:** New exported function in `lib/web-research.js` for fetching a single URL with effectively unlimited page text limit. Usable by Pi extensions and direct API consumers.
+
+### Fixed
+- **Plugin Manifest Version Alignment:** Updated `.claude-plugin/plugin.json`, `.codex-plugin/plugin.json`, and `plugins/emet/.codex-plugin/plugin.json` to match package version 1.2.5.
+
 ## 1.2.5
 
 ### Fixed
