@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1
+
+### Fixed
+- **Unhandled Promise Rejection in Article Extraction (Crash):** `extractArticle()` in `lib/article-extractor.js` called async `extractFromHtml()` without `await`, causing unhandled promise rejections to crash the process when `linkedom`'s `DOMParser` returned a document without `documentElement` (empty/whitespace-only/plain-text HTML). Made `extractArticle` and `extractPageSnapshot` async with proper `await` chains so the error is caught gracefully and falls back to regex extraction.
+
 ## 1.3.0
 
 ### Removed
