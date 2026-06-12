@@ -1,20 +1,20 @@
 {
   "task": "preflight",
   "modelType": "lr",
-  "trainRows": 2551,
-  "rawDomainRows": 10925,
-  "reviewedDomainRows": 10901,
+  "trainRows": 1640,
+  "rawDomainRows": 3787,
+  "reviewedDomainRows": 2910,
   "rawMultitaskRows": 609,
   "reviewedMultitaskRows": 606,
   "queryRows": 176,
-  "multitaskQueryRows": 0,
-  "cappedDomainRows": 2383,
+  "multitaskQueryRows": 606,
+  "cappedDomainRows": 1809,
   "maxDomainRowsPerLabel": 600,
   "domainHoldoutRows": 126,
   "queryHoldoutRows": 24,
   "targets": {
     "domain": {
-      "threshold": 0.9907823555539285,
+      "threshold": 0.9984900951385498,
       "labels": [
         "ai-ml",
         "changelog",
@@ -24,13 +24,13 @@
         "forums",
         "github",
         "legal",
-        "local-howto",
         "medical",
         "news-current-events",
         "package-registry",
         "papers",
         "quantum",
         "security",
+        "shopify",
         "specs",
         "standards",
         "trading",
@@ -39,7 +39,7 @@
       ]
     },
     "query_shape": {
-      "threshold": 0.9729307973779229,
+      "threshold": 0.9901491403579712,
       "labels": [
         "academic_review",
         "ambiguous_factoid",
@@ -54,7 +54,7 @@
       ]
     },
     "answer_shape": {
-      "threshold": 0.45,
+      "threshold": 0.5767588019371033,
       "labels": [
         "citation_heavy",
         "comparison_table",
@@ -65,7 +65,7 @@
       ]
     },
     "source_family": {
-      "threshold": 0.9670704148668109,
+      "threshold": 0.98759925365448,
       "labels": [
         "academic",
         "community",
@@ -79,7 +79,7 @@
       ]
     },
     "recency_need": {
-      "threshold": 0.8679604683447314,
+      "threshold": 0.901154637336731,
       "labels": [
         "helpful",
         "none",
@@ -87,7 +87,7 @@
       ]
     },
     "ambiguity": {
-      "threshold": 0.70664838957413,
+      "threshold": 0.5972715020179749,
       "labels": [
         "high",
         "low",

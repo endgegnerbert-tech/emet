@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { runWebResearch } from "../lib/web-research.js";
 import { EmetRuntime } from "../lib/emet-runtime.js";
 import { Pinglet } from "@black-knight.dev/pinglet";
-import packageJson from "../../package.json" with { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 
 import { handleInitialize } from "./handlers/initialize.js";
 import { handlePromptsList, handlePromptsGet } from "./handlers/prompts.js";

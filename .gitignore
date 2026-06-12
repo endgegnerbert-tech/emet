@@ -19,3 +19,5 @@ data/router/experiment-candidates/*.jsonl
 
 # npm pack artifacts
 *.tgz
+ml/models/domain/
+ml/models/conflict-structured/

@@ -450,6 +450,7 @@ function writeJson(path, value) {
 function parseArgs(argv) {
   const args = {
     logs: [join(homedir(), ".pi", "logs", "emet.jsonl"), join(homedir(), ".pi", "logs", "pi-research.jsonl")],
+    logDir: null,
     outDir: "data/router/log-candidates",
     followupOutDir: "data/followup/log-candidates",
     maxQueryOccurrences: 10,
@@ -459,6 +460,7 @@ function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === "--logs") args.logs = String(argv[++index] || "").split(",").filter(Boolean);
+    else if (arg === "--log-dir") args.logDir = argv[++index];
     else if (arg === "--out-dir") args.outDir = argv[++index];
     else if (arg === "--followup-out-dir") args.followupOutDir = argv[++index];
     else if (arg === "--max-query-occurrences") args.maxQueryOccurrences = Number(argv[++index]);
@@ -472,9 +474,39 @@ function parseArgs(argv) {
 
 function usage() {
   return [
-    "Usage: node scripts/router/build-log-training-candidates.mjs [--logs a.jsonl,b.jsonl] [--out-dir data/router/log-candidates]",
+    "Usage: node scripts/router/build-log-training-candidates.mjs [--logs a.jsonl,b.jsonl] [--log-dir dir] [--out-dir data/router/log-candidates]",
     "Builds cleaned, review-required training candidates from research logs. It never writes gold files or trainable model artifacts.",
+    "",
+    "Options:",
+    "  --logs <paths>    Comma-separated log file paths (default: ~/.pi/logs/emet.jsonl,~/.pi/logs/pi-research.jsonl)",
+    "  --log-dir <dir>   Directory with daily structured logs (emet-YYYY-MM-DD.jsonl) — new schema with outcome/reason fields",
+    "  --out-dir <dir>   Output directory for candidate files",
+    "  --followup-out-dir <dir>  Output directory for followup candidates",
+    "  --max-query-occurrences <n>  Max times a query can appear (default: 10)",
+    "  --include-internal Whether to include internal/test queries",
+    "  --help            Show this help",
   ].join("\n");
+}
+
+function readDailyLogEvents(dirPath) {
+  if (!dirPath || !existsSync(dirPath)) return [];
+  const files = readdirSync(dirPath)
+    .filter((name) => name.startsWith("emet-") && name.endsWith(".jsonl"))
+    .sort()
+    .map((name) => join(dirPath, name));
+
+  const events = [];
+  for (const file of files) {
+    const lines = readFileSync(file, "utf8").split("\n");
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const event = safeJsonParse(line);
+      if (event) {
+        events.push({ ...event, logPath: file, sourceFormat: "daily" });
+      }
+    }
+  }
+  return events;
 }
 
 async function main() {
@@ -484,7 +516,9 @@ async function main() {
     return;
   }
 
-  const events = readLogEvents(args.logs);
+  const fileEvents = readLogEvents(args.logs);
+  const dailyEvents = readDailyLogEvents(args.logDir);
+  const events = [...fileEvents, ...dailyEvents].sort((a, b) => String(a.ts || "").localeCompare(String(b.ts || "")));
   const sessions = parseResearchSessionsFromLogEvents(events);
   const candidates = buildCandidateSets(sessions, args);
 

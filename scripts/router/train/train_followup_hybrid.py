@@ -6,7 +6,7 @@ import numpy as np
 from collections import Counter
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.model_selection import GroupKFold
+from sklearn.model_selection import StratifiedKFold
 from sklearn.svm import LinearSVC
 
 sys.path.insert(0, os.path.join(os.getcwd(), "ml", "router"))
@@ -148,17 +148,19 @@ def train_classifier(X, y):
 def evaluate(real_rows, augmented_rows, emb_model, confidence_threshold=0.75):
     real_groups = np.array([row["group"] for row in real_rows])
     unique_groups = np.unique(real_groups)
-    n_splits = min(5, len(unique_groups))
-    splitter = GroupKFold(n_splits=n_splits)
+    min_class_count = min(Counter(row["label"] for row in real_rows).values())
+    n_splits = min(5, len(unique_groups), max(2, min_class_count))
+    splitter = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
 
     gold = []
     pred_model = []
     pred_hybrid = []
     fold_rows = []
+    labels_arr = np.array([row["label"] for row in real_rows])
 
-    for fold, (train_idx, test_idx) in enumerate(splitter.split(real_rows, groups=real_groups), start=1):
-        test_groups = set(real_groups[test_idx])
-        train_rows = [row for row in augmented_rows if row["group"] not in test_groups]
+    for fold, (train_idx, test_idx) in enumerate(splitter.split(real_rows, labels_arr), start=1):
+        train_groups = set(real_groups[train_idx])
+        train_rows = [row for row in augmented_rows if row["group"] in train_groups]
         test_rows = [real_rows[i] for i in test_idx]
 
         X_train, y_train, _ = build_xy(train_rows, emb_model)
