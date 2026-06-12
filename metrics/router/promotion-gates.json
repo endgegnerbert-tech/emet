@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T16:56:10.223Z",
+  "generatedAt": "2026-06-12T21:03:48.557Z",
   "phase": "11-evaluation-promotion-rollout",
   "promoteSafe": false,
   "recommendation": "Do not promote. Fix failed eval, metric, latency, or rollback gates first.",
@@ -72,7 +72,7 @@
       "paths": [
         "data/followup/gold-followup.jsonl"
       ],
-      "rows": 26,
+      "rows": 607,
       "minRows": 1,
       "pass": true,
       "warnings": []
@@ -155,8 +155,8 @@
       "name": "sufficiency",
       "kind": "structured-promotion",
       "reportPath": "metrics/router/sufficiency-structured-models.json",
-      "macroF1": 0.7409257409257409,
-      "accuracy": 0.8461538461538461,
+      "macroF1": 0.8092046752515216,
+      "accuracy": 0.8426724137931034,
       "promotionGate": {
         "beats_baseline_macro_f1": true,
         "beats_baseline_accuracy": true,
@@ -169,17 +169,15 @@
       "name": "conflict",
       "kind": "structured-promotion",
       "reportPath": "metrics/router/conflict-structured-models.json",
-      "macroF1": 0.6336908409942117,
-      "accuracy": 0.6375,
+      "macroF1": 1,
+      "accuracy": 1,
       "promotionGate": {
         "beats_baseline_macro_f1": true,
-        "beats_baseline_accuracy": false,
+        "beats_baseline_accuracy": true,
         "high_risk_false_sufficient_zero": true
       },
-      "pass": false,
-      "warnings": [
-        "promotion_gate_failed"
-      ]
+      "pass": true,
+      "warnings": []
     },
     {
       "name": "followup_action",
@@ -215,9 +213,14 @@
   "rollback": {
     "routerFile": "lib/tiny-router.js",
     "missingFlags": [],
-    "missingArtifacts": [],
+    "missingArtifacts": [
+      "ml/models/domain/model.joblib",
+      "ml/models/conflict-structured/model.joblib"
+    ],
     "rulesFallbackPresent": true,
-    "pass": true,
-    "warnings": []
+    "pass": false,
+    "warnings": [
+      "missing_model_artifacts"
+    ]
   }
 }

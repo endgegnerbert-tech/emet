@@ -21,3 +21,10 @@ data/router/experiment-candidates/*.jsonl
 *.tgz
 ml/models/domain/
 ml/models/conflict-structured/
+
+# Generated training data (regeneratable from logs)
+data/router/merged-domain-*.jsonl
+data/router/merged-domain-*.npz
+data/router/merged-domain-train.jsonl
+data/followup/gold-followup.jsonl.bak
+data/router/log-candidates/*-report.json

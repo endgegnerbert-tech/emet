@@ -1,7 +1,7 @@
 import { defaultMode } from "../../lib/research.js";
 import { runWebResearch } from "../../lib/web-research.js";
 import { Pinglet } from "@black-knight.dev/pinglet";
-import packageJson from "../../../package.json" with { type: "json" };
+import packageJson from "../../package.json" with { type: "json" };
 import { buildToolDefinition, TOOL_NAME } from "../../lib/tool-schema.js";
 import { applyHostProfileToTool } from "../hosts/profiles.js";
 
