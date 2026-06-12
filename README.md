@@ -349,6 +349,16 @@ Once installed, your agent has access to the `emet` tool. It accepts a `query`, 
 
 ---
 
+## Runtime, logging, and local routing
+
+- **Tiny router auto-activation:** When `ml/models/domain/model.joblib`, `ml/models/preflight/model.joblib`, and `.venv-router/bin/python` are present, emet enables local `domain` and `preflight` routing automatically. Set `EMET_TINY_ROUTER=0` to force it off.
+- **Optional router tasks:** Follow-up, conflict, sufficiency, source-authority, page-quality, and query-understanding heads remain opt-in via their `EMET_TINY_ROUTER_*` flags.
+- **Structured runtime logs:** Research events are JSONL with stable `outcome`, `reason`, provider, retry, status, source-count, and latency fields where relevant.
+- **Log paths:** `EMET_LOG_PATH` still overrides everything. Otherwise Pi runs use the emet context/log directory, and standalone installs use OS-native log locations (`~/Library/Logs/emet` on macOS, `$XDG_STATE_HOME/emet/logs` on Linux).
+- **Bounded logs:** Default logs are daily files (`emet-YYYY-MM-DD.jsonl`) and oversized active files roll over at `EMET_LOG_MAX_BYTES` (default 50 MiB). Use `node scripts/maintenance/rotate-emet-logs.mjs [log-dir]` to gzip older JSONL logs.
+
+---
+
 ## 🧠 Under the Hood: The Agentic Router Update (v1.4.0)
 
 With `1.4.0`, `emet` shifted from heavy, generative JSON-planners to a **Hybrid Tiny-Router Architecture**.

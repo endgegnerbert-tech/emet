@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.3.2
+
+### Added
+- **Tiny router auto-activation:** `lib/tiny-router.js` now auto-enables `domain` and `preflight` tasks when `ml/models/domain/model.joblib`, `ml/models/preflight/model.joblib`, and `.venv-router/bin/python` are present. Set `EMET_TINY_ROUTER=0` to force off.
+- **Structured research logging:** Stable `outcome`/`reason` fields plus `retryCount`, `provider`, `statusCode`, `latencyMs`, `sourceCount`, `fallbackUsed`, and `fallback` metadata across all fetch, search, synthesis, and research events. New `fetchFailureReason()`, `contentFailureReason()`, `isTransientStatus()`, and `isRetryableFetchError()` helpers.
+- **Daily log files with size rollover:** Research logs default to context-aware OS/Pi paths and daily JSONL files (`emet-YYYY-MM-DD.jsonl`) instead of an unbounded `~/.pi/logs/emet.jsonl`. Active file rolls over at `EMET_LOG_MAX_BYTES` (default 50 MiB). Logger degradation is counted and reported once.
+- **Log maintenance script:** `scripts/maintenance/rotate-emet-logs.mjs` compresses older JSONL with gzip.
+
+### Changed
+- **Retry hardening in `fetchTextWithRetry()`:** Retries only transient failures (timeout, 408, 429, 500, 502, 503, 504). Does not retry 400/401/403/404. Uses exponential backoff + jitter. Respects request latency budget.
+- **Search provider instrumentation:** `searchDuckDuckGo()` logs per-provider fallthrough, raw/post-filter/final counts, and provider order. Cache hits logged as `search_results_summary`.
+- **Router daemon ref-counting:** Tiny-router daemon unrefs its child-process streams when idle and refs them during active requests, so test/CLI processes exit promptly.
+- **Reduced fallback noise:** When tiny-router is unavailable, emits one `tiny_router_setup` event per session instead of repeated fallback spam.
+
+### Fixed
+- **PDF.js runtime dependency shipping:** Added `@napi-rs/canvas` as a direct runtime dependency so published npm installs also pull the Node canvas runtime that `pdfjs-dist` expects for `DOMMatrix`/`ImageData`.
+- **PDF extraction fallback:** `lib/pdf-extractor.js` now preloads canvas support before importing `pdfjs-dist` and degrades gracefully when native canvas support is unavailable, instead of crashing with `DOMMatrix is not defined`.
+
 ## 1.3.1
 
 ### Fixed

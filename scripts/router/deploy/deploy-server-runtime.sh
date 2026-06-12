@@ -32,7 +32,7 @@ set -euo pipefail
 cd "$REMOTE_RUNTIME_DIR"
 
 mkdir -p .cache/models/emet-router
-for model in domain conflict-structured sufficiency-structured; do
+for model in domain preflight conflict-structured sufficiency-structured; do
   if [ -d "$REMOTE_TRAIN_DIR/.cache/models/emet-router/$model" ]; then
     rm -rf ".cache/models/emet-router/$model"
     cp -R "$REMOTE_TRAIN_DIR/.cache/models/emet-router/$model" ".cache/models/emet-router/$model"
@@ -81,6 +81,7 @@ export EMET_TINY_ROUTER_MODEL="$PWD/.cache/models/emet-router"
 export EMET_TINY_ROUTER_PYTHON="$PWD/.venv-router/bin/python"
 export EMET_TINY_ROUTER_TIMEOUT_MS="${EMET_TINY_ROUTER_TIMEOUT_MS:-50}"
 export EMET_TINY_ROUTER_DOMAIN=1
+export EMET_TINY_ROUTER_PREFLIGHT=1
 export EMET_TINY_ROUTER_FOLLOWUP=0
 export EMET_TINY_ROUTER_CONFLICT=0
 export EMET_TINY_ROUTER_SUFFICIENCY=0
@@ -98,6 +99,7 @@ export EMET_TINY_ROUTER_MODEL="$PWD/.cache/models/emet-router"
 export EMET_TINY_ROUTER_PYTHON="$PWD/.venv-router/bin/python"
 export EMET_TINY_ROUTER_TIMEOUT_MS="${EMET_TINY_ROUTER_TIMEOUT_MS:-50}"
 export EMET_TINY_ROUTER_DOMAIN=1
+export EMET_TINY_ROUTER_PREFLIGHT=1
 export EMET_TINY_ROUTER_FOLLOWUP=1
 export EMET_TINY_ROUTER_CONFLICT=1
 export EMET_TINY_ROUTER_SUFFICIENCY=1

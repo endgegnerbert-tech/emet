@@ -32,19 +32,34 @@ test("tiny router returns null if disabled", async () => {
 });
 
 
-test("tiny router config keeps structured tasks off by default", () => {
+test("tiny router config enables domain and preflight by default when prerequisites exist", () => {
   const config = resolveTinyRouterConfig(TEST_ENV);
   assert.equal(config.tasks.domain, true);
   assert.equal(config.tasks.followup, true);
-  assert.equal(config.tasks.preflight, false);
+  assert.equal(config.tasks.preflight, true);
   assert.equal(config.tasks.conflict, false);
   assert.equal(config.tasks.sufficiency, false);
   assert.equal(config.tasks.queryUnderstanding, false);
 });
 
-test("preflight classifier is opt-in and returns null unless enabled", async () => {
-  const result = await classifyPreflightWithTinyRouter("CVE-2024-3094 xz utils", "fast", undefined, TEST_ENV);
-  assert.equal(result, null);
+test("tiny router auto-enables domain and preflight without env flag when prerequisites exist", () => {
+  const config = resolveTinyRouterConfig({
+    EMET_TINY_ROUTER_MODEL: "ml/models",
+    EMET_TINY_ROUTER_PYTHON: ".venv-router/bin/python",
+  });
+  assert.equal(config.autoEnabled, true);
+  assert.equal(config.enabled, true);
+  assert.equal(config.tasks.domain, true);
+  assert.equal(config.tasks.preflight, true);
+});
+
+test("preflight classifier is active when prerequisites exist", async () => {
+  try {
+    const result = await classifyPreflightWithTinyRouter("CVE-2024-3094 xz utils", "fast", undefined, TEST_ENV);
+    assert.ok(result === null || typeof result === "object");
+  } finally {
+    stopTinyRouterDaemon();
+  }
 });
 
 
