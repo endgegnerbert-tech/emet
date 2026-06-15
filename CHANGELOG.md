@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.3.4
+
+### Fixed
+- **PDF Buffer → Uint8Array conversion:** `lib/pdf-extractor.js` now converts Node.js `Buffer` to `Uint8Array` before passing to `pdfjs-dist` v6, which no longer accepts `Buffer` objects. Fixes `"Please provide binary data as Uint8Array, rather than Buffer"` error during PDF text extraction in academic, code, and deep research modes.
+
+## 1.3.3
+
+### Fixed
+- **MCP import path:** Fixed incorrect import path in `mcp/handlers/tools.js`.
+- **Tiny router tests:** Fixed test stability issues in `test/tiny-router.test.js`.
+
+### Changed
+- **Promotion gates:** Updated metrics and thresholds in `metrics/router/promotion-gates.json`.
+- **Audit roadmap:** Refreshed implementation roadmap timestamps.
+
 ## 1.3.2
 
 ### Added
