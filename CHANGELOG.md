@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.5
+
+### Added
+- **Topic-based cache key (`emet:v2`):** New `normalizeResearchTopic()` strips years, versions, `site:` prefixes, GitHub paths, and URLs before hashing. Cache writes go to both the exact key (`emet:v1`) and the topic key (`emet:v2`). On read, topic key is tried as fallback after exact miss. Analyzed data shows ~93% of daily queries share a topic with a cached entry, turning 0% → ~93% cache hit rate for repeat topics. (`lib/research-memory.js`, `lib/web-research.js`)
+
+### Fixed
+- **pdfjs-dist v6 `standardFontDataUrl` parameter:** `lib/pdf-extractor.js` now passes resolved `file://` URLs for `standardFontDataUrl` and `cMapUrl` to `pdfjs.getDocument()`, plus `useWorkerFetch: false`. Fixes `Warning: UnknownErrorException: Ensure that the standardFontDataUrl API parameter is provided.` during PDF extraction in academic, code, and deep modes.
+
 ## 1.3.4
 
 ### Fixed
