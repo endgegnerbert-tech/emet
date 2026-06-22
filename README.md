@@ -3,14 +3,14 @@
 ![emet logo](docs/assets/emet-logo.png)
 
 [![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
-[![tests](https://img.shields.io/badge/tests-228%2F228-brightgreen)](https://github.com/endgegnerbert-tech/emet)
+[![tests](https://img.shields.io/badge/tests-333%2F333-brightgreen)](https://github.com/endgegnerbert-tech/emet)
 [![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
 
 **The Zero-Setup Research Engine for Autonomous AI Agents.**
 
-Quick links: [5-minute quickstarts](docs/quickstarts.md) · [examples gallery](docs/examples.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.1 release notes](docs/releases/1.4.1.md)
+Quick links: [5-minute quickstarts](docs/quickstarts.md) · [examples gallery](docs/examples.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.5 release notes](docs/releases/1.4.5.md)
 
-> **Pinned for 1.4.1:** emet now ships `emet doctor`, `emet init`, CLI `emet fetch`, MCP/Pi `web_fetch`, and a persistent SQLite/FTS5 page store. New in 1.4.1: internal no-auth collector registry (HN, V2EX, GitHub, RSS, YouTube) for platform data — visible in `emet doctor`.
+> **Pinned for 1.4.5:** emet is a unified, checkpointable research pipeline for agents. Community/media platforms (HN, V2EX, GitHub, RSS, YouTube) are retrieval backends, not separate public tools; social evidence is treated as signal and factual/high-risk claims require authoritative follow-up.
 
 `emet` is a grounded research layer for autonomous AI coding agents. It lets the agent decide when to verify facts, resolve source conflicts, or pull current documentation—without leaving the workflow.
 

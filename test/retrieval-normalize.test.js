@@ -117,9 +117,10 @@ test("normalizeCollectorResult: stable IDs from objectID", () => {
   assert.equal(r1.id, "hn:abc123");
 });
 
-test("normalizeCollectorResult: fallback to index for missing ID", () => {
+test("normalizeCollectorResult: fallback ID is stable hash, not index-only", () => {
   const result = normalizeCollectorResult("rss", { title: "No ID" }, 7);
-  assert.equal(result.id, "rss:7");
+  assert.match(result.id, /^rss:[a-f0-9]{10}$/);
+  assert.equal(result.id, normalizeCollectorResult("rss", { title: "No ID" }, 9).id);
 });
 
 // --- buildCollectorGap ---
@@ -167,4 +168,12 @@ test("normalizeCollectorResult: community sources are never authoritative", () =
     const result = normalizeCollectorResult(platform, { title: "X", url: "https://x.com" }, 0);
     assert.equal(result.authoritative, false, `${platform} should not be authoritative`);
   }
+});
+
+test("normalizeCollectorResult: social signals include evidence role and stability", () => {
+  const result = normalizeCollectorResult("hn", { title: "A", url: "https://a.com", points: 5, signals: { createdAt: "2026-01-01" } }, 0);
+  assert.equal(result.signals.evidenceRole, "community_signal");
+  assert.equal(result.signals.platformStability, "stable");
+  assert.equal(result.signals.auth, "none");
+  assert.equal(result.signals.createdAt, "2026-01-01");
 });

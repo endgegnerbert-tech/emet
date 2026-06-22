@@ -37,10 +37,9 @@ test("resolveFlowPolicy: default is auto", () => {
   assert.equal(policy.runMode, "auto");
 });
 
-test("resolveFlowPolicy: interactive without platforms still auto (prep phase)", () => {
-  // ponytail: interactive→checkpoint once unified plan lands
+test("resolveFlowPolicy: interactive without platforms checkpoints", () => {
   const policy = resolveFlowPolicy("test query", { mode: "fast", interactive: true });
-  assert.equal(policy.runMode, "auto");
+  assert.equal(policy.runMode, "checkpoint");
 });
 
 // --- resolveFlowPolicy: retrievalBias ---
@@ -177,4 +176,19 @@ test("resolveFlowPolicy: hn sentiment query — community bias, community allowe
   assert.equal(policy.retrievalBias, "community");
   assert.equal(policy.communityOnlyAllowed, true);
   assert.equal(policy.authorityRequired, false);
+});
+
+test("resolveFlowPolicy: community verification becomes mixed authority", () => {
+  const policy = resolveFlowPolicy("HN says React API is deprecated — verify", { mode: "fast", platforms: ["hn"] });
+  assert.equal(policy.retrievalBias, "mixed");
+  assert.equal(policy.authorityRequired, true);
+  assert.equal(policy.communityOnlyAllowed, false);
+  assert.equal(policy.communityIntent, "verify_claim");
+});
+
+test("resolveFlowPolicy: complaints are community-sufficient when low risk", () => {
+  const policy = resolveFlowPolicy("what are people complaining about in React 19", { mode: "fast", platforms: ["hn"] });
+  assert.equal(policy.retrievalBias, "community");
+  assert.equal(policy.communityOnlyAllowed, true);
+  assert.equal(policy.communityIntent, "complaints");
 });

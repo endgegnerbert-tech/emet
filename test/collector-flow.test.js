@@ -12,7 +12,7 @@ test.beforeEach(() => {
 
 // --- Schema tests ---
 
-test("MCP tool schema includes collector interactive options", () => {
+test("MCP tool schema includes checkpoint/community options", () => {
   const def = buildToolDefinition();
   const opts = def.inputSchema.properties.options.properties;
   assert.ok(opts.platforms);
@@ -25,7 +25,7 @@ test("MCP tool schema includes collector interactive options", () => {
   assert.ok(opts.maxResultsPerPlatform);
 });
 
-test("Pi extension schema includes collector interactive options", () => {
+test("Pi extension schema includes checkpoint/community options", () => {
   const tools = [];
   const pi = { on() {}, registerTool(t) { tools.push(t); } };
   webResearchExtension(pi);
@@ -49,8 +49,8 @@ test("shouldRunCollectorInteractive: explicit platforms", () => {
   assert.equal(shouldRunCollectorInteractive("anything", { platforms: [] }), false);
 });
 
-test("shouldRunCollectorInteractive: interactive flag", () => {
-  assert.equal(shouldRunCollectorInteractive("anything", { interactive: true }), true);
+test("shouldRunCollectorInteractive: interactive alone is not collector mode", () => {
+  assert.equal(shouldRunCollectorInteractive("anything", { interactive: true }), false);
 });
 
 test("shouldRunCollectorInteractive: normal web queries return false", () => {
@@ -78,7 +78,7 @@ test("shouldRunCollectorInteractive: GitHub issues/repos/discussions intent", ()
 
 // --- Interactive flow tests (with mocked fetch for collectors) ---
 
-test("collector interactive: unavailable collector returns structured error", async () => {
+test("community checkpoint: unavailable collector returns structured error", async () => {
   const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
   clearResearchMemory();
   const result = await runWebResearch(
@@ -89,12 +89,13 @@ test("collector interactive: unavailable collector returns structured error", as
     { platforms: ["nonexistent"], interactive: true, isolate: true }
   );
   assert.equal(result.ok, true);
-  assert.equal(result.action, "collector_search");
+  assert.equal(result.action, "search");
+  assert.equal(result.legacyAction, "collector_search");
   assert.ok(result.collectorResults[0].available === false);
   assert.ok(result.collectorResults[0].reason);
 });
 
-test("collector interactive: HN collector returns structured results", async () => {
+test("community checkpoint: HN collector returns structured results", async () => {
   const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
   clearResearchMemory();
   const previousFetch = globalThis.fetch;
@@ -129,7 +130,8 @@ test("collector interactive: HN collector returns structured results", async () 
       { platforms: ["hn"], interactive: true, isolate: true }
     );
     assert.equal(result.ok, true);
-    assert.equal(result.action, "collector_search");
+    assert.equal(result.action, "search");
+    assert.equal(result.legacyAction, "collector_search");
     assert.ok(result.sessionId);
     assert.equal(result.turn, 1);
     assert.ok(Array.isArray(result.collectorResults));
@@ -139,12 +141,12 @@ test("collector interactive: HN collector returns structured results", async () 
     assert.equal(result.collectorResults[0].resultCount, 3);
     assert.ok(result.collectorResults[0].results.length === 3);
     // Stable IDs
-    assert.equal(result.collectorResults[0].results[0].id, "hn:0");
-    assert.equal(result.collectorResults[0].results[1].id, "hn:1");
-    assert.equal(result.collectorResults[0].results[2].id, "hn:2");
-    // Score preserved
-    assert.equal(result.collectorResults[0].results[0].score, 120);
-    assert.equal(result.collectorResults[0].results[1].score, 60);
+    assert.match(result.collectorResults[0].results[0].id, /^hn:[a-f0-9]{10}$/);
+    assert.match(result.collectorResults[0].results[1].id, /^hn:[a-f0-9]{10}$/);
+    assert.match(result.collectorResults[0].results[2].id, /^hn:[a-f0-9]{10}$/);
+    // Score normalized
+    assert.ok(result.collectorResults[0].results[0].score > 0 && result.collectorResults[0].results[0].score <= 10);
+    assert.ok(result.collectorResults[0].results[1].score > 0 && result.collectorResults[0].results[1].score <= 10);
     // Next actions present
     assert.ok(Array.isArray(result.nextActions));
     assert.ok(result.nextActions.length > 0);
@@ -156,7 +158,7 @@ test("collector interactive: HN collector returns structured results", async () 
   }
 });
 
-test("collector interactive: session turns across search and refine", async () => {
+test("community checkpoint: session turns across search and refine", async () => {
   const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
   clearResearchMemory();
   const previousFetch = globalThis.fetch;
@@ -197,7 +199,7 @@ test("collector interactive: session turns across search and refine", async () =
   }
 });
 
-test("collector interactive: max turns enforcement", async () => {
+test("community checkpoint: max turns enforcement", async () => {
   const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
   clearResearchMemory();
   const previousFetch = globalThis.fetch;
@@ -239,7 +241,7 @@ test("collector interactive: max turns enforcement", async () => {
   }
 });
 
-test("collector interactive: multiple platforms run in parallel", async () => {
+test("community checkpoint: multiple platforms run in parallel", async () => {
   const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
   clearResearchMemory();
   const previousFetch = globalThis.fetch;
@@ -273,6 +275,115 @@ test("collector interactive: multiple platforms run in parallel", async () => {
     assert.equal(result.collectorResults.length, 2);
     assert.ok(result.collectorResults.some(r => r.platform === "hn"));
     assert.ok(result.collectorResults.some(r => r.platform === "v2ex"));
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("interactive without platforms runs normal pipeline, not collector checkpoint", async () => {
+  const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+
+  const ddgHtml = (results) => results.map(({ url, title, snippet }) => `
+    <div class="result results_links">
+      <h2 class="result__title"><a class="result__a" href="//duckduckgo.com/l/?uddg=${encodeURIComponent(url)}&amp;rut=abc">${title}</a></h2>
+      <a class="result__snippet">${snippet}</a>
+    </div>
+  `).join("\n");
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("duckduckgo.com/html")) {
+      return {
+        headers: { get: () => "text/html" },
+        async text() {
+          return ddgHtml([
+            { url: "https://normal.example.com/1", title: "Normal 1", snippet: "pipeline evidence alpha" },
+            { url: "https://normal.example.com/2", title: "Normal 2", snippet: "pipeline evidence beta" },
+            { url: "https://normal.example.com/3", title: "Normal 3", snippet: "pipeline evidence gamma" },
+          ]);
+        },
+      };
+    }
+    return {
+      status: 200,
+      url: text,
+      headers: { get: () => "text/html" },
+      async text() { return `<html><title>${text}</title><body>${("pipeline evidence ").repeat(120)}</body></html>`; },
+    };
+  };
+
+  try {
+    const result = await runWebResearch(
+      "pipeline evidence",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { interactive: true, isolate: true }
+    );
+    assert.equal(result.ok, true);
+    assert.equal(result.action, "final");
+    assert.equal(result.legacyAction, "web_research");
+    assert.equal(result.collectorResults, undefined);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("community synthesize action runs normal pipeline instead of legacy collector synthesis", async () => {
+  const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+
+  const ddgHtml = (results) => results.map(({ url, title, snippet }) => `
+    <div class="result results_links">
+      <h2 class="result__title"><a class="result__a" href="//duckduckgo.com/l/?uddg=${encodeURIComponent(url)}&amp;rut=abc">${title}</a></h2>
+      <a class="result__snippet">${snippet}</a>
+    </div>
+  `).join("\n");
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("hn.algolia.com")) {
+      return {
+        ok: true,
+        headers: { get: () => "application/json" },
+        async json() { return { hits: [{ title: "Community signal", url: "https://community.example.com/a", author: "h", points: 10, num_comments: 2 }] }; },
+      };
+    }
+    if (text.includes("duckduckgo.com/html")) {
+      return {
+        headers: { get: () => "text/html" },
+        async text() {
+          return ddgHtml([
+            { url: "https://official.example.com/a", title: "Official source", snippet: "community pipeline synthesis evidence" },
+            { url: "https://official.example.com/b", title: "Official source B", snippet: "community pipeline synthesis evidence" },
+            { url: "https://official.example.com/c", title: "Official source C", snippet: "community pipeline synthesis evidence" },
+          ]);
+        },
+      };
+    }
+    return {
+      status: 200,
+      url: text,
+      headers: { get: () => "text/html" },
+      async text() { return `<html><title>${text}</title><body>${("community pipeline synthesis evidence ").repeat(120)}</body></html>`; },
+    };
+  };
+
+  try {
+    const result = await runWebResearch(
+      "community pipeline synthesis evidence",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, action: "synthesize", isolate: true }
+    );
+    assert.equal(result.ok, true);
+    assert.equal(result.action, "final");
+    assert.equal(result.legacyAction, "web_research");
+    assert.notEqual(result.legacyAction, "collector_synthesize");
   } finally {
     globalThis.fetch = previousFetch;
   }

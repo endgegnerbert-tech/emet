@@ -23,6 +23,8 @@ test("listDomainPacks keeps legacy aliases while families expose the new archite
   assert.ok(families.includes("current-events"));
   assert.ok(overlays.includes("official-only"));
   assert.ok(overlays.includes("recency-required"));
+  assert.ok(overlays.includes("community-complaints"));
+  assert.ok(overlays.includes("social-verify"));
 });
 
 test("getDomainPack returns the web fallback pack", () => {
@@ -102,4 +104,16 @@ test("forceDomain keeps expert overrides explicit", () => {
   assert.equal(config.domain, "github");
   assert.equal(config.domainFamily, "developer-docs");
   assert.deepEqual(config.sourcePolicy.decisionSource, "forced");
+});
+
+test("resolveDomainConfig exposes community extraction overlays", () => {
+  const complaints = resolveDomainConfig({ query: "complaints about React 19", domain: "community-complaints" });
+  assert.equal(complaints.domainFamily, "community");
+  assert.ok(complaints.overlays.includes("community-complaints"));
+  assert.ok(complaints.queryHints.includes("complaints"));
+
+  const verify = resolveDomainConfig({ query: "HN says package is deprecated verify", domain: "social-verify" });
+  assert.equal(verify.domainFamily, "community");
+  assert.ok(verify.overlays.includes("official-only"));
+  assert.equal(verify.requireAuthoritative, true);
 });

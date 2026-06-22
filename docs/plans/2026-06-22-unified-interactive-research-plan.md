@@ -1,7 +1,7 @@
 # Unified checkpointable research pipeline plan
 
 **Date:** 2026-06-22
-**Status:** planning, revised
+**Status:** implementation slice applied, revised against current repo
 **Scope:** make `emet` interactive by reusing the normal research pipeline; keep one public tool surface
 **Prep dependency:** run `docs/plans/2026-06-22-research-pipeline-modularization-prep-plan.md` first to avoid growing `lib/web-research.js` further.
 **Supersedes for future work:** `docs/plans/2026-06-22-issue-19-collector-backed-interactive-mode-plan.md`
@@ -16,7 +16,7 @@ Repo evidence checked before this revision:
 - `emet doctor` reports collectors available: `hn`, `v2ex`, `github`, `rss`, `youtube`.
 - Public tools remain exactly `emet` and `web_fetch`.
 - Interactive schema fields already exist in MCP and Pi definitions.
-- Current interactive handling is an early collector branch in `lib/web-research.js`:
+- Historical interactive handling was an early collector branch before the pipeline:
 
 ```txt
 runWebResearch()
@@ -26,7 +26,7 @@ runWebResearch()
   -> otherwise normal web pipeline
 ```
 
-- `shouldRunCollectorInteractive()` currently treats `interactive: true` as collector mode, even without explicit platforms.
+- Historical note: `shouldRunCollectorInteractive()` treated `interactive: true` as collector mode; the applied slice now keeps interactive separate from platform selection.
 - Domain routing already has `community` family plus `forums` and `github` overlays.
 - Query understanding already supports `source_family: community`.
 - Promotion gate currently says `promoteSafe: false`; ML/router expansion must stay rule-first or shadow-mode until gates pass.
@@ -40,6 +40,18 @@ node --test test/research-policy-domain.test.js test/query-understanding.test.js
 npm run check
 npm run check:promotion # expected non-promoted status today
 ```
+
+## Implementation update (2026-06-22)
+
+Current repo state changed after the original draft, so the applied slice kept the existing large-repo boundaries instead of adding a new monolith:
+
+- `lib/web-research.js` is now a pure re-export facade and remains untouched.
+- Flow/session/contract/community-normalization seams already exist and are used.
+- `interactive: true` alone no longer selects collector-only retrieval.
+- `platforms` or clear platform wording selects community retrieval/checkpointing.
+- Final web research now emits canonical `action: "final"` plus `legacyAction: "web_research"` for compatibility.
+- Community checkpoints emit canonical `action: "search" | "fetch" | "synthesize"` plus `legacyAction: "collector_*"` during migration.
+- Collector fallback IDs are hash-based, not index-only.
 
 ---
 

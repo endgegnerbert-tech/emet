@@ -149,6 +149,8 @@ export function buildHostInstructions(profile = HOST_PROFILES.generic) {
   return [
     "Use emet for current facts, docs, best practices, comparisons, and citations. Search if unsure.",
     profile.instruction,
+    "Use default auto mode for straightforward factual/docs research; use interactive checkpoints for exploratory source/refinement choices.",
+    "Use platforms for community/sentiment retrieval, but require authoritative follow-up for factual, security, legal, medical, finance, package, version, or outage claims.",
     "MCP best practice: tools are read-only, resources expose reusable context, prompts expose repeatable workflows, and sampling/elicitation must remain optional client-mediated capabilities.",
   ].filter(Boolean).join("\n");
 }

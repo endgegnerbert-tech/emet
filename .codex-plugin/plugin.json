@@ -1,6 +1,6 @@
 {
   "name": "emet",
-  "version": "1.4.2",
+  "version": "1.4.5",
   "description": "Grounded web research MCP plugin for Codex with live sources, cited answers, and current-doc lookup.",
   "author": {
     "name": "Black Knight"
@@ -8,7 +8,19 @@
   "homepage": "https://github.com/endgegnerbert-tech/emet#readme",
   "repository": "https://github.com/endgegnerbert-tech/emet",
   "license": "MIT",
-  "keywords": ["mcp", "model-context-protocol", "mcp-server", "research", "web-research", "citations", "grounded", "docs", "developer-tools", "ai-agents", "codex"],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "research",
+    "web-research",
+    "citations",
+    "grounded",
+    "docs",
+    "developer-tools",
+    "ai-agents",
+    "codex"
+  ],
   "mcpServers": "./.codex-plugin/mcp.json",
   "interface": {
     "displayName": "emet",

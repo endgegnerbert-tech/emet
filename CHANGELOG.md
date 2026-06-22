@@ -1,27 +1,47 @@
 # Changelog
 
-Pinned: [1.4.2 release notes](docs/releases/1.4.2.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+Pinned: [1.4.5 release notes](docs/releases/1.4.5.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
 
 ## Unreleased (master)
 
-### Pinned theme
-- **Pipeline modularization:** Split `lib/web-research.js` (1831 lines) into layered architecture (Chrome/VS Code pattern). No behavior change.
+- Nothing yet.
+
+---
+
+## 1.4.5
+
+### Pinned release theme
+- **Unified checkpointable pipeline + community evidence:** `interactive` is checkpointing, `platforms` is community/media retrieval, and social/community sources are normalized into the shared research evidence path instead of acting as a separate truth pipeline.
 
 ### Added
-- **11 layer modules** extracted from `lib/web-research.js`: `cache` (34L), `helpers` (137L), `config` (61L), `queries` (81L), `search` (199L), `fetch` (234L), `synthesis` (132L), `pipeline` (708L) — plus 5 earlier seams: `contract`, `session`, `flow`, `normalize`, `community`.
-- **Boundary audit test** (11 checks): base imports no adapters, domain packs import no I/O, logs serialize no secrets.
-- **86 new focused tests** across 6 test files.
-- **AGENTS.md** with architecture rules and layer documentation.
+- **Community extraction overlays:** Added `community-sentiment`, `community-complaints`, `feature-requests`, `social-verify`, and `video-transcript` routing overlays for social/media research intents. (`lib/domains/index.js`, `lib/router-policy-context.js`)
+- **Community intent policy:** Flow policy now distinguishes sentiment, complaints, feature requests, and verification claims. Verification claims become `mixed` retrieval with authoritative follow-up required. (`lib/research-flow.js`)
+- **Social evidence metadata:** Normalized community results now include `evidenceRole`, `platformStability`, `auth`, and `createdAt` signals while remaining non-authoritative by default. (`lib/retrieval/normalize.js`)
+- **Checkpoint/community tests:** Added coverage for canonical actions, interactive-without-platforms, normal-pipeline synthesis, community overlays, social metadata, and authority gating. (`test/collector-flow.test.js`, `test/research-flow.test.js`, `test/retrieval-normalize.test.js`, `test/domain-packs.test.js`)
+- **Release note shipping:** npm package files now include the whole `docs/releases/` directory, including this release note. (`package.json`, `docs/releases/1.4.5.md`)
 
 ### Changed
-- **`lib/web-research.js`:** 1831 → 27 lines. Pure re-export facade. Public API unchanged.
-- **`docs/pipeline.md`:** Added module boundary table.
-- **`package.json`:** All new modules in `files` array.
+- **Pipeline semantics:** `interactive: true` alone no longer routes to collector-only mode; explicit `platforms` or platform wording selects community retrieval. (`lib/research/pipeline.js`, `lib/retrieval/community.js`)
+- **Canonical result contract:** Normal web research returns `action: "final"` with `legacyAction: "web_research"`; community checkpoints return canonical actions like `search` with `legacyAction` for migration compatibility. (`lib/research/pipeline.js`, `lib/retrieval/community.js`, `lib/emet-runtime.js`, `mcp/handlers/resources.js`)
+- **Community synthesis path:** `interactive + action: "synthesize"` now falls back to the normal research pipeline instead of the legacy collector synthesis branch. (`lib/research/pipeline.js`, `lib/retrieval/community.js`)
+- **Schema and host guidance:** MCP/Pi schema text and host instructions now describe checkpointed research and community/media retrieval instead of collector-interactive as a separate mode. (`lib/tool-schema.js`, `index.js`, `mcp/hosts/profiles.js`)
+- **Stable IDs:** Collector fallback IDs are hash-based instead of turn-local index-only IDs. (`lib/retrieval/normalize.js`)
+- **Architecture documentation:** Updated the unified interactive plan to reflect the implemented slice and current facade/module boundaries. (`docs/plans/2026-06-22-unified-interactive-research-plan.md`)
+- **Pipeline modularization:** `lib/web-research.js` remains a 27-line pure re-export facade after the Chrome/VS Code-style split into layered modules. Public API remains compatible.
+
+### Fixed
+- **Split search module cache constant:** Imported `SEARCH_CACHE_TTL_MS` in `lib/research/search.js`, fixing `SEARCH_CACHE_TTL_MS is not defined` after modularization.
+
+### Upgrade notes
+- No database migration is required.
+- Public tools remain exactly `emet` and `web_fetch`.
+- Existing integrations should prefer canonical `action` and treat `legacyAction` as a migration hint.
+- Updating from 1.4.x only requires reinstalling/restarting the MCP/Pi host.
 
 ### Verified
-- `npm test` — 327/327 passing. `npm run check` green.
-- `emet doctor` — all 5 collectors healthy.
-- No new dependencies, no public API change.
+- `npm run check` — green locally.
+- `npm pack --dry-run` — package builds and includes `docs/releases/`.
+- No new dependencies and no new public tools.
 
 ---
 
@@ -48,10 +68,6 @@ Pinned: [1.4.2 release notes](docs/releases/1.4.2.md) · [quickstarts](docs/quic
 - No new dependencies in `package.json`.
 - No new MCP tools in `tools/list`.
 - All existing tests pass unchanged.
-
-# Changelog
-
-Pinned: [1.4.2 release notes](docs/releases/1.4.2.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
 
 ## 1.4.1
 

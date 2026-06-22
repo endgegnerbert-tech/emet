@@ -118,6 +118,8 @@ export default function webResearchExtension(pi) {
       "Use for current facts, docs, best practices, comparisons, and verification.",
       "Search instead of guessing.",
       "Pick fast, deep, code, or academic mode as needed.",
+      "Use interactive: true only when source/refinement choices should checkpoint; use platforms for community or sentiment retrieval.",
+      "Verify factual or high-risk community claims with authoritative sources.",
     ],
     parameters: Type.Object({
       query: Type.String({ description: "Live web question" }),
@@ -141,13 +143,13 @@ export default function webResearchExtension(pi) {
         preferRecent: Type.Optional(Type.Boolean()),
         files: Type.Optional(Type.Array(Type.String())),
         format: Type.Optional(Type.Union([Type.Literal("markdown"), Type.Literal("json"), Type.Literal("table"), Type.Literal("latex")], { default: "markdown" })),
-        // ponytail: collector interactive options
-        platforms: Type.Optional(Type.Array(Type.String(), { description: "Explicit collector platforms (hn, v2ex, github, rss, youtube)" })),
-        interactive: Type.Optional(Type.Boolean({ description: "Return compact state + next action choices" })),
+        // ponytail: checkpoint/community options
+        platforms: Type.Optional(Type.Array(Type.String(), { description: "Community/media retrieval backends (hn, v2ex, github, rss, youtube)" })),
+        interactive: Type.Optional(Type.Boolean({ description: "Checkpoint the normal research pipeline and return compact state + next action choices" })),
         sessionId: Type.Optional(Type.String({ description: "Continue bounded in-memory session" })),
-        action: Type.Optional(Type.Union([Type.Literal("search"), Type.Literal("refine"), Type.Literal("fetch"), Type.Literal("synthesize")], { description: "Interactive mode action" })),
+        action: Type.Optional(Type.Union([Type.Literal("search"), Type.Literal("refine"), Type.Literal("fetch"), Type.Literal("synthesize")], { description: "Checkpoint session action" })),
         queryOverride: Type.Optional(Type.String({ description: "Override query for refine action" })),
-        selectedResultIds: Type.Optional(Type.Array(Type.String(), { description: "Result IDs (stable session IDs) to fetch" })),
+        selectedResultIds: Type.Optional(Type.Array(Type.String(), { description: "Stable result IDs from a previous checkpoint to fetch" })),
         selectedUrls: Type.Optional(Type.Array(Type.String(), { description: "URLs to fetch (fallback)" })),
         maxResultsPerPlatform: Type.Optional(Type.Number({ description: "Max results per collector platform" })),
         deepResearchConfig: Type.Optional(Type.Object({

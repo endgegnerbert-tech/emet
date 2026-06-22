@@ -1,6 +1,6 @@
 {
   "name": "@black-knight.dev/emet",
-  "version": "1.4.2",
+  "version": "1.4.5",
   "private": false,
   "type": "module",
   "description": "Zero-setup grounded web research MCP server and Pi extension for AI coding agents.",
@@ -23,8 +23,7 @@
     "configs",
     "docs/examples.md",
     "docs/quickstarts.md",
-    "docs/releases/1.4.0.md",
-    "docs/releases/1.4.1.md",
+    "docs/releases",
     "emet-mcp.js",
     "emet.js",
     "extensions",
