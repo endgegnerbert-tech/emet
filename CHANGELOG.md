@@ -1,3 +1,30 @@
+# Changelog
+
+Pinned: [1.4.2 release notes](docs/releases/1.4.2.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+
+## Unreleased (master)
+
+### Pinned theme
+- **Pipeline modularization:** Split `lib/web-research.js` (1831 lines) into layered architecture (Chrome/VS Code pattern). No behavior change.
+
+### Added
+- **11 layer modules** extracted from `lib/web-research.js`: `cache` (34L), `helpers` (137L), `config` (61L), `queries` (81L), `search` (199L), `fetch` (234L), `synthesis` (132L), `pipeline` (708L) — plus 5 earlier seams: `contract`, `session`, `flow`, `normalize`, `community`.
+- **Boundary audit test** (11 checks): base imports no adapters, domain packs import no I/O, logs serialize no secrets.
+- **86 new focused tests** across 6 test files.
+- **AGENTS.md** with architecture rules and layer documentation.
+
+### Changed
+- **`lib/web-research.js`:** 1831 → 27 lines. Pure re-export facade. Public API unchanged.
+- **`docs/pipeline.md`:** Added module boundary table.
+- **`package.json`:** All new modules in `files` array.
+
+### Verified
+- `npm test` — 327/327 passing. `npm run check` green.
+- `emet doctor` — all 5 collectors healthy.
+- No new dependencies, no public API change.
+
+---
+
 ## 1.4.2
 
 ### Pinned release theme
