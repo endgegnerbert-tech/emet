@@ -108,5 +108,8 @@
       "./extensions/emet.ts"
     ],
     "image": "https://raw.githubusercontent.com/endgegnerbert-tech/emet/main/docs/assets/emet-demo.gif"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
