@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PACKAGE_NAME = "@black-knight.dev/emet";
-const PACKAGE_VERSION = "1.3.4";
+const PACKAGE_VERSION = "1.4.0";
 const HOST_ID = "codex";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const runtimeDir = path.join(scriptDir, ".runtime");

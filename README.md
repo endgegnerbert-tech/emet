@@ -3,10 +3,14 @@
 ![emet logo](docs/assets/emet-logo.png)
 
 [![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
-[![tests](https://img.shields.io/badge/tests-187%2F187-brightgreen)](https://github.com/endgegnerbert-tech/emet)
+[![tests](https://img.shields.io/badge/tests-210%2F210-brightgreen)](https://github.com/endgegnerbert-tech/emet)
 [![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
 
 **The Zero-Setup Research Engine for Autonomous AI Agents.**
+
+Quick links: [5-minute quickstarts](docs/quickstarts.md) · [examples gallery](docs/examples.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.0 release notes](docs/releases/1.4.0.md)
+
+> **Pinned for 1.4.0:** emet now ships `emet doctor`, `emet init`, CLI `emet fetch`, MCP/Pi `web_fetch`, and a persistent SQLite/FTS5 page store. Public agent tools stay intentionally small: `emet` + `web_fetch`.
 
 `emet` is a grounded research layer for autonomous AI coding agents. It lets the agent decide when to verify facts, resolve source conflicts, or pull current documentation—without leaving the workflow.
 
@@ -46,14 +50,28 @@ Best of all? **Zero setup.** No external search API keys, no heavy local LLMs, a
 
 ---
 
+## CLI helpers
+
+```bash
+emet doctor                         # check local install health
+emet init claude-code --print       # print host config
+emet init cursor --write            # write host config to the default path
+emet fetch https://example.com/docs  # raw page text via emet's fetch/cache path
+```
+
+`emet fetch` is the CLI equivalent of the MCP/Pi `web_fetch` tool. Use it when you already have a URL and need raw source text without LLM synthesis.
+
+---
+
 ## ✨ Features
 
 - 🚀 **Lightning Fast:** Powered by a Hybrid Tiny-Router Architecture (Model2Vec + SVC), routing queries in **< 0.6 milliseconds**.
 - 🛡️ **Anti-Hallucination:** Built-in Veto-Power for high-risk queries. If a security question only finds blog posts, the system forces a follow-up to find authoritative NIST/CVE data.
-- 🕸️ **Resilient Fetching:** Pre-emptively escalates blocked, JS-heavy, or thin pages through an integrated, robust Python `Scrapling` daemon (via IPC JSON-RPC 2.0).
+- 🕸️ **Resilient Fetching:** Uses article extraction, PDF text extraction, Jina Reader fallback, rotating user agents, and bounded caches to avoid brittle browser scripts.
 - 🧩 **Domain Families + Overlays:** Routes through stable retrieval families with composable overlays such as `security`, `github`, `changelog`, `shopify`, and `official-only`.
 - 📊 **Structured Outputs:** Returns citations, code blocks, missing aspects, confidence scores, and conflict summaries (e.g., "Source A contradicts Source B").
 - 📂 **Local Context:** Ingests local files (`options.files`) to ground web research in your current repository context.
+- 📄 **Raw Source Access:** Use `web_fetch` for one URL, or `options.rawPages: true` to include full page text in an `emet` research response.
 
 ---
 
@@ -74,6 +92,7 @@ For MCP hosts, prefer a real binary over `npx`. `emet` ships bin aliases (`emet`
 **Recommended global install**
 ```bash
 npm install -g @black-knight.dev/emet
+emet doctor
 emet
 ```
 
@@ -167,6 +186,7 @@ The Claude marketplace plugin runs the repo-bundled MCP entrypoint directly, so 
 
 **Verify**
 ```bash
+emet doctor
 claude mcp list
 claude mcp get emet
 ```

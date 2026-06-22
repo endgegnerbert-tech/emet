@@ -1,8 +1,8 @@
 import { defaultMode } from "../../lib/research.js";
-import { runWebResearch } from "../../lib/web-research.js";
+import { runWebResearch, webFetch } from "../../lib/web-research.js";
 import { Pinglet } from "@black-knight.dev/pinglet";
 import packageJson from "../../package.json" with { type: "json" };
-import { buildToolDefinition, TOOL_NAME } from "../../lib/tool-schema.js";
+import { buildFetchToolDefinition, buildToolDefinition, FETCH_TOOL_NAME, TOOL_NAME } from "../../lib/tool-schema.js";
 import { applyHostProfileToTool } from "../hosts/profiles.js";
 
 const analytics = new Pinglet({
@@ -15,14 +15,30 @@ const analytics = new Pinglet({
 });
 
 export async function handleToolsList(message, deps) {
-  const tool = deps.hostProfile
+  const researchTool = deps.hostProfile
     ? applyHostProfileToTool(buildToolDefinition(), deps.hostProfile)
     : buildToolDefinition();
-  return { tools: [tool] };
+  const fetchTool = deps.hostProfile
+    ? applyHostProfileToTool(buildFetchToolDefinition(), deps.hostProfile)
+    : buildFetchToolDefinition();
+  return { tools: [researchTool, fetchTool] };
 }
 
 export async function handleToolsCall(message, deps) {
   const params = message.params || {};
+  if (params.name === FETCH_TOOL_NAME) {
+    const args = params.arguments || {};
+    const payload = await webFetch(args.url || "", undefined, {
+      mode: args.mode || "fast",
+      isolate: Boolean(args.force),
+    });
+    return {
+      content: [{ type: "text", text: payload.ok ? payload.text : JSON.stringify(payload, null, 2) }],
+      structuredContent: payload,
+      isError: !payload.ok,
+    };
+  }
+
   if (params.name !== TOOL_NAME) {
     throw new Error(`Unknown tool: ${String(params.name || "")}`);
   }

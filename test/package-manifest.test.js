@@ -21,6 +21,11 @@ test("package manifest ships MCP host config examples", () => {
   assert.ok(pkg.files.includes(".claude-plugin"));
   assert.ok(pkg.files.includes(".codex-plugin"));
   assert.ok(pkg.files.includes("plugins"));
+  assert.ok(pkg.files.includes("CHANGELOG.md"));
+  assert.ok(pkg.files.includes("CONTRIBUTING.md"));
+  assert.ok(pkg.files.includes("docs/quickstarts.md"));
+  assert.ok(pkg.files.includes("docs/examples.md"));
+  assert.ok(pkg.files.includes("docs/releases/1.4.0.md"));
   assert.equal(existsSync("configs/claude-code/mcp.json"), true);
   assert.equal(existsSync("configs/cursor/mcp.json"), true);
   assert.equal(existsSync("configs/vscode-copilot/mcp.json"), true);

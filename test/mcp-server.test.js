@@ -26,14 +26,17 @@ test("root mcp-server shim re-exports the MCP API", () => {
   assert.equal(buildInitializeResultFromShim("2025-03-26").serverInfo.name, "emet-mcp");
 });
 
-test("mcp tools/list exposes emet", async () => {
+test("mcp tools/list exposes emet and web_fetch", async () => {
   const server = new McpServer({});
   server.transport = new MockTransport();
   await server.handleMessage({ jsonrpc: "2.0", id: 1, method: "tools/list" });
   
   const response = server.transport.responses[0];
-  assert.equal(response.result.tools[0].name, "emet");
-  assert.equal(response.result.tools[0].inputSchema.required[0], "query");
+  const names = response.result.tools.map((tool) => tool.name);
+  assert.ok(names.includes("emet"));
+  assert.ok(names.includes("web_fetch"));
+  assert.equal(response.result.tools.find((tool) => tool.name === "emet").inputSchema.required[0], "query");
+  assert.equal(response.result.tools.find((tool) => tool.name === "web_fetch").inputSchema.required[0], "url");
 });
 
 test("mcp host profile is selected at initialize and applied to tools", async () => {

@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
-import { startMcpServer } from "../mcp/index.js";
+import { runCli } from "../lib/cli.js";
 
-startMcpServer();
+try {
+  process.exitCode = await runCli();
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exitCode = 1;
+}

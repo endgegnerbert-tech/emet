@@ -18,7 +18,10 @@ test("webResearchExtension registers a emet tool", () => {
   };
 
   webResearchExtension(pi);
-  assert.equal(tools[0].name, "emet");
+  const emetTool = tools.find((tool) => tool.name === "emet");
+  assert.ok(emetTool);
+  assert.ok(tools.some((tool) => tool.name === "web_fetch"));
+  assert.ok(emetTool.parameters.properties.options.properties.rawPages);
 });
 
 test("getResearchConfig supports code and academic profiles", () => {
@@ -259,6 +262,7 @@ test("fetchPageSource uses Jina Reader proactively for known reader-friendly dom
       pageTextLimit: 4000,
       minPageText: 300,
       useJinaFallback: true,
+      isolate: true,
     });
 
     assert.equal(calls[0], "https://r.jina.ai/https://medium.com/example/post");

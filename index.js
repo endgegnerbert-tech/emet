@@ -3,7 +3,7 @@ import { Type } from "typebox";
 import { buildWebResearchGuidance, defaultMode } from "./lib/research.js";
 import { clearResearchMemory } from "./lib/research-memory.js";
 import { logResearchEvent } from "./lib/local-logger.js";
-import { runWebResearch } from "./lib/web-research.js";
+import { runWebResearch, webFetch } from "./lib/web-research.js";
 import { EmetRuntime } from "./lib/emet-runtime.js";
 
 const runtime = new EmetRuntime();
@@ -87,6 +87,29 @@ export default function webResearchExtension(pi) {
   });
 
   pi.registerTool({
+    name: "web_fetch",
+    label: "Web Fetch",
+    description: "Fetch one URL through emet's resilient fetch/cache pipeline and return raw page text.",
+    promptSnippet: "Use for reading a cited URL without browser_harness or curl.",
+    promptGuidelines: [
+      "Use when you need original page text from a known URL.",
+      "Prefer this over curl/browser fallback for sources emet already fetched.",
+    ],
+    parameters: Type.Object({
+      url: Type.String({ description: "URL to fetch" }),
+      mode: Type.Optional(Type.Union([Type.Literal("fast"), Type.Literal("deep"), Type.Literal("code"), Type.Literal("academic")], { description: "Fetch profile", default: "fast" })),
+      force: Type.Optional(Type.Boolean({ description: "Bypass persistent page cache where supported" })),
+    }),
+    async execute(_toolCallId, params, signal) {
+      const payload = await webFetch(params.url || "", signal, {
+        mode: params.mode || "fast",
+        isolate: Boolean(params.force),
+      });
+      return toolResponse(payload, payload.ok ? payload.text : JSON.stringify(payload, null, 2));
+    },
+  });
+
+  pi.registerTool({
     name: "emet",
     label: "Web Research",
     description: "Live sources, ranking, and cited answers.",
@@ -112,6 +135,7 @@ export default function webResearchExtension(pi) {
         maxTurns: Type.Optional(Type.Number()),
         maxSites: Type.Optional(Type.Number()),
         requireAuthoritative: Type.Optional(Type.Boolean()),
+        rawPages: Type.Optional(Type.Boolean({ description: "Include full raw page texts in pageTexts array." })),
         minYear: Type.Optional(Type.Number()),
         maxYear: Type.Optional(Type.Number()),
         preferRecent: Type.Optional(Type.Boolean()),

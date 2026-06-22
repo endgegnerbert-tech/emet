@@ -1,5 +1,36 @@
 # Changelog
 
+Pinned: [1.4.0 release notes](docs/releases/1.4.0.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+
+## 1.4.0
+
+### Pinned release theme
+- **DX + raw-source release:** `emet doctor`, `emet init`, CLI `emet fetch`, MCP/Pi `web_fetch`, persistent SQLite/FTS5 page storage, and a deliberate two-tool public policy: `emet` + `web_fetch`.
+
+### Added
+- **CLI helper surface:** `emet` now supports `doctor`, `init <host> --print|--write`, and `fetch <url> [--json]` while preserving default MCP stdio startup with plain `emet`. (`lib/cli.js`, `bin/emet.js`)
+- **Install doctor:** `emet doctor` checks Node runtime, package metadata, MCP binary, Pi extension, packaged model presence, shipped host configs, and persistent page-store stats with actionable output. (`lib/cli.js`, `test/cli.test.js`)
+- **Host config generator:** `emet init` can print or write shipped Claude Code, Codex, Cursor, Gemini, and VS Code/Copilot MCP configs. (`lib/cli.js`, `configs/`)
+- **Raw URL fetch command:** `emet fetch <url>` exposes the existing resilient fetch/cache pipeline from the CLI for direct source inspection without synthesis. (`lib/cli.js`, `lib/web-research.js`)
+- **`web_fetch` agent tool:** MCP and Pi now expose `web_fetch` as the single raw-URL companion to the main `emet` research tool. (`lib/tool-schema.js`, `mcp/handlers/tools.js`, `index.js`)
+- **Persistent page store:** The context DB now has a `pages` table, FTS5-backed `pages_fts` index, URL-normalized dedupe, TTL cleanup, access counts, and public helpers for write/read/search/stats. (`lib/research-memory.js`, `test/page-store.test.js`)
+- **Cross-session page reuse:** `fetchPageSource()` now consults the persistent page store in addition to the in-memory page cache, and successful page fetches are stored for later raw fetch/research reuse. (`lib/web-research.js`)
+- **Pi raw-pages schema:** The Pi `emet` tool schema now includes `options.rawPages`, matching the MCP schema and runtime behavior. (`index.js`, `test/web-research.test.js`)
+- **Onboarding docs:** Added 5-minute host quickstarts, copy-paste examples, and a contributor guide. (`docs/quickstarts.md`, `docs/examples.md`, `CONTRIBUTING.md`, `README.md`)
+- **Release notes:** Added a dedicated release note draft for this release. (`docs/releases/1.4.0.md`)
+
+### Changed
+- **Minimal tool policy:** The social-collector roadmap was consolidated around two public agent tools only: `emet` for research/orchestration and `web_fetch` for known-URL raw text. Planned `emet_search`, `emet_fetch`, `emet_synthesize`, `emet_plan`, `emet_continue`, and `emet_status` tool sprawl was explicitly rejected in the GitHub issue split.
+- **Package contents:** `CONTRIBUTING.md`, `docs/quickstarts.md`, and `docs/examples.md` are now included in the npm package files list. (`package.json`, `test/package-manifest.test.js`)
+- **GitHub backlog:** Issue #17 was rewritten and closed as a superseded epic; focused follow-ups were created/updated as #18, #19, and #22, with #20 and #21 closed into #19 to keep the public tool surface small.
+- **Version metadata:** Bumped package, lockfile, MCP server metadata, Claude/Codex plugin manifests, marketplace metadata, and plugin runtime installer version to `1.4.0`.
+
+### Verified
+- `npm test` — 210/210 passing.
+- `npm run audit:roadmap` — `allSlicesReady: true`.
+- `npm run pack:dry` — dry-run package build succeeds.
+- `node bin/emet.js doctor` — local install checks pass.
+
 ## 1.3.5
 
 ### Added
