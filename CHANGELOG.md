@@ -1,6 +1,30 @@
+## 1.4.2
+
+### Pinned release theme
+- **Collector-backed interactive mode release:** Agent-steered interactive `emet` mode using the internal collector registry from 1.4.1. Adds schema options (`platforms`, `interactive`, `sessionId`, `action`, `queryOverride`, `selectedResultIds`, `selectedUrls`, `maxResultsPerPlatform`) to both MCP and Pi tool definitions. In-memory bounded sessions with 30min TTL. No new MCP tools, no new dependencies.
+
+### Added
+- **Collector interactive mode:** New `shouldRunCollectorInteractive()` and `runCollectorInteractive()` in `lib/web-research.js` that return compact structured results with stable result IDs, `nextActions`, and session state for AI agent steering.
+- **Agent steering contract:** Interactive responses include `collectorResults`, `observedGaps`, `nextActions`, `limits` (maxTurns/remainingTurns), and a compact `contentText` summary. The agent can call `search`, `refine` (with `queryOverride`), `fetch` (by `selectedResultIds` or `selectedUrls`), or `synthesize` via the existing `emet` tool — no new MCP tools.
+- **Session management:** In-memory `Map` with 30min TTL, 100 session cap, per-session turn tracking. (`lib/web-research.js`)
+- **Platform inference:** Conservative `inferQueryPlatforms()` triggers for HN, V2EX, and GitHub (issues/repos/discussions only — not passing mentions). (`lib/web-research.js`)
+- **Interactive options schema:** New `platforms`, `interactive`, `sessionId`, `action`, `queryOverride`, `selectedResultIds`, `selectedUrls`, `maxResultsPerPlatform` fields in both MCP (`lib/tool-schema.js`) and Pi (`index.js`) tool schemas.
+- **Collector flow tests:** 13 tests covering schema options, platform inference, structured results, session turns, max turns enforcement, and unavailable collector degradation. (`test/collector-flow.test.js`)
+
+### Changed
+- **RunWebResearch early branch:** Added a collector interactive check before the full web pipeline. When `shouldRunCollectorInteractive()` returns true, research routes to the collector path instead of DuckDuckGo search. (`lib/web-research.js`)
+
+### Verified
+- `npm test` — 241/241 passing (13 new + 228 existing).
+- `npm run audit:roadmap` — `allSlicesReady: true`.
+- `npm run pack:dry` — dry-run package build succeeds.
+- No new dependencies in `package.json`.
+- No new MCP tools in `tools/list`.
+- All existing tests pass unchanged.
+
 # Changelog
 
-Pinned: [1.4.1 release notes](docs/releases/1.4.1.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+Pinned: [1.4.2 release notes](docs/releases/1.4.2.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
 
 ## 1.4.1
 

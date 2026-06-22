@@ -141,6 +141,15 @@ export default function webResearchExtension(pi) {
         preferRecent: Type.Optional(Type.Boolean()),
         files: Type.Optional(Type.Array(Type.String())),
         format: Type.Optional(Type.Union([Type.Literal("markdown"), Type.Literal("json"), Type.Literal("table"), Type.Literal("latex")], { default: "markdown" })),
+        // ponytail: collector interactive options
+        platforms: Type.Optional(Type.Array(Type.String(), { description: "Explicit collector platforms (hn, v2ex, github, rss, youtube)" })),
+        interactive: Type.Optional(Type.Boolean({ description: "Return compact state + next action choices" })),
+        sessionId: Type.Optional(Type.String({ description: "Continue bounded in-memory session" })),
+        action: Type.Optional(Type.Union([Type.Literal("search"), Type.Literal("refine"), Type.Literal("fetch"), Type.Literal("synthesize")], { description: "Interactive mode action" })),
+        queryOverride: Type.Optional(Type.String({ description: "Override query for refine action" })),
+        selectedResultIds: Type.Optional(Type.Array(Type.String(), { description: "Result IDs (stable session IDs) to fetch" })),
+        selectedUrls: Type.Optional(Type.Array(Type.String(), { description: "URLs to fetch (fallback)" })),
+        maxResultsPerPlatform: Type.Optional(Type.Number({ description: "Max results per collector platform" })),
         deepResearchConfig: Type.Optional(Type.Object({
           depth: Type.Optional(Type.Union([Type.Literal(1), Type.Literal(2), Type.Literal(3)])),
           breadth: Type.Optional(Type.Union([Type.Literal(2), Type.Literal(3), Type.Literal(4)])),

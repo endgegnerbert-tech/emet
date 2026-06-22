@@ -1,6 +1,6 @@
 {
   "name": "emet",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Grounded web research MCP plugin for Claude Code with cited answers and live documentation lookup.",
   "author": {
     "name": "Black Knight"
