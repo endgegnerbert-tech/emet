@@ -3,14 +3,14 @@
 ![emet logo](docs/assets/emet-logo.png)
 
 [![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
-[![tests](https://img.shields.io/badge/tests-210%2F210-brightgreen)](https://github.com/endgegnerbert-tech/emet)
+[![tests](https://img.shields.io/badge/tests-228%2F228-brightgreen)](https://github.com/endgegnerbert-tech/emet)
 [![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
 
 **The Zero-Setup Research Engine for Autonomous AI Agents.**
 
-Quick links: [5-minute quickstarts](docs/quickstarts.md) · [examples gallery](docs/examples.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.0 release notes](docs/releases/1.4.0.md)
+Quick links: [5-minute quickstarts](docs/quickstarts.md) · [examples gallery](docs/examples.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.1 release notes](docs/releases/1.4.1.md)
 
-> **Pinned for 1.4.0:** emet now ships `emet doctor`, `emet init`, CLI `emet fetch`, MCP/Pi `web_fetch`, and a persistent SQLite/FTS5 page store. Public agent tools stay intentionally small: `emet` + `web_fetch`.
+> **Pinned for 1.4.1:** emet now ships `emet doctor`, `emet init`, CLI `emet fetch`, MCP/Pi `web_fetch`, and a persistent SQLite/FTS5 page store. New in 1.4.1: internal no-auth collector registry (HN, V2EX, GitHub, RSS, YouTube) for platform data — visible in `emet doctor`.
 
 `emet` is a grounded research layer for autonomous AI coding agents. It lets the agent decide when to verify facts, resolve source conflicts, or pull current documentation—without leaving the workflow.
 

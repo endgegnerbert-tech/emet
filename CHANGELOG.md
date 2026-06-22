@@ -1,6 +1,33 @@
 # Changelog
 
-Pinned: [1.4.0 release notes](docs/releases/1.4.0.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+Pinned: [1.4.1 release notes](docs/releases/1.4.1.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+
+## 1.4.1
+
+### Pinned release theme
+- **Internal collector registry release:** Internal no-auth collectors for HN (Algolia), V2EX (public API), GitHub (REST search), RSS/Atom feeds (zero deps), and YouTube (yt-dlp, optional). No new MCP tools, no new dependencies. Visible in `emet doctor`.
+
+### Added
+- **Internal collector registry:** New `lib/collectors/` module with lazy Map-based registry, shared `SocialCollector` base class, `fetchWithTimeout` primitive, and unified output schema (`emptyResult()`, `normalizeResult()`). (`lib/collectors/collector.js`, `lib/collectors/index.js`)
+- **Hacker News collector:** Algolia API search, no auth, 10k req/h/IP. (`lib/collectors/hn.js`)
+- **V2EX collector:** Public v1 `/api/topics/hot.json`, no auth, 120 req/h/IP, client-side filter for search. (`lib/collectors/v2ex.js`)
+- **GitHub collector:** Public REST search, no auth (60 req/h), supports repositories/code/issues types. (`lib/collectors/github-collector.js`)
+- **RSS/Atom collector:** Zero-dependency regex parser for RSS 2.0 `<item>` and Atom `<entry>` elements. (`lib/collectors/rss.js`)
+- **YouTube collector:** `yt-dlp`-based metadata extraction, degrades gracefully when yt-dlp is missing. (`lib/collectors/youtube.js`)
+- **Collector doctor:** `runCollectorDoctor()` checks availability of all collectors; YouTube is optional. (`lib/collectors/index.js`)
+- **Doctor integration:** `emet doctor` now reports collector availability alongside core checks, with `warn` level for optional collectors. (`lib/cli.js`)
+- **Collector tests:** 18 unit tests with mocked `globalThis.fetch` covering registry, HN, V2EX, GitHub, RSS, error handling, timeouts, and YouTube availability. (`test/collectors.test.js`)
+
+### Changed
+- **`runDoctor()` output:** Collector checks appended with `ok`/`warn` prefix; `runDoctor()` return shape unchanged. (`lib/cli.js`)
+- **Version metadata:** Bumped package, lockfile, MCP server metadata, Claude/Codex plugin manifests, marketplace metadata to `1.4.1`.
+
+### Verified
+- `npm test` — 228/228 passing (18 new + 210 existing).
+- `node bin/emet.js doctor` — reports all 5 collectors.
+- No new dependencies in `package.json`.
+- No new MCP tools in `tools/list`.
+- All existing tests pass unchanged.
 
 ## 1.4.0
 
