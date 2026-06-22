@@ -1,6 +1,6 @@
 {
   "name": "emet",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "Grounded web research MCP plugin for Codex with live sources, cited answers, and current-doc lookup.",
   "author": {
     "name": "Black Knight"

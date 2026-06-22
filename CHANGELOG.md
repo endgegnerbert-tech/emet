@@ -1,10 +1,25 @@
 # Changelog
 
-Pinned: [1.4.5 release notes](docs/releases/1.4.5.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+Pinned: [1.4.6 release notes](docs/releases/1.4.6.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
 
-## Unreleased (master)
+## 1.4.6
 
-- Nothing yet.
+### Pinned release theme
+- **Missing import fix:** Fixed `readPageSnapshot is not defined` / `writePageSnapshot is not defined` in `lib/research/fetch.js` by adding the missing import from `lib/research-memory.js`.
+
+### Fixed
+- **Missing imports in fetch module:** `lib/research/fetch.js` called `readPageSnapshot` and `writePageSnapshot` without importing them from `lib/research-memory.js`. Added the import line. All 333 tests pass. (`lib/research/fetch.js`)
+
+### Upgrade notes
+- No database migration is required.
+- Only `lib/research/fetch.js` changed.
+- Updating from any 1.x requires reinstalling/restarting the MCP/Pi host.
+
+### Verified
+- `npm test` — all 333 tests green.
+- `bin/emet.js doctor` — all checks ok.
+- MCP `tools/list` + `tools/call` (both `emet` and `web_fetch`) — working.
+- Layer boundary audit — passes.
 
 ---
 

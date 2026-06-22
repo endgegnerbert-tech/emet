@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Claude Code marketplace entry for emet, a grounded web research MCP plugin with cited answers.",
-    "version": "1.4.5"
+    "version": "1.4.6"
   },
   "plugins": [
     {
       "name": "emet",
       "source": "./",
       "description": "Grounded web research MCP plugin for Claude Code with live sources, citations, and current-doc lookup.",
-      "version": "1.4.5",
+      "version": "1.4.6",
       "author": {
         "name": "Black Knight"
       },
