@@ -5,6 +5,7 @@ import webResearchExtension from "../index.js";
 import { buildQueries, fetchPageSource, getResearchConfig, resolveResearchModel, runWebResearch } from "../lib/web-research.js";
 import { compactResearchPayload, evaluateSufficiency, prioritizeSourceEntries, scoreSourceEntry } from "../lib/research.js";
 import { clearResearchMemory, normalizeResearchQuery, readCachedResult, shouldSkipResearch, writeCachedResult } from "../lib/research-memory.js";
+import { EmetRuntime } from "../lib/emet-runtime.js";
 import { createResearchResult } from "../lib/types.js";
 
 test("webResearchExtension registers a emet tool", () => {
@@ -716,4 +717,29 @@ test("compactResearchPayload keeps claim metadata", () => {
 
   assert.equal(compact.claims[0].text, "Claim");
   assert.equal(compact.evidenceSummary, "Multiple sources support the claim.");
+});
+
+test("EmetRuntime formatResponse includes raw page texts when rawPages is enabled", () => {
+  const runtime = new EmetRuntime();
+  const formatted = runtime.formatResponse({
+    ok: true,
+    action: "final",
+    legacyAction: "web_research",
+    contentText: "summary",
+    citations: [{ text: "Doc", sourceIndex: 1 }],
+    sufficient: true,
+    authoritativeSourcesFound: true,
+    pageTexts: [{
+      url: "https://example.com/doc",
+      title: "Example Doc",
+      text: "Exact raw text here",
+      sourceType: "official_doc",
+      codeBlocks: [],
+      publishDate: null,
+    }],
+  });
+
+  assert.match(formatted.text, /## Raw page 1/);
+  assert.match(formatted.text, /Exact raw text here/);
+  assert.equal(formatted.structuredContent.pageTexts[0].url, "https://example.com/doc");
 });
