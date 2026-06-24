@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { buildDeepQueries, classifySourceType, detectClaimConflicts, detectCoverageGaps, detectConflictSignals, normalizePaperTitle, prioritizeSourceEntries, scoreSourceEntry } from "../lib/research.js";
+import { buildDeepQueries, classifySourceType, detectClaimConflicts, detectCoverageGaps, detectConflictSignals, isAuthoritativeUrl, normalizePaperTitle, prioritizeSourceEntries, scoreSourceEntry } from "../lib/research.js";
 
 test("prioritizeSourceEntries prefers official docs over blogs", () => {
   const sources = [
@@ -42,6 +42,14 @@ test("classifySourceType recognizes canonical news sources", () => {
   assert.equal(classifySourceType("https://medium.com/example/post", "Post"), "blog");
 });
 
+
+test("secondary docs hosts are not treated as authoritative official docs", () => {
+  assert.equal(classifySourceType("https://sureprompts.com/docs/mcp-sampling", "Docs"), "other");
+  assert.equal(isAuthoritativeUrl("https://sureprompts.com/docs/mcp-sampling"), false);
+  assert.equal(classifySourceType("https://cursorcommunity.com/reference/mcp", "Reference"), "other");
+  assert.equal(isAuthoritativeUrl("https://cursorcommunity.com/reference/mcp"), false);
+});
+
 test("buildDeepQueries adds academic paper hints", () => {
   const queries = buildDeepQueries("transformer attention paper", 4);
   assert.ok(queries.some((q) => q.includes("arxiv")));
@@ -57,6 +65,19 @@ test("detectConflictSignals ignores benign support wording variations", () => {
   assert.equal(conflict.detected, false);
   assert.equal(conflict.conflictSummary, "");
   assert.deepEqual(conflict.conflictingSourcePairs, []);
+});
+
+
+test("detectConflictSignals summarizes the actual disagreement", () => {
+  const conflict = detectConflictSignals([
+    { url: "https://docs.example.com/a", title: "Docs A", text: "Sampling is supported and available in this release." },
+    { url: "https://status.example.org/b", title: "Status B", text: "Sampling is not supported for this client today." },
+  ]);
+
+  assert.equal(conflict.detected, true);
+  assert.match(conflict.conflictSummary, /docs\.example\.com says/i);
+  assert.match(conflict.conflictSummary, /status\.example\.org says/i);
+  assert.match(conflict.conflictSummary, /disagreement on support status/i);
 });
 
 test("normalizePaperTitle strips boilerplate prefixes", () => {

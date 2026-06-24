@@ -83,8 +83,8 @@ Result shape: answer grounded in local dependency evidence plus live docs.
 
 ## Official-only docs lookup
 
-Tool call: `emet({ query: "current Stripe webhook signature docs", mode: "code", options: { sourcePolicy: "official-only" } })`
-Result shape: official docs prioritized, lower-authority sources demoted.
+Tool call: `emet({ query: "current Stripe webhook signature docs", mode: "code", options: { sourcePolicy: "official-only", hostAllowlist: ["docs.stripe.com", "stripe.com"] } })`
+Result shape: official docs prioritized and strict host filtering keeps non-canonical sources out.
 
 ## Comparison
 

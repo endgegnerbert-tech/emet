@@ -7,6 +7,7 @@ import { compactResearchPayload, evaluateSufficiency, prioritizeSourceEntries, s
 import { clearResearchMemory, normalizeResearchQuery, readCachedResult, shouldSkipResearch, writeCachedResult } from "../lib/research-memory.js";
 import { EmetRuntime } from "../lib/emet-runtime.js";
 import { createResearchResult } from "../lib/types.js";
+import { filterSearchResults } from "../lib/research/search.js";
 
 test("webResearchExtension registers a emet tool", () => {
   clearResearchMemory();
@@ -38,6 +39,7 @@ test("getResearchConfig merges deep research options", () => {
   const config = getResearchConfig({
     mode: "deep",
     maxSites: 9,
+    hostAllowlist: ["modelcontextprotocol.io"],
     deepResearchConfig: { depth: 3, breadth: 4, concurrency: 2 },
   });
 
@@ -46,7 +48,19 @@ test("getResearchConfig merges deep research options", () => {
   assert.equal(config.maxQueries, 12);
   assert.equal(config.maxPages, 9);
   assert.equal(config.concurrentQueries, 2);
+  assert.deepEqual(config.hostAllowlist, ["modelcontextprotocol.io"]);
 });
+
+test("strict host allowlists fail closed during search filtering", () => {
+  const filtered = filterSearchResults([
+    { title: "Official", url: "https://modelcontextprotocol.io/docs/sampling", snippet: "sampling docs" },
+    { title: "Mirror", url: "https://sureprompts.com/docs/mcp-sampling", snippet: "sampling docs" },
+  ], { hostAllowlist: ["modelcontextprotocol.io"] });
+
+  assert.equal(filtered.length, 1);
+  assert.equal(filtered[0].url, "https://modelcontextprotocol.io/docs/sampling");
+});
+
 
 test("getResearchConfig composes manual family and overlay hints", () => {
   const config = getResearchConfig({
@@ -117,7 +131,7 @@ test("compactResearchPayload keeps citations, source metadata, code blocks, conf
     bullets: ["B [1]"],
     citations: [{ text: "Doc", sourceIndex: 1 }],
     codeBlocks: ["const x = 1;\n".repeat(30)],
-    sources: [{ title: "Doc", url: "https://example.com", sourceType: "official_doc", score: 12, authoritative: true, local: true }],
+    sources: [{ title: "Doc", url: "https://example.com", sourceType: "official_doc", score: 12, rankScore: 12, authorityScore: 0.9, qualityScore: 0.8, versionMatchScore: 1, publishDate: "2026-06-24", lastModified: "2026-06-25", authoritative: true, local: true, signals: { platform: "github" } }],
     sufficient: true,
     authoritativeSourcesFound: true,
     confidence: 0.9,
@@ -129,8 +143,15 @@ test("compactResearchPayload keeps citations, source metadata, code blocks, conf
   assert.equal(compact.citations.length, 1);
   assert.equal(compact.sources[0].sourceType, "official_doc");
   assert.equal(compact.sources[0].score, 12);
+  assert.equal(compact.sources[0].rankScore, 12);
+  assert.equal(compact.sources[0].authorityScore, 0.9);
+  assert.equal(compact.sources[0].qualityScore, 0.8);
+  assert.equal(compact.sources[0].versionMatchScore, 1);
+  assert.equal(compact.sources[0].publishDate, "2026-06-24");
+  assert.equal(compact.sources[0].lastModified, "2026-06-25");
   assert.equal(compact.sources[0].authoritative, true);
   assert.equal(compact.sources[0].local, true);
+  assert.equal(compact.sources[0].signals.platform, "github");
   assert.equal(compact.confidence, 0.9);
   assert.deepEqual(compact.sourceTypes, ["official_doc"]);
   assert.deepEqual(compact.unverifiedClaims, ["A"]);

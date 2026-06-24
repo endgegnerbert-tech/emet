@@ -23,6 +23,7 @@ test("MCP tool schema includes checkpoint/community options", () => {
   assert.ok(opts.selectedResultIds);
   assert.ok(opts.selectedUrls);
   assert.ok(opts.maxResultsPerPlatform);
+  assert.ok(opts.hostAllowlist);
 });
 
 test("Pi extension schema includes checkpoint/community options", () => {
@@ -40,6 +41,7 @@ test("Pi extension schema includes checkpoint/community options", () => {
   assert.ok(opts.selectedResultIds);
   assert.ok(opts.selectedUrls);
   assert.ok(opts.maxResultsPerPlatform);
+  assert.ok(opts.hostAllowlist);
 });
 
 // --- shouldRunCollectorInteractive tests ---
@@ -153,6 +155,55 @@ test("community checkpoint: HN collector returns structured results", async () =
     assert.ok(result.limits);
     assert.equal(result.limits.remainingTurns, 2);
     assert.ok(result.contentText);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("community checkpoint: fetch uses selectedResultIds from prior search", async () => {
+  const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("hn.algolia.com")) {
+      return {
+        ok: true,
+        headers: { get: () => "application/json" },
+        async json() { return { hits: [{ title: "Result", url: "https://example.com/post", author: "t", points: 10, num_comments: 2, created_at: "2026-01-01" }] }; },
+      };
+    }
+    return {
+      status: 200,
+      url: text,
+      headers: { get: () => "text/html" },
+      async text() { return `<html><title>${text}</title><body>${("community fetched evidence ").repeat(120)}</body></html>`; },
+    };
+  };
+
+  try {
+    const first = await runWebResearch(
+      "React 19",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, isolate: true }
+    );
+    const selectedId = first.collectorResults[0].results[0].id;
+
+    const second = await runWebResearch(
+      "React 19",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, sessionId: first.sessionId, action: "fetch", selectedResultIds: [selectedId], isolate: true }
+    );
+    assert.equal(second.ok, true);
+    assert.equal(second.action, "fetch");
+    assert.equal(second.legacyAction, "collector_fetch");
+    assert.equal(second.pages.length, 1);
+    assert.ok(second.nextActions.some((action) => action.action === "synthesize"));
   } finally {
     globalThis.fetch = previousFetch;
   }

@@ -21,6 +21,7 @@ Most search tools return links. `emet` returns research the agent can use direct
 
 - live sources with citations
 - authority-aware ranking for docs, security, versions, and changelogs
+- strict host allowlists when you need fail-closed source control
 - conflict handling instead of silent averaging
 - local repo grounding via `options.files`
 - optional full page text via `web_fetch` or `options.rawPages: true`
@@ -45,7 +46,7 @@ Supported read-only community/media backends today:
 | --- | --- |
 | `hn` | Hacker News discussions and launch reactions |
 | `v2ex` | V2EX threads and community chatter |
-| `github` | repos, issues, discussions, code search context |
+| `github` | repos, issues, and code-search-style context |
 | `rss` | feed-backed updates and mention tracking |
 | `youtube` | metadata/transcript-oriented retrieval when available |
 
@@ -95,7 +96,10 @@ More copy-paste setup lives in [docs/quickstarts.md](docs/quickstarts.md).
 {
   "query": "current MCP sampling docs",
   "mode": "code",
-  "options": { "requireAuthoritative": true }
+  "options": {
+    "requireAuthoritative": true,
+    "hostAllowlist": ["modelcontextprotocol.io", "github.com/modelcontextprotocol"]
+  }
 }
 ```
 
@@ -124,6 +128,8 @@ More copy-paste setup lives in [docs/quickstarts.md](docs/quickstarts.md).
 ```
 
 ### Raw text for one known URL
+
+Use this first when you already know the page you want. It is faster and more reliable than a deep search round.
 
 ```json
 {
