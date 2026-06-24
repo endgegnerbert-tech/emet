@@ -52,7 +52,6 @@
     "lib/retrieval/normalize.js",
     "mcp",
     "mcp-server.js",
-    "ml",
     "package.json",
     "plugins",
     "server.json"
@@ -87,11 +86,8 @@
   "scripts": {
     "test": "node --test",
     "eval": "node --test test/eval-runner.test.js",
-    "audit:roadmap": "node scripts/router/audit/audit-implementation-roadmap.mjs",
-    "audit:promotion": "node scripts/router/audit/audit-promotion-gates.mjs",
     "pack:dry": "npm pack --dry-run",
-    "check": "npm test && npm run audit:roadmap && npm run pack:dry",
-    "check:promotion": "npm run audit:promotion",
+    "check": "npm test && npm run pack:dry",
     "mcp": "node ./mcp/server.js"
   },
   "dependencies": {

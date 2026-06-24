@@ -43,9 +43,7 @@ test("core policy/evidence modules import no adapter internals", () => {
     "research-next-action-policy.js",
     "research-intent.js",
     "query-understanding.js",
-    "tiny-router.js",
     "router-policy-context.js",
-    "router-structured-features.js",
     "research-trace.js",
     "local-logger.js",
     "research-memory.js",
@@ -127,27 +125,6 @@ test("domain packs import no network/I/O modules", () => {
     );
     assert.deepEqual(violations, [], `domains/${f} imports I/O: ${violations.join(", ")}`);
   }
-});
-
-test("tiny-router imports only pure modules", () => {
-  const imports = localImports(join(libDir, "tiny-router.js"));
-  const violations = imports.filter(imp =>
-    imp.includes("collectors/") ||
-    imp.includes("mcp/") ||
-    imp.includes("research-memory") ||
-    imp.includes("page-fetch-adapter")
-  );
-  assert.deepEqual(violations, [], `tiny-router imports forbidden: ${violations.join(", ")}`);
-});
-
-test("router-policy-context imports no network modules", () => {
-  const imports = localImports(join(libDir, "router-policy-context.js"));
-  const violations = imports.filter(imp =>
-    imp.includes("collectors/") ||
-    imp.includes("mcp/") ||
-    imp.includes("fetch")
-  );
-  assert.deepEqual(violations, [], `router-policy-context imports forbidden: ${violations.join(", ")}`);
 });
 
 // ---------------------------------------------------------------------------

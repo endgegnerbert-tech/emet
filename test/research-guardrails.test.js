@@ -6,8 +6,6 @@ import {
   buildResearchGuardrails,
   guardrailVetoesDomainDowngrade,
 } from "../lib/research-guardrails.js";
-import { chooseTinyRouterDomain } from "../lib/tiny-router.js";
-
 
 test("research guardrails detect non-negotiable high-risk flags", () => {
   const guardrails = buildResearchGuardrails("Current CVE-2024-3094 xz advisory mitigation from official vendor docs");
@@ -55,9 +53,7 @@ test("guardrails apply minimum evidence requirements to runtime config", () => {
 test("domain guardrails veto high-risk and authority downgrades to generic web", () => {
   const changelog = buildResearchGuardrails("React 19 release notes changelog");
   assert.equal(guardrailVetoesDomainDowngrade("changelog", "web", changelog), true);
-  assert.equal(chooseTinyRouterDomain("changelog", "web", { guardrails: changelog }), "changelog");
 
   const docsRequired = buildResearchGuardrails("official Kubernetes API reference docs");
   assert.equal(guardrailVetoesDomainDowngrade("github", "web", docsRequired), true);
-  assert.equal(chooseTinyRouterDomain("github", "web", { guardrails: docsRequired }), "github");
 });

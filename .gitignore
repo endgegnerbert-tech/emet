@@ -8,24 +8,14 @@ coverage/
 .pi-harness-observer/
 .sem/
 .venv*/
+
+# Generated local artifacts
+*.pyc
+
 Scrapling/
 experiments/
 
-# Generated local artifacts
-ml/router/__pycache__/
-*.pyc
-data/followup/log-candidates/*.jsonl
-data/router/log-candidates/*.jsonl
-data/router/experiment-candidates/*.jsonl
-
 # npm pack artifacts
 *.tgz
-ml/models/domain/
-ml/models/conflict-structured/
 
-# Generated training data (regeneratable from logs)
-data/router/merged-domain-*.jsonl
-data/router/merged-domain-*.npz
-data/router/merged-domain-train.jsonl
-data/followup/gold-followup.jsonl.bak
-data/router/log-candidates/*-report.json
+emet-promo/

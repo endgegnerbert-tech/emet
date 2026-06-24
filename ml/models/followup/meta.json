@@ -1,9 +1,0 @@
-{
-  "confidenceThreshold": 0.75,
-  "task": "followup",
-  "macro_f1": 0.97,
-  "accuracy": 0.97,
-  "rows": 607,
-  "baseline_f1": 0.215,
-  "promoted": true
-}

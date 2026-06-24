@@ -1,1 +1,0 @@
-{"query": "Current node LTS version", "label": "insufficient", "rationale": "Needs authoritative source (nodejs.org) to be truly sufficient, otherwise false positive risk", "inputText": ""}

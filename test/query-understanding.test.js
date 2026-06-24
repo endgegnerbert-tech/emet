@@ -69,7 +69,7 @@ test("mergeQueryUnderstandingPrediction falls back only on abstained labels", ()
   assert.equal(merged.final.source_family, "official_docs");
   assert.equal(typeof merged.final.answer_shape, "string");
   assert.equal(typeof merged.final.recency_need, "string");
-  assert.equal(merged.decisionSource, "tiny_router");
+  assert.equal(merged.decisionSource, "heuristic");
 });
 
 test("resolveQueryUnderstandingPlanning keeps config shaping in the service layer", () => {

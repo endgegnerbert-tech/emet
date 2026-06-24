@@ -1,7 +1,0 @@
-{
-  "task": "sufficiency",
-  "bestModel": "lr",
-  "rows": 2788,
-  "macro_f1": 0.5926125142245919,
-  "promoted": true
-}

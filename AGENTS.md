@@ -3,8 +3,8 @@
 ## Commands
 
 ```bash
-npm test                                # 327 tests
-npm run check                           # tests + audit + pack
+npm test                                # 260 tests
+npm run check                           # tests + pack
 node --test test/boundary-audit.test.js # verify layer boundaries
 node bin/emet.js doctor                 # collector health
 npm run pack:dry                        # verify publishable
@@ -25,7 +25,7 @@ Platform:    lib/research/{search,fetch,queries,synthesis}.js
 Adapter:     lib/retrieval/community.js  lib/collectors/  mcp/  bin/  index.js
 Base:        lib/research/{cache,config,helpers}.js  lib/research-{contract,session,flow}.js
 Base:        lib/retrieval/normalize.js  lib/research{,-evidence,-policy,...}.js
-Infra:       lib/research-memory.js  lib/local-logger.js  lib/tiny-router.js
+Infra:       lib/research-memory.js  lib/local-logger.js
 ```
 
 Hard rules:
