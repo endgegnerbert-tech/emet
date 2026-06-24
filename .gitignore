@@ -5,6 +5,7 @@ coverage/
 .cache/
 .worktrees/
 .pi-context/
+.pi-harness-observer/
 .sem/
 .venv*/
 Scrapling/

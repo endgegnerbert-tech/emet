@@ -2,132 +2,152 @@
 
 ![emet logo](docs/assets/emet-logo.png)
 
-[![npm version](https://img.shields.io/npm/v/emet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
-[![tests](https://img.shields.io/badge/tests-333%2F333-brightgreen)](https://github.com/endgegnerbert-tech/emet)
-[![Pi package](https://img.shields.io/badge/pi-package-blueviolet)](https://pi.ai)
+[![npm version](https://img.shields.io/npm/v/%40black-knight.dev%2Femet?color=blue)](https://www.npmjs.com/package/@black-knight.dev/emet)
+[![package](https://img.shields.io/badge/package-pi%20%2B%20MCP-blueviolet)](https://www.npmjs.com/package/@black-knight.dev/emet)
 
-**The Zero-Setup Research Engine for Autonomous AI Agents.**
+**Zero-setup grounded research for AI coding agents.**
 
-Quick links: [5-minute quickstarts](docs/quickstarts.md) · [examples gallery](docs/examples.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.6 release notes](docs/releases/1.4.6.md)
+Pinned: [docs index](docs/README.md) · [tool reference](docs/tool-reference.md) · [host setup](docs/hosts/README.md) · [5-minute quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [SECURITY](SECURITY.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.6 release notes](docs/releases/1.4.6.md)
 
-> **Pinned for 1.4.6:** emet is a unified, checkpointable research pipeline for agents. Community/media platforms (HN, V2EX, GitHub, RSS, YouTube) are retrieval backends, not separate public tools; social evidence is treated as signal and factual/high-risk claims require authoritative follow-up.
+`emet` gives agents live, cited answers from the web, docs, repositories, papers, and selected community/media sources — without adding tool sprawl.
 
-`emet` is a grounded research layer for autonomous AI coding agents. It lets the agent decide when to verify facts, resolve source conflicts, or pull current documentation—without leaving the workflow.
+> **Current shape:** public tools stay exactly `emet` + `web_fetch`. Community/media retrieval is read-only and explicit. Supported backends today: **Hacker News, V2EX, GitHub, RSS/Atom, YouTube**. Not every social network is supported, and factual/high-risk claims still require authoritative follow-up.
 
 ![emet in action](docs/assets/emet-demo.gif)
 
-![community packs](docs/assets/emet-community.png)
+## Why emet
 
-## 💡 Why `emet`?
+Most search tools return links. `emet` returns research the agent can use directly:
 
-Most search tools give links. `emet` gives the agent live, cited, conflict-aware answers it can use directly.
+- live sources with citations
+- authority-aware ranking for docs, security, versions, and changelogs
+- conflict handling instead of silent averaging
+- local repo grounding via `options.files`
+- optional full page text via `web_fetch` or `options.rawPages: true`
+- explicit community/media retrieval when web docs are not enough
 
-It fits the agent loop naturally: when the model sees uncertainty, version drift, API confusion, or security questions, it can autonomously call `emet` for grounding before it answers.
+## Public tool surface
 
-`emet` is designed to stay out of the way:
-1. **Autonomous grounding:** the agent can decide when live verification is worth it.
-2. **Authority first:** it prefers official docs and strong sources.
-3. **Conflict-aware:** it surfaces contradictions instead of hiding them.
+| Tool | Use it for |
+| --- | --- |
+| `emet` | Live research, docs lookup, comparisons, papers, security checks, community/media retrieval, checkpointed sessions |
+| `web_fetch` | Raw text for one known URL through emet's fetch/cache pipeline |
 
-Best of all? **Zero setup.** No external search API keys, no heavy local LLMs, and no brittle browser scripts.
+That is intentional: no `emet_search`, `emet_fetch`, or collector-specific public tools.
 
-## ✅ What it does
+## Community and social/media support
 
-`emet` helps agents:
-- verify current facts against live sources
-- avoid hallucinated endpoints, versions, and CVE details
-- compare conflicting claims
-- ground answers in local repo context when needed
+`emet` is no longer web-only.
 
-## 🎯 Core use cases
+Supported read-only community/media backends today:
 
-- Check library/API versions
-- Pull current official docs
-- Compare conflicting sources
-- Validate security/CVE claims
-- Ground repo-specific questions from local files
-- Retrieve code or README-backed documentation
+| Backend | What it is good for |
+| --- | --- |
+| `hn` | Hacker News discussions and launch reactions |
+| `v2ex` | V2EX threads and community chatter |
+| `github` | repos, issues, discussions, code search context |
+| `rss` | feed-backed updates and mention tracking |
+| `youtube` | metadata/transcript-oriented retrieval when available |
 
----
+Use them explicitly with `options.platforms`, or ask with clear platform wording.
 
-## CLI helpers
+Important guardrail: community/social results are signals, not automatic truth. For CVEs, vendor status, deprecations, outages, medical/legal topics, and other high-risk claims, emet follows up with stronger sources.
 
-```bash
-emet doctor                         # check local install health
-emet init claude-code --print       # print host config
-emet init cursor --write            # write host config to the default path
-emet fetch https://example.com/docs  # raw page text via emet's fetch/cache path
-```
+## Quick start
 
-`emet fetch` is the CLI equivalent of the MCP/Pi `web_fetch` tool. Use it when you already have a URL and need raw source text without LLM synthesis.
-
----
-
-## ✨ Features
-
-- 🚀 **Lightning Fast:** Powered by a Hybrid Tiny-Router Architecture (Model2Vec + SVC), routing queries in **< 0.6 milliseconds**.
-- 🛡️ **Anti-Hallucination:** Built-in Veto-Power for high-risk queries. If a security question only finds blog posts, the system forces a follow-up to find authoritative NIST/CVE data.
-- 🕸️ **Resilient Fetching:** Uses article extraction, PDF text extraction, Jina Reader fallback, rotating user agents, and bounded caches to avoid brittle browser scripts.
-- 🧩 **Domain Families + Overlays:** Routes through stable retrieval families with composable overlays such as `security`, `github`, `changelog`, `shopify`, and `official-only`.
-- 📊 **Structured Outputs:** Returns citations, code blocks, missing aspects, confidence scores, and conflict summaries (e.g., "Source A contradicts Source B").
-- 📂 **Local Context:** Ingests local files (`options.files`) to ground web research in your current repository context.
-- 📄 **Raw Source Access:** Use `web_fetch` for one URL, or `options.rawPages: true` to include full page text in an `emet` research response.
-
----
-
-## 📦 Installation
-
-### Pi Coding Agent (Extension)
-If you are using the Pi Agent harness, the Pi install path stays the same:
+### Pi
 
 ```bash
 pi install npm:@black-knight.dev/emet
 ```
 
-**Pi compatibility note:** the public Pi extension contract is unchanged. It still exports `extensions/emet.ts`, registers the `emet` tool, and keeps the same modes (`fast`, `deep`, `code`, `academic`). The new host-profile layer only affects MCP server surfaces.
+### MCP / CLI
 
-### How to install the MCP server
-For MCP hosts, prefer a real binary over `npx`. `emet` ships bin aliases (`emet`, `emet-mcp`), and explicit installation is the most reliable cross-host setup.
-
-**Recommended global install**
 ```bash
 npm install -g @black-knight.dev/emet
 emet doctor
 emet
 ```
 
-**Project-local install**
-```bash
-npm install @black-knight.dev/emet
-node ./node_modules/@black-knight.dev/emet/emet.js
+- `emet doctor` checks the local install.
+- plain `emet` starts the MCP stdio server.
+- `emet fetch <url> [--json]` is the CLI equivalent of `web_fetch`.
+- `emet init <host> --print|--write` writes known-good host configs.
+
+## Host setup
+
+| Host | Fastest setup | Config |
+| --- | --- | --- |
+| Claude Code | `claude mcp add emet -- emet` | [`configs/claude-code/mcp.json`](configs/claude-code/mcp.json) |
+| Codex | `emet init codex --write` | [`configs/codex/config.toml`](configs/codex/config.toml) |
+| Cursor | `emet init cursor --write` | [`configs/cursor/mcp.json`](configs/cursor/mcp.json) |
+| VS Code / Copilot | `emet init vscode-copilot --write` | [`configs/vscode-copilot/mcp.json`](configs/vscode-copilot/mcp.json) |
+| Gemini CLI | `emet init gemini --write` | [`configs/gemini/settings.json`](configs/gemini/settings.json) |
+| Pi | `pi install npm:@black-knight.dev/emet` | extension entrypoint shipped in package |
+
+More copy-paste setup lives in [docs/quickstarts.md](docs/quickstarts.md).
+
+## Example calls
+
+### Current docs / API lookup
+
+```json
+{
+  "query": "current MCP sampling docs",
+  "mode": "code",
+  "options": { "requireAuthoritative": true }
+}
 ```
 
-**Local dev / repo checkout**
-```bash
-node ./mcp/server.js
+### Community + GitHub research
+
+```json
+{
+  "query": "What are developers saying about React 19 upgrade pain?",
+  "mode": "deep",
+  "options": {
+    "platforms": ["hn", "github"],
+    "interactive": true,
+    "maxResultsPerPlatform": 5
+  }
+}
 ```
 
-The MCP server identifies itself as `emet-mcp` and exposes the tool `emet`.
+### Full raw page text in the research result
 
-### Anonymous usage analytics
+```json
+{
+  "query": "MCP tool schema docs",
+  "mode": "code",
+  "options": { "rawPages": true }
+}
+```
 
-`emet` collects anonymous runtime usage data via [`pinglet`](https://www.npmjs.com/package/pinglet)
-to understand which features are used and improve the project.
+### Raw text for one known URL
 
-**Tracking is ON by default** (basic: `run` + tool events like `tool:call`, `tool:success`).
-No prompts during install.
+```json
+{
+  "url": "https://modelcontextprotocol.io/docs/develop/build-server"
+}
+```
 
-Collected:
-- package name/version, Node.js version, platform (darwin/linux/win32), CI flag
-- anonymous random client id (SHA-256 hashed, one-way)
-- event names: `run`, `tool:call`, `tool:success`, `tool:error`, `tool:skip`
-- non-PII metadata: `mode`, host profile (`claude-code`, `codex`, `generic`)
+More examples: [docs/examples.md](docs/examples.md)
 
-Not collected:
-- research queries, prompts, URLs
-- source contents, file paths
-- environment variables, API keys, secrets, tokens
-- logs or stack traces
+## CLI helpers
+
+```bash
+emet doctor
+emet init claude-code --print
+emet init cursor --write
+emet fetch https://example.com/docs --json
+```
+
+## Safety, privacy, and telemetry
+
+- Security reporting lives in [SECURITY.md](SECURITY.md).
+- `emet` is read-only.
+- Queries, prompts, URLs, source contents, file paths, tokens, and secrets are not collected by the default telemetry described below.
+- Anonymous runtime usage analytics are provided by [`pinglet`](https://github.com/endgegnerbert-tech/pinglet).
 
 Opt out anytime:
 
@@ -137,268 +157,31 @@ PINGLET_OPT_OUT=1 emet
 emet --no-telemetry
 ```
 
-[Learn more about pinglet telemetry](https://github.com/endgegnerbert-tech/pinglet)
+## Docs
 
-### Host install matrix
+Start here:
 
-| Host | Install command | Config example |
-| --- | --- | --- |
-| Claude Code | `npm install -g @black-knight.dev/emet` or plugin marketplace install | [`configs/claude-code/mcp.json`](./configs/claude-code/mcp.json) |
-| Cursor | `npm install -g @black-knight.dev/emet` | [`configs/cursor/mcp.json`](./configs/cursor/mcp.json) |
-| VS Code / Copilot | `npm install -g @black-knight.dev/emet` | [`configs/vscode-copilot/mcp.json`](./configs/vscode-copilot/mcp.json) |
-| Codex | `npm install -g @black-knight.dev/emet` or plugin marketplace install | [`configs/codex/config.toml`](./configs/codex/config.toml) |
-| Gemini CLI | `npm install -g @black-knight.dev/emet` | [`configs/gemini/settings.json`](./configs/gemini/settings.json) |
+- [docs/README.md](docs/README.md) — docs index
+- [docs/quickstarts.md](docs/quickstarts.md) — host-by-host copy-paste setup
+- [docs/hosts/README.md](docs/hosts/README.md) — shortest path per supported host
+- [docs/tool-reference.md](docs/tool-reference.md) — modes, options, and best call patterns
+- [docs/examples.md](docs/examples.md) — prompt and tool-call gallery
+- [docs/pipeline.md](docs/pipeline.md) — maintainer pipeline/module overview
+- [CHANGELOG.md](CHANGELOG.md) — release history
+- [docs/releases/](docs/releases/) — pinned release notes
 
-**Verified in real CLIs:** Claude Code, Codex, and Gemini CLI were tested with temporary installs. Claude and Codex connected successfully; Gemini registered successfully and was then gated by workspace trust, which is expected behavior.
+## Contributing
 
-### Host-specific setup
-Ready-to-copy examples live in [`configs/`](./configs).
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-<details open>
-<summary><strong>Claude Code</strong></summary>
+Local verification gate:
 
-**MCP install**
 ```bash
-npm install -g @black-knight.dev/emet
-claude mcp add emet -- emet
+npm run check
 ```
 
-**Project config**
-- Copy [`configs/claude-code/mcp.json`](./configs/claude-code/mcp.json) to `.mcp.json`
+## License
 
-**Plugin / marketplace files**
-- [`./.claude-plugin/plugin.json`](./.claude-plugin/plugin.json)
-- [`./.claude-plugin/marketplace.json`](./.claude-plugin/marketplace.json)
-
-**Marketplace install**
-```bash
-claude plugin marketplace add https://github.com/endgegnerbert-tech/emet
-claude plugin install emet@emet
-```
-
-**Local marketplace install (repo checkout)**
-```bash
-claude plugin marketplace add .
-claude plugin install emet@emet
-```
-
-The Claude marketplace plugin runs the repo-bundled MCP entrypoint directly, so it does not require a separate global `emet` install.
-
-**Verify**
-```bash
-emet doctor
-claude mcp list
-claude mcp get emet
-```
-
-For direct `claude mcp add ...`, expect `emet` with `Status: ✓ Connected`.
-For marketplace installs, Claude prefixes the server name, so `claude mcp list` should show `plugin:emet:emet` as connected.
-
-**Local marketplace validation**
-```bash
-claude plugin validate ./.claude-plugin/plugin.json
-```
-
-**Repo checkout alternative**
-```bash
-claude mcp add emet -- node ./mcp/server.js
-```
-
-</details>
-
-<details>
-<summary><strong>Cursor</strong></summary>
-
-**Install**
-```bash
-npm install -g @black-knight.dev/emet
-```
-
-Copy [`configs/cursor/mcp.json`](./configs/cursor/mcp.json) to `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "emet": {
-      "command": "emet"
-    }
-  }
-}
-```
-
-**Verify**
-Restart Cursor and confirm `emet` appears in MCP settings/tools and exposes the `emet` tool.
-
-</details>
-
-<details>
-<summary><strong>VS Code / GitHub Copilot</strong></summary>
-
-**Install**
-```bash
-npm install -g @black-knight.dev/emet
-```
-
-Copy [`configs/vscode-copilot/mcp.json`](./configs/vscode-copilot/mcp.json) to `.vscode/mcp.json`:
-
-```json
-{
-  "servers": {
-    "emet": {
-      "type": "stdio",
-      "command": "emet"
-    }
-  }
-}
-```
-
-**Verify**
-Restart VS Code and confirm the MCP server is available from Copilot Chat and exposes the `emet` tool.
-
-</details>
-
-<details>
-<summary><strong>Codex</strong></summary>
-
-**MCP install**
-```bash
-npm install -g @black-knight.dev/emet
-```
-
-Merge [`configs/codex/config.toml`](./configs/codex/config.toml) into `~/.codex/config.toml` or your project-level Codex config:
-
-```toml
-[mcp_servers.emet]
-command = "emet"
-```
-
-**Plugin / marketplace files**
-- [`./.codex-plugin/plugin.json`](./.codex-plugin/plugin.json)
-- [`./.codex-plugin/mcp.json`](./.codex-plugin/mcp.json)
-- [`./.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json)
-- [`./plugins/emet`](./plugins/emet) (local marketplace source path)
-
-**Marketplace install**
-```bash
-codex plugin marketplace add https://github.com/endgegnerbert-tech/emet
-codex plugin add emet@emet
-```
-
-**Local marketplace install (repo checkout)**
-```bash
-codex plugin marketplace add .
-codex plugin add emet@emet
-```
-
-The Codex marketplace plugin bootstraps `@black-knight.dev/emet` on first run from the plugin bundle in `plugins/emet`, so it does not require a separate global `emet` install.
-
-**Verify**
-```bash
-codex mcp list
-codex mcp get emet
-```
-
-Expected: `enabled: true` and `transport: stdio`.
-
-**Marketplace usage**
-Codex reads local plugin marketplaces from `.agents/plugins/marketplace.json`. This repo now ships that file plus a dedicated `plugins/emet` bundle for local marketplace workflows and future marketplace packaging.
-
-</details>
-
-<details>
-<summary><strong>Gemini CLI</strong></summary>
-
-**Install**
-```bash
-npm install -g @black-knight.dev/emet
-```
-
-Merge [`configs/gemini/settings.json`](./configs/gemini/settings.json) into `~/.gemini/settings.json` or `.gemini/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "emet": {
-      "command": "emet"
-    }
-  }
-}
-```
-
-**Verify**
-```bash
-gemini mcp list
-```
-
-Expected: `emet` should appear in the configured MCP server list. In untrusted folders Gemini may show the server as configured but disabled until the workspace is trusted.
-
-</details>
-
----
-
-## 🚀 Quick Start / Usage
-
-Once installed, your agent has access to the `emet` tool. It accepts a `query`, a `mode`, and various `options`.
-
-### Modes
-| Mode | Best for |
-| --- | --- |
-| `fast` | Quick factual lookups (e.g., "What is the latest LTS version of Node.js?"). Stops fetching early if authoritative sources are found. |
-| `deep` | Broader retrieval with automatic follow-up rounds. Perfect for comparisons, conflicts, or unclear architecture questions. |
-| `code` | Docs, repositories, README-driven answers, and retrieving actual code snippets. |
-| `academic` | Scholarly sources, DOI links, and paper-heavy topics. |
-
-### Example Tool Calls (For Agents)
-**Factual Lookup:**
-```json
-{
-  "query": "React 19 RC release notes",
-  "mode": "fast",
-  "options": { "requireAuthoritative": true }
-}
-```
-
-**Architecture Research:**
-```json
-{
-  "query": "Compare PostgreSQL and MySQL for multi-tenant SaaS",
-  "mode": "deep",
-  "options": { "preferRecent": true, "maxTurns": 2 }
-}
-```
-
----
-
-## Runtime, logging, and local routing
-
-- **Tiny router auto-activation:** When `ml/models/domain/model.joblib`, `ml/models/preflight/model.joblib`, and `.venv-router/bin/python` are present, emet enables local `domain` and `preflight` routing automatically. Set `EMET_TINY_ROUTER=0` to force it off.
-- **Optional router tasks:** Follow-up, conflict, sufficiency, source-authority, page-quality, and query-understanding heads remain opt-in via their `EMET_TINY_ROUTER_*` flags.
-- **Structured runtime logs:** Research events are JSONL with stable `outcome`, `reason`, provider, retry, status, source-count, and latency fields where relevant.
-- **Log paths:** `EMET_LOG_PATH` still overrides everything. Otherwise Pi runs use the emet context/log directory, and standalone installs use OS-native log locations (`~/Library/Logs/emet` on macOS, `$XDG_STATE_HOME/emet/logs` on Linux).
-- **Bounded logs:** Default logs are daily files (`emet-YYYY-MM-DD.jsonl`) and oversized active files roll over at `EMET_LOG_MAX_BYTES` (default 50 MiB). Use `node scripts/maintenance/rotate-emet-logs.mjs [log-dir]` to gzip older JSONL logs.
-
----
-
-## 🧠 Under the Hood: The Agentic Router Update (v1.4.0)
-
-With `1.4.0`, `emet` shifted from heavy, generative JSON-planners to a **Hybrid Tiny-Router Architecture**.
-
-- **Model2Vec & SVC:** Queries are classified via locally embedded features. Security and paper queries have a 0% downgrade rate.
-- **Structured ML:** Instead of asking a heavy LLM "Is this enough data?", the system extracts deterministic features (`has_authority`, `conflict_state`) and uses an ultra-fast Logistic Regression model to evaluate sufficiency and follow-up actions with 100% evaluated accuracy.
-- **Node.js-to-Python IPC:** Operates entirely locally using a highly optimized, line-delimited JSON-RPC daemon to manage Python dependencies (`Scrapling`, `Model2Vec`) without memory leaks.
-
----
-
-## 🛣️ Future Roadmap
-
-We are actively working on scaling the reasoning capabilities:
-- **LLM Data Augmentation (Weak Supervision):** Generating synthetic training data for underconfident domains to boost zero-shot accuracy to >95% without manual labeling.
-- **Active Learning Telemetry Loop:** Clustering low-confidence predictions from cache logs into a weakly-supervised retraining pipeline to let the system "self-heal."
-- **Cross-Encoder for Conflict Detection:** Transitioning to a fine-tuned Cross-Encoder (e.g., MiniLM + Natural Language Inference) to detect deep semantic contradiction across differing texts (e.g., recognizing that "Node 20 is stable" contradicts "Node 20 is broken").
-
----
-
-## 📝 License & Notices
-- **License:** MIT
-- **Third-party notices:** See `THIRD_PARTY_NOTICES.md`
-- **GitHub:** [https://github.com/endgegnerbert-tech/emet](https://github.com/endgegnerbert-tech/emet)
+- MIT
+- Third-party notices: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- Repo: <https://github.com/endgegnerbert-tech/emet>

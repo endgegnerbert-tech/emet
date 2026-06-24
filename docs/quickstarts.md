@@ -1,5 +1,7 @@
 # 5-minute quickstarts
 
+Need the option semantics after setup? See [tool-reference.md](./tool-reference.md). Need host-specific setup? See [hosts/README.md](./hosts/README.md).
+
 Install once:
 
 ```bash
@@ -57,6 +59,24 @@ pi install npm:@black-knight.dev/emet
 ```
 
 Try: `Use emet when you are unsure about current package docs.`
+
+## Community/media example
+
+Tool call:
+
+```json
+{
+  "query": "What are developers saying about React 19 upgrade pain?",
+  "mode": "deep",
+  "options": {
+    "platforms": ["hn", "github"],
+    "interactive": true,
+    "maxResultsPerPlatform": 5
+  }
+}
+```
+
+Supported read-only backends today: `hn`, `v2ex`, `github`, `rss`, `youtube`.
 
 ## Useful commands
 

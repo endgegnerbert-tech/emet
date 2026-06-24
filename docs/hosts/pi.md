@@ -1,0 +1,17 @@
+# Pi Coding Agent
+
+## Install
+
+```bash
+pi install npm:@black-knight.dev/emet
+```
+
+## Verify
+
+Use a prompt like:
+
+```text
+Use emet to verify the current Node.js test runner docs.
+```
+
+The Pi extension keeps the public `emet` tool contract and also ships `web_fetch`.

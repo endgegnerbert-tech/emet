@@ -1,6 +1,6 @@
 # Changelog
 
-Pinned: [1.4.6 release notes](docs/releases/1.4.6.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [contributing](CONTRIBUTING.md)
+Pinned: [docs index](docs/README.md) · [tool reference](docs/tool-reference.md) · [1.4.6 release notes](docs/releases/1.4.6.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [SECURITY](SECURITY.md) · [contributing](CONTRIBUTING.md)
 
 ## 1.4.6
 

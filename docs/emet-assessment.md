@@ -1,5 +1,7 @@
 # emet assessment
 
+This note is historical product assessment, not front-door documentation.
+
 ## Short verdict
 - Good research tool.
 - Not yet a strong exact-answer benchmark solver.
@@ -28,6 +30,6 @@
 - Improving the benchmark behavior should help the real tool, but only if the changes target search, fetch, and synthesis quality.
 
 ## Why MCP showed up
-- MCP was the harness layer I used to inspect and run commands.
-- `emet` is still the actual extension/tool name.
-- So the logs show MCP because that is the transport/tooling layer, not because the tool changed name.
+- MCP was the harness layer used to inspect and run commands.
+- `emet` remained the actual extension/tool name.
+- So logs showed MCP because that was the transport/tooling layer, not because the tool changed name.

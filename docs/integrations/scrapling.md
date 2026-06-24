@@ -1,46 +1,24 @@
-# Scrapling integration
+# Page-fetch adapter note (historical `scrapling.md` filename)
 
-`emet` uses Scrapling as an optional resilient page-fetch fallback for blocked, thin, or JavaScript-heavy pages.
+This file used to document a real Scrapling runtime integration. That is no longer the current setup.
 
-## Runtime path
+## Current reality
 
-- Node entry point: `lib/page-fetch-adapter.js`
-- Research call site: `lib/web-research.js`
-- Tests: `test/page-fetch-adapter.test.js`, `test/web-research.test.js`
+- `emet` does **not** require a local `Scrapling/` submodule.
+- `emet` does **not** require a `.venv-scrapling/` environment.
+- `lib/web-research.js` is now a thin facade, not the fetch implementation site.
 
-The normal HTTP/Jina path stays first. Scrapling is only attempted after `assessPageAttempt()` marks a page as weak, blocked, or dynamic.
+## What exists now
 
-## Local source checkout
+The current page-read path is centered on:
 
-The repository keeps `Scrapling/` as a submodule checkout from:
+- `lib/research/fetch.js`
+- `lib/page-fetch-adapter.js`
+- `test/page-fetch-adapter.test.js`
+- `test/web-research.test.js`
 
-```text
-https://github.com/D4Vinci/Scrapling.git
-```
+`lib/page-fetch-adapter.js` keeps the blocked/thin/dynamic heuristics. The helper name `chooseScraplingMode()` remains for compatibility/history, but it is just a small mode-selection heuristic now.
 
-This is useful for local development because `page-fetch-adapter.js` adds that checkout to `PYTHONPATH` before importing `scrapling`.
+## Documentation rule
 
-Package consumers do not receive the submodule in the npm package. For packaged/runtime installs, Scrapling must be available in the configured Python environment.
-
-## Python environment
-
-Default resolution order:
-
-1. `PYTHON` environment variable
-2. `.venv-scrapling/bin/python`
-3. `python3`
-
-The runtime probe imports:
-
-```python
-lxml
-patchright
-playwright
-scrapling
-```
-
-If the probe fails, `fetchWithScrapling()` returns `null` and `emet` falls back without failing the research run.
-
-## Cleanup decision
-
-Do not archive or delete `Scrapling/` while the fallback path is active. Keep it as a correctly declared submodule, or replace the integration with a documented pip dependency and update `page-fetch-adapter.js` first.
+If another doc claims that users must install Scrapling, keep a local Scrapling checkout, or run `.venv-scrapling/bin/python`, that doc is stale and should be updated or archived.

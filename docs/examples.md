@@ -1,5 +1,7 @@
 # emet examples gallery
 
+Need the mode/option rules behind these examples? See [tool-reference.md](./tool-reference.md).
+
 Copy-paste prompts for common jobs.
 
 ## Current facts
@@ -37,6 +39,26 @@ Result shape: authority-first answer; weak blogs do not satisfy the result alone
 Prompt: `Use emet to find the official changelog for React 19 and summarize breaking changes.`
 Mode: `deep`
 Result shape: official release/changelog citations.
+
+## Community / social signals
+
+Tool call: `emet({ query: "What are developers saying about React 19 upgrade pain?", mode: "deep", options: { platforms: ["hn", "github"], interactive: true, maxResultsPerPlatform: 5 } })`
+Result shape: compact community results, stable result IDs, next actions, then optional fetch/synthesis.
+
+## V2EX / forum chatter
+
+Tool call: `emet({ query: "Search V2EX for Bun Windows support reports", mode: "deep", options: { platforms: ["v2ex"] } })`
+Result shape: forum-backed signals with citations and non-authoritative metadata.
+
+## RSS / feed tracking
+
+Tool call: `emet({ query: "Recent RSS mentions of pnpm catalog support", mode: "deep", options: { platforms: ["rss"] } })`
+Result shape: feed-backed results for release/mention tracking.
+
+## YouTube / media lookup
+
+Tool call: `emet({ query: "YouTube tutorials about MCP server setup", mode: "deep", options: { platforms: ["youtube"] } })`
+Result shape: media metadata/transcript-oriented retrieval when available.
 
 ## Academic
 
