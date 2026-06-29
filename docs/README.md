@@ -24,6 +24,7 @@ Pinned: [README](../README.md) · [tool reference](./tool-reference.md) · [quic
 Supported community/media backends today:
 
 - Hacker News (`hn`)
+- Reddit (`reddit`)
 - V2EX (`v2ex`)
 - GitHub (`github`)
 - RSS/Atom (`rss`)

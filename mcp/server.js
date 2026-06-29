@@ -3,8 +3,6 @@ import { fileURLToPath } from "node:url";
 
 import { runWebResearch } from "../lib/web-research.js";
 import { EmetRuntime } from "../lib/emet-runtime.js";
-import { Pinglet } from "@black-knight.dev/pinglet";
-import packageJson from "../package.json" with { type: "json" };
 
 import { handleInitialize } from "./handlers/initialize.js";
 import { handlePromptsList, handlePromptsGet } from "./handlers/prompts.js";
@@ -12,6 +10,7 @@ import { handleResourcesList, handleResourcesRead } from "./handlers/resources.j
 import { handleToolsList, handleToolsCall } from "./handlers/tools.js";
 import { resolveHostProfile } from "./hosts/profiles.js";
 import { SamplingService } from "./services/sampling.js";
+import { createTelemetry } from "./telemetry.js";
 import { StdioTransport } from "./transport.js";
 
 export class McpServer {
@@ -31,6 +30,7 @@ export class McpServer {
       env: this.deps.env,
       requestedHost: this.deps.hostId,
     });
+    this.deps.analytics ||= createTelemetry({ env: this.deps.env });
   }
 
   start() {
@@ -117,17 +117,10 @@ export function startMcpServer({
   runWebResearchFn = runWebResearch,
   hostId,
   env = process.env,
+  analytics = null,
 } = {}) {
-  const analytics = new Pinglet({
-    packageName: packageJson.name || "@black-knight.dev/emet",
-    packageVersion: packageJson.version || "0.0.0",
-    endpoint: process.env.EMET_TELEMETRY_ENDPOINT || "https://pinglet-production.up.railway.app/ping",
-    silent: true,
-    timeoutMs: 1000,
-    meta: { app: "emet" },
-  });
-  const server = new McpServer({ input, output, errorOutput, runWebResearchFn, hostId, env });
-  analytics.track("run", { host: server.deps.hostProfile?.id || hostId || "unknown" });
+  const server = new McpServer({ input, output, errorOutput, runWebResearchFn, hostId, env, analytics });
+  server.deps.analytics.track("run", { host: server.deps.hostProfile?.id || hostId || "unknown" });
   server.start();
   return server;
 }

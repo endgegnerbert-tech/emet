@@ -42,13 +42,13 @@ test("isValidAction rejects legacy and unknown actions", () => {
   assert.equal(isValidAction(undefined), false);
 });
 
-// --- canonicalAction bridge ---
+// --- canonicalAction ---
 
-test("canonicalAction maps legacy to canonical", () => {
-  assert.equal(canonicalAction("collector_search"), "search");
-  assert.equal(canonicalAction("collector_fetch"), "fetch");
-  assert.equal(canonicalAction("collector_synthesize"), "synthesize");
-  assert.equal(canonicalAction("web_research"), "final");
+test("canonicalAction rejects removed legacy actions", () => {
+  assert.equal(canonicalAction("collector_search"), null);
+  assert.equal(canonicalAction("collector_fetch"), null);
+  assert.equal(canonicalAction("collector_synthesize"), null);
+  assert.equal(canonicalAction("web_research"), null);
 });
 
 test("canonicalAction passes through canonical", () => {
@@ -84,15 +84,14 @@ test("buildCheckpointResult builds valid search checkpoint", () => {
   assert.equal(result.nextActions.length, 1);
 });
 
-test("buildCheckpointResult accepts legacy action", () => {
-  const result = buildCheckpointResult({
+test("buildCheckpointResult rejects legacy action", () => {
+  assert.throws(() => buildCheckpointResult({
     action: "collector_search",
     sessionId: "abc-123",
     query: "test",
     turn: 0,
     nextActions: [],
-  });
-  assert.equal(result.action, "search"); // canonicalized
+  }));
 });
 
 test("buildCheckpointResult throws on invalid action", () => {

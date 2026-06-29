@@ -7,7 +7,7 @@ import { compactResearchPayload, evaluateSufficiency, prioritizeSourceEntries, s
 import { clearResearchMemory, normalizeResearchQuery, readCachedResult, shouldSkipResearch, writeCachedResult } from "../lib/research-memory.js";
 import { EmetRuntime } from "../lib/emet-runtime.js";
 import { createResearchResult } from "../lib/types.js";
-import { filterSearchResults } from "../lib/research/search.js";
+import { filterSearchResults, sourceFromPaper } from "../lib/research/search.js";
 
 test("webResearchExtension registers a emet tool", () => {
   clearResearchMemory();
@@ -24,6 +24,60 @@ test("webResearchExtension registers a emet tool", () => {
   assert.ok(emetTool);
   assert.ok(tools.some((tool) => tool.name === "web_fetch"));
   assert.ok(emetTool.parameters.properties.options.properties.rawPages);
+});
+
+test("webResearchExtension keeps web_fetch active alongside emet in Pi", async () => {
+  clearResearchMemory();
+  const tools = [];
+  const handlers = new Map();
+  let active = ["read", "emet"];
+  const pi = {
+    on(name, handler) { handlers.set(name, handler); },
+    registerTool(tool) { tools.push(tool); },
+    getActiveTools() { return active; },
+    getAllTools() { return tools.map((tool) => ({ name: tool.name, description: tool.description, parameters: tool.parameters })); },
+    setActiveTools(names) { active = names; },
+  };
+
+  webResearchExtension(pi);
+  await handlers.get("session_start")?.({ type: "session_start", reason: "startup" });
+
+  assert.ok(tools.some((tool) => tool.name === "web_fetch"));
+  assert.deepEqual(active, ["read", "emet", "web_fetch"]);
+});
+
+test("webResearchExtension tolerates Pi active-tool APIs before runtime binding", async () => {
+  clearResearchMemory();
+  const tools = [];
+  const handlers = new Map();
+  const pi = {
+    on(name, handler) { handlers.set(name, handler); },
+    registerTool(tool) { tools.push(tool); },
+    getActiveTools() { throw new Error("Extension runtime not initialized"); },
+    getAllTools() { throw new Error("Extension runtime not initialized"); },
+    setActiveTools() { throw new Error("Extension runtime not initialized"); },
+  };
+
+  webResearchExtension(pi);
+  await handlers.get("session_start")?.({ type: "session_start", reason: "startup" });
+
+  assert.ok(tools.some((tool) => tool.name === "web_fetch"));
+  assert.ok(tools.some((tool) => tool.name === "emet"));
+});
+
+test("webResearchExtension exposes Pi-friendly string enum schemas", () => {
+  clearResearchMemory();
+  const tools = [];
+  const pi = {
+    on() {},
+    registerTool(tool) { tools.push(tool); },
+  };
+
+  webResearchExtension(pi);
+  const emetTool = tools.find((tool) => tool.name === "emet");
+  assert.deepEqual(emetTool.parameters.properties.mode.enum, ["fast", "deep", "code", "academic"]);
+  assert.deepEqual(emetTool.parameters.properties.options.properties.format.enum, ["markdown", "json", "table", "latex"]);
+  assert.equal(emetTool.parameters.properties.mode.type, "string");
 });
 
 test("getResearchConfig supports code and academic profiles", () => {
@@ -51,6 +105,17 @@ test("getResearchConfig merges deep research options", () => {
   assert.deepEqual(config.hostAllowlist, ["modelcontextprotocol.io"]);
 });
 
+test("getResearchConfig maps requirePrimarySource to primary-source policy", () => {
+  const config = getResearchConfig({
+    mode: "fast",
+    query: "verify package claim",
+    requirePrimarySource: true,
+  });
+
+  assert.equal(config.requireAuthoritative, true);
+  assert.ok(config.overlays.includes("primary-source-required"));
+});
+
 test("strict host allowlists fail closed during search filtering", () => {
   const filtered = filterSearchResults([
     { title: "Official", url: "https://modelcontextprotocol.io/docs/sampling", snippet: "sampling docs" },
@@ -59,6 +124,25 @@ test("strict host allowlists fail closed during search filtering", () => {
 
   assert.equal(filtered.length, 1);
   assert.equal(filtered[0].url, "https://modelcontextprotocol.io/docs/sampling");
+});
+
+test("host allowlist path matching is segment-aware", () => {
+  const filtered = filterSearchResults([
+    { title: "Docs root", url: "https://example.com/docs", snippet: "docs" },
+    { title: "Docs page", url: "https://example.com/docs/page", snippet: "docs page" },
+    { title: "Sibling", url: "https://example.com/docsx", snippet: "not docs" },
+  ], { hostAllowlist: ["example.com/docs"] });
+
+  assert.deepEqual(filtered.map((result) => result.title), ["Docs root", "Docs page"]);
+});
+
+test("academic paper sources pass through source policy filtering", () => {
+  const filtered = filterSearchResults([
+    sourceFromPaper("Allowed Paper", "https://arxiv.org/abs/2601.00001", "paper abstract", "2026-01-01"),
+    sourceFromPaper("Blocked Paper", "https://doi.org/10.1000/example", "paper abstract", "2026-01-01"),
+  ], { mode: "academic", hostAllowlist: ["arxiv.org"], allowedSourceTypes: ["paper"] });
+
+  assert.deepEqual(filtered.map((result) => result.title), ["Allowed Paper"]);
 });
 
 
@@ -76,6 +160,19 @@ test("getResearchConfig composes manual family and overlay hints", () => {
   assert.ok(config.overlays.includes("changelog"));
   assert.ok(config.allowedSources.includes("shopify.dev"));
   assert.equal(config.requireAuthoritative, true);
+});
+
+test("getResearchConfig merges caller and domain query hints additively", () => {
+  const config = getResearchConfig({
+    mode: "fast",
+    query: "React 19 release notes",
+    domainHint: "changelog",
+    queryHints: ["caller hint", "changelog"],
+  });
+
+  assert.ok(config.queryHints.includes("release notes"));
+  assert.ok(config.queryHints.includes("caller hint"));
+  assert.equal(config.queryHints.filter((hint) => hint === "changelog").length, 1);
 });
 
 test("evaluateSufficiency reports missing aspects and open questions", () => {
@@ -188,6 +285,27 @@ test("buildQueries keeps pinned versions intact for deprecated endpoint queries"
   assert.ok(queries.every((item) => !/\b2026\b/.test(item)));
   assert.ok(queries.some((item) => /2022-11-28/.test(item)));
   assert.ok(queries.some((item) => /changelog|release notes|breaking changes/i.test(item)));
+});
+
+test("buildQueries includes additive caller and domain query hints", async () => {
+  const ctx = {
+    model: "expensive/model",
+    modelRegistry: {
+      async getApiKeyAndHeaders() {
+        throw new Error("fast planning must not ask the model registry");
+      },
+    },
+  };
+
+  const queries = await buildQueries("React 19 release notes", {
+    mode: "fast",
+    domainHint: "changelog",
+    queryHints: ["caller hint"],
+    maxQueries: 10,
+  }, ctx, undefined);
+
+  assert.ok(queries.some((item) => item.includes("release notes")));
+  assert.ok(queries.some((item) => item.includes("caller hint")));
 });
 
 test("buildQueries can use model-planned subqueries only in deep mode", async () => {
@@ -730,6 +848,38 @@ test("runWebResearch can merge local files as sources", async () => {
   assert.ok(result.sources.some((source) => source.url.startsWith("file://")));
 });
 
+test("runWebResearch fetches selectedUrls without an interactive session", async () => {
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => ({
+    status: 200,
+    url: String(url),
+    headers: { get: () => "text/html" },
+    async text() {
+      return `<html><title>Selected URL</title><body>${("selected url evidence ").repeat(120)}</body></html>`;
+    },
+  });
+
+  try {
+    const result = await runWebResearch(
+      "summarize selected url",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { mode: "fast", isolate: true, selectedUrls: ["https://example.com/a"], rawPages: true }
+    );
+
+    assert.equal(result.ok, true);
+    assert.equal(result.action, "final");
+    assert.equal(result.reason, "selected_urls_fetched");
+    assert.equal(result.pagesRead, 1);
+    assert.equal(result.sources[0].url, "https://example.com/a");
+    assert.equal(result.pageTexts[0].url, "https://example.com/a");
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
 test("compactResearchPayload keeps claim metadata", () => {
   const compact = compactResearchPayload({
     claims: [{ text: "Claim", confidence: "high", evidence: [{ type: "web", source: "https://example.com", snippet: "Claim" }] }],
@@ -745,7 +895,6 @@ test("EmetRuntime formatResponse includes raw page texts when rawPages is enable
   const formatted = runtime.formatResponse({
     ok: true,
     action: "final",
-    legacyAction: "web_research",
     contentText: "summary",
     citations: [{ text: "Doc", sourceIndex: 1 }],
     sufficient: true,
@@ -763,4 +912,19 @@ test("EmetRuntime formatResponse includes raw page texts when rawPages is enable
   assert.match(formatted.text, /## Raw page 1/);
   assert.match(formatted.text, /Exact raw text here/);
   assert.equal(formatted.structuredContent.pageTexts[0].url, "https://example.com/doc");
+});
+
+test("EmetRuntime formatResponse preserves pure JSON format for Pi", () => {
+  const runtime = new EmetRuntime();
+  const formatted = runtime.formatResponse({
+    ok: true,
+    action: "final",
+    format: "json",
+    contentText: JSON.stringify({ answer: "A", sources: [] }),
+    citations: [],
+    sufficient: true,
+    authoritativeSourcesFound: true,
+  });
+
+  assert.doesNotThrow(() => JSON.parse(formatted.text));
 });

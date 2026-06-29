@@ -76,7 +76,7 @@ Tool call:
 }
 ```
 
-Supported read-only backends today: `hn`, `v2ex`, `github`, `rss`, `youtube`.
+Supported read-only backends today: `hn`, `reddit`, `v2ex`, `github`, `rss`, `youtube`.
 
 ## Useful commands
 

@@ -49,6 +49,14 @@ test("guardrails apply minimum evidence requirements to runtime config", () => {
   assert.equal(config.guardrails.guardrail_flags.version_sensitive, true);
 });
 
+test("guardrails honor explicit requirePrimarySource", () => {
+  const guardrails = buildResearchGuardrails("verify this claim", { requirePrimarySource: true });
+
+  assert.equal(guardrails.guardrail_flags.primary_source_required, true);
+  assert.equal(guardrails.minimumEvidence.requirePrimarySource, true);
+  assert.equal(guardrails.minimumEvidence.requireAuthoritative, true);
+});
+
 
 test("domain guardrails veto high-risk and authority downgrades to generic web", () => {
   const changelog = buildResearchGuardrails("React 19 release notes changelog");

@@ -1,6 +1,32 @@
 const DEFAULT_PROMPTS = ["current_docs", "framework_comparison"];
 
 const PROMPT_BUILDERS = {
+  official_docs_check: {
+    name: "official_docs_check",
+    description: "Find and verify the official documentation for a technical claim or API.",
+    arguments: [
+      { name: "topic", description: "Technology, API, command, or behavior to verify", required: true },
+      { name: "host", description: "Expected official host or path, when known", required: false },
+    ],
+    build: ({ topic, host }) => `Use emet in code mode to verify official documentation for: ${topic}.${host ? ` Use hostAllowlist: ${host}.` : " Prefer official vendor/spec/package hosts and fail closed if results drift to another vendor."} Return implementation-relevant facts, citations, and any gaps/conflicts.`,
+  },
+  version_evidence_check: {
+    name: "version_evidence_check",
+    description: "Verify version-sensitive package, API, changelog, or migration facts.",
+    arguments: [
+      { name: "target", description: "Package, API, framework, or command", required: true },
+      { name: "version", description: "Version or range to verify", required: false },
+    ],
+    build: ({ target, version }) => `Use emet in code mode with requireAuthoritative for version-sensitive evidence about ${target}${version ? ` ${version}` : ""}. Prefer package registry, official docs, changelog/release notes, and GitHub release sources. Do not rely on community-only evidence for final claims.`,
+  },
+  security_advisory_check: {
+    name: "security_advisory_check",
+    description: "Verify security advisories, CVEs, affected versions, and mitigations from primary sources.",
+    arguments: [
+      { name: "target", description: "CVE, dependency, product, or vulnerability", required: true },
+    ],
+    build: ({ target }) => `Use emet in code/deep mode with requireAuthoritative for: ${target}. Prefer NVD, CISA, GHSA, vendor advisories, and official release notes. Return affected versions, mitigation, confidence, citations, and unresolved conflicts.`,
+  },
   current_docs: {
     name: "current_docs",
     description: "Verify a package, framework, or API question against current authoritative docs.",

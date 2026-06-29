@@ -117,3 +117,16 @@ test("resolveDomainConfig exposes community extraction overlays", () => {
   assert.ok(verify.overlays.includes("official-only"));
   assert.equal(verify.requireAuthoritative, true);
 });
+
+test("package-registry pack allows official zero-setup API fallbacks", () => {
+  const config = resolveDomainConfig({ query: "serde crate latest version", domain: "package-registry" });
+
+  assert.ok(config.allowedSources.includes("registry.npmjs.org"));
+  assert.ok(config.allowedSources.includes("pypi.org"));
+  assert.ok(config.allowedSources.includes("crates.io"));
+  assert.ok(config.allowedSources.includes("docs.rs"));
+  assert.ok(config.allowedSources.includes("search.maven.org"));
+  assert.ok(config.allowedSources.includes("api.github.com"));
+  assert.ok(config.allowedSourceTypes.includes("official_doc"));
+  assert.ok(config.allowedSourceTypes.includes("github_repo"));
+});

@@ -52,7 +52,7 @@ export const HOST_PROFILES = {
     installSnippet: buildInstallSnippet(`command: ${TOOL_COMMAND}`),
     toolDescription: "Read-only live web research with ranked sources and citations. Use for current or uncertain facts; avoid repeat calls after a sufficient result.",
     instruction: "Use emet as a read-only research layer. Prefer one focused query, inspect citations, and only call again when the status says evidence is insufficient or conflicting.",
-    prompts: ["current_docs", "framework_comparison"],
+    prompts: ["official_docs_check", "current_docs", "framework_comparison"],
   },
   "claude-code": {
     id: "claude-code",
@@ -62,7 +62,7 @@ export const HOST_PROFILES = {
     installSnippet: buildInstallSnippet(`claude mcp add ${TOOL_COMMAND} -- ${TOOL_COMMAND}`),
     toolDescription: "Claude Code profile: read-only citations for implementation decisions, dependency docs, migration notes, and ambiguity checks before code changes.",
     instruction: "Claude Code: call emet before editing when a task depends on current APIs, migration guidance, security advisories, or conflicting external docs. Use prompts for reusable research workflows; sampling is optional and must degrade safely.",
-    prompts: ["current_docs", "migration_check", "security_scan", "framework_comparison"],
+    prompts: ["official_docs_check", "version_evidence_check", "security_advisory_check", "current_docs", "migration_check", "security_scan", "framework_comparison"],
   },
   cursor: {
     id: "cursor",
@@ -72,7 +72,7 @@ export const HOST_PROFILES = {
     installSnippet: buildMcpServersSnippet({ command: TOOL_COMMAND }),
     toolDescription: "Cursor profile: read-only cited lookup for compiler errors, library APIs, framework migrations, and official-doc verification. Safe for autonomous use when local context is insufficient.",
     instruction: "Cursor: prefer short, targeted emet calls for build errors, unknown APIs, and current docs. Do not replace local code search; use emet to verify external facts and return citations the IDE chat can inspect.",
-    prompts: ["current_docs", "fix_build_error", "migration_check", "framework_comparison"],
+    prompts: ["official_docs_check", "version_evidence_check", "current_docs", "fix_build_error", "migration_check", "framework_comparison"],
   },
   "vscode-copilot": {
     id: "vscode-copilot",
@@ -82,7 +82,7 @@ export const HOST_PROFILES = {
     installSnippet: buildServersSnippet({ type: "stdio", command: TOOL_COMMAND }),
     toolDescription: "VS Code/Copilot profile: read-only, auditable research with citations for enterprise-safe docs, security, and version checks.",
     instruction: "VS Code/Copilot: use emet when an answer needs auditable external evidence. Favor authoritative sources, preserve citations, and keep workspace changes separate from research output.",
-    prompts: ["current_docs", "enterprise_verification", "security_scan", "migration_check"],
+    prompts: ["official_docs_check", "version_evidence_check", "security_advisory_check", "current_docs", "enterprise_verification", "security_scan", "migration_check"],
   },
   codex: {
     id: "codex",
@@ -92,7 +92,7 @@ export const HOST_PROFILES = {
     installSnippet: buildCodexSnippet(),
     toolDescription: "Codex profile: concise read-only research for CLI implementation plans, package docs, changelogs, and cross-checking command behavior.",
     instruction: "Codex: use emet to ground implementation plans in current package docs, changelogs, and command references. Keep calls narrow and treat citations as evidence for later verification.",
-    prompts: ["current_docs", "cli_implementation_check", "migration_check", "framework_comparison"],
+    prompts: ["official_docs_check", "version_evidence_check", "security_advisory_check", "current_docs", "cli_implementation_check", "migration_check", "framework_comparison"],
   },
   gemini: {
     id: "gemini",
@@ -102,7 +102,7 @@ export const HOST_PROFILES = {
     installSnippet: buildMcpServersSnippet({ command: TOOL_COMMAND }),
     toolDescription: "Gemini profile: prompt-friendly cited research for deep dives, API docs, comparisons, and slash-command style workflows.",
     instruction: "Gemini: expose emet prompts as reusable research commands. Use deep mode for broad comparisons and fast mode for focused official-doc checks.",
-    prompts: ["current_docs", "deep_dive", "security_scan", "framework_comparison"],
+    prompts: ["official_docs_check", "version_evidence_check", "security_advisory_check", "current_docs", "deep_dive", "security_scan", "framework_comparison"],
   },
 };
 
@@ -147,11 +147,10 @@ export function resolveHostProfile(options = {}) {
 
 export function buildHostInstructions(profile = HOST_PROFILES.generic) {
   return [
-    "Use emet for current facts, docs, best practices, comparisons, and citations. Search if unsure.",
+    "emet is a read-only evidence layer for coding agents. Use emet before code changes that depend on current technical facts; use web_fetch when you already know the URL. Prefer hostAllowlist/official sources for package, version, security, legal, medical, finance, and outage claims. Community/social results are signals, not authority.",
     profile.instruction,
-    "Use default auto mode for straightforward factual/docs research; use interactive checkpoints for exploratory source/refinement choices.",
-    "Use platforms for community/sentiment retrieval, but require authoritative follow-up for factual, security, legal, medical, finance, package, version, or outage claims.",
-    "MCP best practice: tools are read-only, resources expose reusable context, prompts expose repeatable workflows, and sampling/elicitation must remain optional client-mediated capabilities.",
+    "Use the emet tool for evidence decisions, web_fetch for direct page inspection, resources for the latest compact ledger/profile, and prompts for repeatable workflows.",
+    "Use interactive checkpoints for exploratory community/source selection; fetch selected IDs before synthesize. If evidence is insufficient or conflicting, refine or ask for authoritative follow-up instead of acting.",
   ].filter(Boolean).join("\n");
 }
 

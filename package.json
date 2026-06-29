@@ -1,11 +1,21 @@
 {
   "name": "@black-knight.dev/emet",
-  "version": "1.4.6",
+  "version": "2.0.0",
   "private": false,
   "type": "module",
   "description": "Zero-setup grounded web research MCP server and Pi extension for AI coding agents.",
   "license": "MIT",
   "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./web-research": "./lib/web-research.js",
+    "./research": "./lib/research.js",
+    "./research-contract": "./lib/research-contract.js",
+    "./research-flow": "./lib/research-flow.js",
+    "./mcp-server": "./mcp-server.js",
+    "./mcp": "./mcp/index.js",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "emet": "bin/emet.js",
     "emet-mcp": "bin/emet-mcp.js"
@@ -87,27 +97,28 @@
     "gemini-cli",
     "vscode-copilot"
   ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test",
     "eval": "node --test test/eval-runner.test.js",
-    "pack:dry": "npm pack --dry-run",
-    "check": "npm test && npm run pack:dry",
+    "pack:dry": "node scripts/package-surface-audit.mjs && npm pack --dry-run",
+    "pack:smoke": "node scripts/package-install-smoke.mjs",
+    "check": "npm test && npm run pack:dry && npm run pack:smoke",
     "mcp": "node ./mcp/server.js"
   },
   "dependencies": {
     "@black-knight.dev/pinglet": "^0.2.0",
+    "@earendil-works/pi-ai": "^0.80.2",
     "@extractus/article-extractor": "^8.1.0",
-    "@mariozechner/pi-ai": "^0.73.1",
     "@napi-rs/canvas": "^1.0.0",
     "better-sqlite3": "^12.10.0",
     "pdfjs-dist": "^6.0.227",
-    "turndown": "^7.2.4",
     "typebox": "^1.1.38"
   },
-  "peerDependencies": {
-    "@mariozechner/pi-ai": "^0.73.1",
-    "@mariozechner/pi-coding-agent": "^0.73.1",
-    "typebox": "^1.1.38"
+  "overrides": {
+    "protobufjs": "7.6.4"
   },
   "pi": {
     "extensions": [

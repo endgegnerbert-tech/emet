@@ -11,29 +11,18 @@ npm run check
 This runs, in order:
 
 1. `npm test`
-2. `npm run audit:roadmap`
-3. `npm run pack:dry`
+2. `npm run pack:dry`
 
 ## Individual gates
 
 ```bash
 npm test
-npm run audit:roadmap
-npm run audit:promotion
 npm run pack:dry
+node --test test/boundary-audit.test.js
+node bin/emet.js doctor
 ```
 
-Canonical router scripts live in grouped subdirectories under `scripts/router/` (`audit/`, `export/`, `review/`, `train/`, `eval/`, `tools/`, `deploy/`, `utils/`). Root-level script files are compatibility shims only.
-
-## Router promotion rule
-
-Run the stricter promotion gate only when intentionally promoting a router/model artifact:
-
-```bash
-npm run check:promotion
-```
-
-A model or policy change is not promotion-ready unless both router audits pass and the package dry-run still contains only intended publish files.
+`npm run pack:dry` runs the package surface audit before `npm pack --dry-run`, including bin modes, version sync, and dependency sanity.
 
 ## Current layers
 

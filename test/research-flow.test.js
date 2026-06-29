@@ -18,6 +18,10 @@ test("inferQueryPlatforms: V2EX mentions", () => {
   assert.deepEqual(inferQueryPlatforms("v2ex nodejs discussion"), ["v2ex"]);
 });
 
+test("inferQueryPlatforms: Reddit mentions", () => {
+  assert.deepEqual(inferQueryPlatforms("reddit discussion about react 19"), ["reddit"]);
+});
+
 test("inferQueryPlatforms: GitHub intent", () => {
   assert.deepEqual(inferQueryPlatforms("github issues react hooks"), ["github"]);
   assert.deepEqual(inferQueryPlatforms("github discussions about vite"), ["github"]);

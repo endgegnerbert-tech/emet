@@ -13,9 +13,11 @@ const libDir = join(__dirname, "..", "lib");
 function importSources(path) {
   const content = readFileSync(path, "utf8");
   const re = /import\s+(?:(?:\{[^}]*\}|\*\s+as\s+\w+|\w+)\s+from\s+)?["']([^"']+)["']/g;
+  const dynamicRe = /import\s*\(\s*["']([^"']+)["']\s*\)/g;
   const sources = [];
   let m;
   while ((m = re.exec(content)) !== null) sources.push(m[1]);
+  while ((m = dynamicRe.exec(content)) !== null) sources.push(m[1]);
   return sources;
 }
 
@@ -106,6 +108,20 @@ test("research pipeline imports retrieval/community.js for collector entry", () 
     "research/pipeline.js must import retrieval/community.js for collector functions");
 });
 
+test("community retrieval does not import the public facade", () => {
+  const imports = localImports(join(libDir, "retrieval", "community.js"));
+  assert.ok(!imports.some(i => i.includes("web-research")),
+    "retrieval/community.js must not import lib/web-research.js");
+});
+
+test("public facade exposes only documented research entrypoints", () => {
+  const content = readFileSync(join(libDir, "web-research.js"), "utf8");
+  assert.equal(content.includes("collectorSessions"), false);
+  assert.equal(content.includes("runCollectorInteractive"), false);
+  assert.equal(content.includes("shouldRunCollectorInteractive"), false);
+  assert.equal(content.includes("Backward compat"), false);
+});
+
 // ---------------------------------------------------------------------------
 // Slice 7: Domain/routing boundaries
 // ---------------------------------------------------------------------------
@@ -159,6 +175,14 @@ test("research-memory.js cache keys are query/config-based, not raw session", ()
   // Must not reference raw collector session objects
   assert.ok(!content.includes("collectorSession") && !content.includes("collectorSessions"),
     "research-memory must not reference collector session objects");
+});
+
+test("rawPages results are not written through the slim persistent result cache", () => {
+  const content = readFileSync(join(libDir, "research", "pipeline.js"), "utf8");
+  assert.ok(content.includes("config.rawPages ? null : readCachedResult(cacheKey)"),
+    "rawPages reads must bypass slim persistent result cache");
+  assert.ok(content.includes("if (!config.rawPages) writeCachedResult(cacheKey, slimResult, config.cacheTtlMs)"),
+    "rawPages writes must bypass slim persistent result cache");
 });
 
 // ---------------------------------------------------------------------------

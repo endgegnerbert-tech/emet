@@ -6,6 +6,7 @@ import { getCollector, listCollectors, runCollectorDoctor } from "../lib/collect
 import { HNCollector } from "../lib/collectors/hn.js";
 import { V2exCollector } from "../lib/collectors/v2ex.js";
 import { GitHubCollector } from "../lib/collectors/github-collector.js";
+import { RedditCollector } from "../lib/collectors/reddit.js";
 import { RSSCollector } from "../lib/collectors/rss.js";
 import { YouTubeCollector } from "../lib/collectors/youtube.js";
 import { fetchWithTimeout } from "../lib/collectors/collector.js";
@@ -19,6 +20,7 @@ test("getCollector returns instance for known collectors", () => {
   assert.ok(getCollector("hn") instanceof HNCollector);
   assert.ok(getCollector("v2ex") instanceof V2exCollector);
   assert.ok(getCollector("github") instanceof GitHubCollector);
+  assert.ok(getCollector("reddit") instanceof RedditCollector);
   assert.ok(getCollector("rss") instanceof RSSCollector);
   assert.ok(getCollector("youtube") instanceof YouTubeCollector);
 });
@@ -27,9 +29,9 @@ test("getCollector returns null for unknown name", () => {
   assert.equal(getCollector("nonexistent"), null);
 });
 
-test("listCollectors returns 5 entries with name, label, available", () => {
+test("listCollectors returns 6 entries with name, label, available", () => {
   const list = listCollectors();
-  assert.equal(list.length, 5);
+  assert.equal(list.length, 6);
   for (const entry of list) {
     assert.ok(typeof entry.name === "string");
     assert.ok(typeof entry.label === "string");
@@ -40,7 +42,7 @@ test("listCollectors returns 5 entries with name, label, available", () => {
 test("runCollectorDoctor returns checks with collector prefix", () => {
   const result = runCollectorDoctor();
   assert.ok(Array.isArray(result.checks));
-  assert.equal(result.checks.length, 5);
+  assert.equal(result.checks.length, 6);
   for (const check of result.checks) {
     assert.match(check.name, /^collector:/);
     assert.ok("ok" in check);
@@ -54,7 +56,7 @@ test("runCollectorDoctor returns checks with collector prefix", () => {
 test("doctor includes collector checks", () => {
   const result = runDoctor({ nodeVersion: process.version });
   const collectorChecks = result.checks.filter((c) => c.name.startsWith("collector:"));
-  assert.equal(collectorChecks.length, 5);
+  assert.equal(collectorChecks.length, 6);
   // Non-YouTube collectors should be available
   for (const c of collectorChecks) {
     if (c.name !== "collector:youtube") {
@@ -62,6 +64,42 @@ test("doctor includes collector checks", () => {
     }
   }
   assert.match(result.text, /collector:/);
+});
+
+// ---------------------------------------------------------------------------
+// Reddit Collector
+// ---------------------------------------------------------------------------
+
+test("Reddit collector returns public JSON results", async (t) => {
+  const original = globalThis.fetch;
+  t.after(() => globalThis.fetch = original);
+  globalThis.fetch = async (url, options = {}) => {
+    assert.match(url, /reddit\.com\/search\.json/);
+    assert.match(options.headers["user-agent"], /emet/);
+    return new Response(JSON.stringify({
+      data: {
+        children: [{
+          data: {
+            title: "Reddit Post",
+            permalink: "/r/test/comments/abc/reddit_post/",
+            author: "user",
+            score: 12,
+            num_comments: 3,
+            created_utc: 1760000000,
+            subreddit: "test",
+          },
+        }],
+      },
+    }));
+  };
+
+  const result = await new RedditCollector().search("test", { limit: 5 });
+  assert.equal(result.platform, "reddit");
+  assert.equal(result.resultCount, 1);
+  assert.equal(result.results[0].title, "Reddit Post");
+  assert.equal(result.results[0].url, "https://www.reddit.com/r/test/comments/abc/reddit_post/");
+  assert.equal(result.results[0].signals.comments, 3);
+  assert.equal(result.results[0].signals.subreddit, "test");
 });
 
 // ---------------------------------------------------------------------------

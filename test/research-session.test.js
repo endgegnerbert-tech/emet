@@ -5,9 +5,6 @@ import {
   SESSION_TTL,
   MAX_SESSIONS,
   DEFAULT_MAX_TURNS,
-  COLLECTOR_SESSION_TTL,
-  COLLECTOR_MAX_SESSIONS,
-  COLLECTOR_MAX_TURNS_DEFAULT,
   collectorSessions,
   getOrCreateSession,
 } from "../lib/research-session.js";
@@ -21,12 +18,6 @@ test.beforeEach(() => {
 
 test("SESSION_TTL is 30 minutes", () => {
   assert.equal(SESSION_TTL, 30 * 60 * 1000);
-});
-
-test("legacy aliases match canonical constants", () => {
-  assert.equal(COLLECTOR_SESSION_TTL, SESSION_TTL);
-  assert.equal(COLLECTOR_MAX_SESSIONS, MAX_SESSIONS);
-  assert.equal(COLLECTOR_MAX_TURNS_DEFAULT, DEFAULT_MAX_TURNS);
 });
 
 // --- Session creation ---
@@ -108,5 +99,5 @@ test("session tracks turns separately from creation", () => {
   assert.equal(s.turn, 1);
   s.turn += 1;
   assert.equal(s.turn, 2);
-  // maxTurns is enforced by the caller (runCollectorInteractive), not the session module
+  // maxTurns is enforced by the checkpoint caller, not the session module
 });

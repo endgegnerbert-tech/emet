@@ -25,6 +25,36 @@ test("scoreSourceEntry exposes source type, score, authority, and freshness", ()
   assert.equal(typeof scored.total, "number");
 });
 
+test("scoreSourceEntry does not promote weak sources to authoritative by score alone", () => {
+  const sources = [
+    {
+      title: "Vendor-looking blog release notes and docs",
+      url: "https://blog.example.com/product/docs/release-notes",
+      text: "Official docs release changelog migration guide version support stable recommended available.",
+    },
+    {
+      title: "GitHub issue with support status",
+      url: "https://github.com/example/project/issues/123",
+      text: "Official docs support stable recommended available migration guide release notes.",
+    },
+    {
+      title: "GitHub discussion with support status",
+      url: "https://github.com/example/project/discussions/456",
+      text: "Official docs support stable recommended available migration guide release notes.",
+    },
+    {
+      title: "GitHub pull request with support status",
+      url: "https://github.com/example/project/pull/789",
+      text: "Official docs support stable recommended available migration guide release notes.",
+    },
+  ];
+
+  for (const source of sources) {
+    const scored = scoreSourceEntry(source, "example project release notes migration guide");
+    assert.equal(scored.authoritative, false, `${source.url} should stay non-authoritative`);
+  }
+});
+
 test("prioritizeSourceEntries keeps visible score metadata", () => {
   const ranked = prioritizeSourceEntries([
     { title: "Forum", url: "https://reddit.com/r/javascript" },
@@ -48,6 +78,32 @@ test("secondary docs hosts are not treated as authoritative official docs", () =
   assert.equal(isAuthoritativeUrl("https://sureprompts.com/docs/mcp-sampling"), false);
   assert.equal(classifySourceType("https://cursorcommunity.com/reference/mcp", "Reference"), "other");
   assert.equal(isAuthoritativeUrl("https://cursorcommunity.com/reference/mcp"), false);
+});
+
+test("explicit non-authoritative labels are not promoted by score", () => {
+  const scored = scoreSourceEntry({
+    title: "Official-looking docs mirror",
+    url: "https://docs.example.com/reference",
+    sourceType: "official_doc",
+    authoritative: false,
+    text: "official documentation reference ".repeat(20),
+  }, "example official documentation reference");
+
+  assert.equal(scored.sourceType, "official_doc");
+  assert.equal(scored.authoritative, false);
+  assert.ok(scored.total >= 10);
+});
+
+test("GitHub issues pulls and discussions remain non-authoritative", () => {
+  for (const url of [
+    "https://github.com/org/project/issues/123",
+    "https://github.com/org/project/pull/456",
+    "https://github.com/org/project/pulls/456",
+    "https://github.com/org/project/discussions/789",
+  ]) {
+    const scored = scoreSourceEntry({ title: "GitHub state page", url }, "github project support status");
+    assert.equal(scored.authoritative, false, `${url} should not be authoritative`);
+  }
 });
 
 test("buildDeepQueries adds academic paper hints", () => {
@@ -80,6 +136,16 @@ test("detectConflictSignals summarizes the actual disagreement", () => {
   assert.match(conflict.conflictSummary, /disagreement on support status/i);
 });
 
+test("detectConflictSignals catches same-domain contradictory pages", () => {
+  const conflict = detectConflictSignals([
+    { url: "https://docs.example.com/a", title: "Docs A", text: "Sampling is supported and available in this release." },
+    { url: "https://docs.example.com/b", title: "Docs B", text: "Sampling is not supported for this client today." },
+  ]);
+
+  assert.equal(conflict.detected, true);
+  assert.deepEqual(conflict.conflictingSourcePairs, [[0, 1]]);
+});
+
 test("normalizePaperTitle strips boilerplate prefixes", () => {
   assert.equal(normalizePaperTitle("Title: Example Paper"), "Example Paper");
   assert.equal(normalizePaperTitle("Paper: Semantic Paper"), "Semantic Paper");
@@ -95,5 +161,20 @@ test("detectClaimConflicts flags opposite claims with source evidence", () => {
 
 test("detectCoverageGaps asks for missing authoritative sources", () => {
   const result = detectCoverageGaps({ claims: [{ text: "A", evidence: [] }] });
+  assert.ok(result.missingAspects.includes("authoritative sources"));
+});
+
+test("detectCoverageGaps honors immutable non-authoritative source labels", () => {
+  const result = detectCoverageGaps({
+    query: "example docs",
+    sources: [{
+      title: "Mirror",
+      url: "https://docs.example.com/reference",
+      sourceType: "official_doc",
+      authoritative: false,
+    }],
+  });
+
+  assert.equal(result.detected, true);
   assert.ok(result.missingAspects.includes("authoritative sources"));
 });

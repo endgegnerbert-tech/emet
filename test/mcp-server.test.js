@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 
 import { buildInitializeResult, McpServer } from "../mcp/index.js";
 import { buildInitializeResult as buildInitializeResultFromShim } from "../mcp-server.js";
+import { handleToolsCall } from "../mcp/handlers/tools.js";
+import { createTelemetry } from "../mcp/telemetry.js";
 
 // Mock transport to capture responses
 class MockTransport {
@@ -81,7 +83,7 @@ test("mcp resources expose current profile and latest compact research", async (
     env: {},
     runWebResearchFn: async () => ({
       ok: true,
-      action: "web_research",
+      action: "final",
       contentText: "answer",
       sufficient: true,
       authoritativeSourcesFound: true,
@@ -113,7 +115,7 @@ test("mcp tools/call delegates to the shared research engine", async () => {
     errorOutput: { write: () => {} },
     runWebResearchFn: async (query, ctx, signal, onUpdate, options) => {
       called = { query, ctx, signal, onUpdate, options };
-      return { ok: true, action: "web_research", contentText: "answer", answer: "answer" };
+      return { ok: true, action: "final", contentText: "answer", answer: "answer" };
     },
   });
 
@@ -135,6 +137,70 @@ test("mcp tools/call delegates to the shared research engine", async () => {
   assert.equal(response.result.structuredContent.answer, "answer");
 });
 
+test("mcp web_fetch forwards maxBytes to the fetch pipeline", async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => ({
+    ok: true,
+    status: 200,
+    url: String(url),
+    headers: { get: () => "text/plain" },
+    async text() {
+      return "x".repeat(120);
+    },
+  });
+
+  try {
+    const response = await handleToolsCall({
+      params: {
+        name: "web_fetch",
+        arguments: { url: "https://allowed.example/large", maxBytes: 25 },
+      },
+    }, {});
+
+    assert.equal(response.structuredContent.ok, true);
+    assert.equal(response.structuredContent.textLength, 25);
+    assert.equal(response.structuredContent.textLimit, 25);
+    assert.equal(response.structuredContent.truncated, true);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test("mcp web_fetch forwards allowPrivateNetwork to the fetch pipeline", async () => {
+  const originalFetch = globalThis.fetch;
+  let called = false;
+  globalThis.fetch = async (url) => {
+    called = true;
+    return {
+      ok: true,
+      status: 200,
+      url: String(url),
+      headers: { get: () => "text/plain" },
+      async text() {
+        return "private dev server response";
+      },
+    };
+  };
+
+  try {
+    const response = await handleToolsCall({
+      params: {
+        name: "web_fetch",
+        arguments: {
+          url: "http://127.0.0.1:1234/private-mcp-allow",
+          allowPrivateNetwork: true,
+          force: true,
+        },
+      },
+    }, {});
+
+    assert.equal(response.structuredContent.ok, true);
+    assert.equal(called, true);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test("mcp tools/call triggers MCP sampling when deeply integrated", async () => {
   let calledCtx = null;
   const mockTransport = new MockTransport();
@@ -150,7 +216,7 @@ test("mcp tools/call triggers MCP sampling when deeply integrated", async () => 
         // Trigger the injected fake completeResearch
         await ctx.completeResearch("Please plan this query");
       }
-      return { ok: true, action: "web_research", contentText: "sampled", answer: "sampled" };
+      return { ok: true, action: "final", contentText: "sampled", answer: "sampled" };
     },
   });
 
@@ -183,4 +249,33 @@ test("mcp tools/call triggers MCP sampling when deeply integrated", async () => 
   
   assert.ok(calledCtx);
   assert.ok(typeof calledCtx.completeResearch === "function");
+});
+
+test("mcp telemetry uses injected env and can be disabled", async () => {
+  const created = [];
+  class FakePinglet {
+    constructor(options) {
+      created.push(options);
+    }
+    track(event, payload) {
+      created.push({ event, payload });
+    }
+  }
+
+  const telemetry = createTelemetry({
+    env: { EMET_TELEMETRY_ENDPOINT: "https://telemetry.invalid/ping" },
+    PingletClass: FakePinglet,
+  });
+  telemetry.track("run", { host: "test" });
+
+  assert.equal(created[0].endpoint, "https://telemetry.invalid/ping");
+  assert.equal(created[1].event, "run");
+
+  const disabled = createTelemetry({
+    env: { EMET_TELEMETRY_DISABLED: "1", EMET_TELEMETRY_ENDPOINT: "https://unused.invalid/ping" },
+    PingletClass: FakePinglet,
+  });
+  disabled.track("run", { host: "disabled" });
+
+  assert.equal(created.length, 2);
 });

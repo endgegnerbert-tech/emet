@@ -6,12 +6,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const PACKAGE_NAME = "@black-knight.dev/emet";
-const PACKAGE_VERSION = "latest";
 const HOST_ID = "codex";
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const runtimeDir = path.join(scriptDir, ".runtime");
 const packageDir = path.join(runtimeDir, "node_modules", "@black-knight.dev", "emet");
 const entrypoint = path.join(packageDir, "emet.js");
+const manifest = await fileJson(path.join(scriptDir, ".codex-plugin", "plugin.json"));
+const PACKAGE_VERSION = manifest?.version || "2.0.0";
 
 async function fileJson(file) {
   try {

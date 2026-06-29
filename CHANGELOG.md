@@ -1,6 +1,60 @@
 # Changelog
 
-Pinned: [docs index](docs/README.md) · [tool reference](docs/tool-reference.md) · [1.4.6 release notes](docs/releases/1.4.6.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [SECURITY](SECURITY.md) · [contributing](CONTRIBUTING.md)
+All notable changes to this project are documented here.
+
+Pinned: [docs index](docs/README.md) · [tool reference](docs/tool-reference.md) · [2.0.0 release notes](docs/releases/2.0.0.md) · [quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [SECURITY](SECURITY.md) · [contributing](CONTRIBUTING.md)
+
+## [2.0.0] - 2026-06-29
+
+### Breaking Changes
+- **Canonical result contract:** Result payloads now use canonical `action` values only. Removed `legacyAction` and old action aliases such as `collector_search`, `collector_fetch`, `collector_synthesize`, and `web_research`.
+- **Session alias removal:** Removed `COLLECTOR_*` session aliases. Use `SESSION_TTL`, `MAX_SESSIONS`, and `DEFAULT_MAX_TURNS`.
+- **Facade cleanup:** Removed old collector-interactive helpers from `lib/web-research.js`; community retrieval now goes through normal `emet` checkpoint options.
+- **Explicit package surface:** Added a package `exports` map. Supported public imports are explicit, and unsupported deep imports are intentionally blocked by Node package resolution.
+
+### Added
+- **Public export map:** Added documented `package.json` `exports` entries for `./web-research`, `./research`, `./research-contract`, `./research-flow`, `./mcp-server`, and `./mcp`, and raised the Node engine floor to `>=20`.
+- **Release safety checks:** `npm run pack:dry` now runs the package surface audit before `npm pack --dry-run`, and `npm run check` now includes a tarball install smoke test.
+- **Trusted publishing:** Added a GitHub Actions npm publish workflow prepared for OIDC/provenance publishing.
+- **Official-source routing:** Added pure official-target inference for high-risk docs/spec/package discovery. It can now seed known official pages and zero-setup metadata APIs for OpenAI Codex, MCP specs, npm, PyPI, crates.io, Maven Central, and GitHub releases/tags, while keeping broader docs queries constrained by official hosts instead of hard-coded guessed pages.
+- **Official-doc host rules:** Added official host constraints and query hints for React, Python, Node.js, MDN/WHATWG/W3C, Kubernetes, Docker, cloud-provider docs, GitHub Docs, OpenAI, and Anthropic.
+- **Community/social coverage:** Added a zero-setup Reddit collector using Reddit's public JSON search endpoint, and exposed `reddit` alongside `hn`, `v2ex`, `github`, `rss`, and `youtube`.
+- **Primary-source control:** Added `options.requirePrimarySource` to the Pi and MCP schemas. It maps to stricter authoritative/primary-source guardrails without adding a new public tool.
+- **Fetch controls:** Added `allowPrivateNetwork`, `maxBytes`, fetch diagnostics, and JSON/PDF-aware fetch handling in `web_fetch`.
+
+### Changed
+- **Pi tool schema compatibility:** Pi enum fields now use string enums for better provider compatibility, and prompt guidance names the exact tool (`emet` or `web_fetch`) in each flat guideline.
+- **Pi 0.80 package alignment:** Runtime Pi imports now use `@earendil-works/pi-ai` and its compat `complete()` export instead of the deprecated `@mariozechner/*` namespace. The package no longer peer-installs the Pi host.
+- **Package registry pack:** Expanded official registry/API fallbacks for npm, PyPI, crates.io/docs.rs, Maven Central, and GitHub release metadata while preserving fail-closed host policy behavior.
+- **Standards and docs packs:** Expanded standards/cloud docs allowlists for WHATWG, RFC/IETF, TC39, Docker, GitHub Docs, and provider documentation.
+- **Community fetch policy:** Explicit community fetches no longer get accidentally blocked by soft `allowedSources`; strict `hostAllowlist` remains fail-closed.
+- **Community platform input:** Platform names are normalized for case and common aliases such as `HN`, `Reddit.com`, and `V2EX`.
+
+### Fixed
+- **1.4.6 fetch regression:** `lib/research/fetch.js` now imports the page snapshot helpers it uses.
+- **Pi tool activation:** Fixed Pi sessions where `emet` was active but `web_fetch` did not appear as an active companion tool. `web_fetch` is now re-registered on session start and the activation hook tolerates Pi runtimes whose active-tool APIs are not bound yet.
+- **Pi JSON output:** `options.format: "json"` now returns pure JSON in Pi instead of Markdown wrapped around a JSON block.
+- **Pi rawPages output:** Fixed `rawPages` handling in the Pi runtime.
+- **Source policy enforcement:** Search and fetch now fail closed on private/internal hosts, redirects, placeholder pages, and mismatched source types.
+- **Community checkpoints:** Interactive community flows now work end-to-end without the old collector-interactive facade path, and canonical results no longer emit legacy `legacyAction` values.
+- **Direct URL selection:** `options.selectedUrls` now works without an existing interactive session, so agents can fetch and summarize known URLs through `emet` directly.
+- **HN fetch reliability:** HN discussion fetches now fall back to the public Algolia item API instead of depending on `news.ycombinator.com` pages that often return 429.
+- **Cache isolation:** Research cache keys are now project-scoped, and topic-cache use is blocked for versions, years, URLs, `site:`, repo paths, and strict source queries.
+- **Logging hygiene:** Local file paths are redacted in logs and traces.
+
+### Removed
+- **ML router subsystem:** Removed `ml/`, `scripts/router/`, `data/router/`, `data/followup/`, `metrics/router/`, and the old `tiny-router` / `router-*` modules and tests.
+- **Legacy action compatibility:** Removed `legacyAction`, `collector_*` action aliases, and `COLLECTOR_*` session aliases.
+- **Old collector facade exports:** Removed collector-interactive exports from `lib/web-research.js`; community retrieval now goes through the normal checkpoint options.
+- **Unused compatibility baggage:** Removed obsolete router audit/promotion docs, plans, and scripts, plus the unused `turndown` dependency.
+
+### Security
+- **Dependency audit:** Pinned transitive `protobufjs` to `7.6.4` with an npm override to clear the Pi AI dependency audit finding.
+
+### Verified
+- `npm run check` — 320 tests passing, package surface audit passing, npm pack dry-run passing, and tarball install smoke passing.
+- `npm audit --omit=dev` — 0 vulnerabilities.
+- Live Pi-focused checks covered `web_fetch` activation, JSON output, HN fetch fallback, `allowedSources + platforms`, Reddit collector registration, and `requirePrimarySource` schema/config behavior.
 
 ## 1.4.6
 

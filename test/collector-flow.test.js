@@ -2,7 +2,8 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import webResearchExtension from "../index.js";
-import { shouldRunCollectorInteractive, collectorSessions } from "../lib/web-research.js";
+import { collectorSessions } from "../lib/research-session.js";
+import { selectedCommunityPlatforms } from "../lib/retrieval/community.js";
 import { buildToolDefinition } from "../lib/tool-schema.js";
 
 // Clean session state between tests
@@ -44,38 +45,36 @@ test("Pi extension schema includes checkpoint/community options", () => {
   assert.ok(opts.hostAllowlist);
 });
 
-// --- shouldRunCollectorInteractive tests ---
+// --- community platform selection tests ---
 
-test("shouldRunCollectorInteractive: explicit platforms", () => {
-  assert.equal(shouldRunCollectorInteractive("anything", { platforms: ["hn"] }), true);
-  assert.equal(shouldRunCollectorInteractive("anything", { platforms: [] }), false);
+test("selectedCommunityPlatforms: explicit platforms", () => {
+  assert.deepEqual(selectedCommunityPlatforms("anything", { platforms: ["hn"] }), ["hn"]);
+  assert.deepEqual(selectedCommunityPlatforms("anything", { platforms: ["HN", "Reddit.com", "V2EX"] }), ["hn", "reddit", "v2ex"]);
+  assert.deepEqual(selectedCommunityPlatforms("anything", { platforms: [] }), []);
 });
 
-test("shouldRunCollectorInteractive: interactive alone is not collector mode", () => {
-  assert.equal(shouldRunCollectorInteractive("anything", { interactive: true }), false);
+test("selectedCommunityPlatforms: interactive alone is not community mode", () => {
+  assert.deepEqual(selectedCommunityPlatforms("anything", { interactive: true }), []);
 });
 
-test("shouldRunCollectorInteractive: normal web queries return false", () => {
-  assert.equal(shouldRunCollectorInteractive("How does React work?", {}), false);
-  assert.equal(shouldRunCollectorInteractive("GitHub REST apiVersion deprecated", {}), false);
-  assert.equal(shouldRunCollectorInteractive("Deploy to GitHub Pages", {}), false);
+test("selectedCommunityPlatforms: normal web queries return empty", () => {
+  assert.deepEqual(selectedCommunityPlatforms("How does React work?", {}), []);
+  assert.deepEqual(selectedCommunityPlatforms("GitHub REST apiVersion deprecated", {}), []);
+  assert.deepEqual(selectedCommunityPlatforms("Deploy to GitHub Pages", {}), []);
 });
 
-test("shouldRunCollectorInteractive: HN wording", () => {
-  assert.equal(shouldRunCollectorInteractive("What does HN think about React 19?", {}), true);
-  assert.equal(shouldRunCollectorInteractive("Hacker News discussion on TypeScript", {}), true);
+test("selectedCommunityPlatforms: platform wording", () => {
+  assert.deepEqual(selectedCommunityPlatforms("What does HN think about React 19?", {}), ["hn"]);
+  assert.deepEqual(selectedCommunityPlatforms("Hacker News discussion on TypeScript", {}), ["hn"]);
+  assert.deepEqual(selectedCommunityPlatforms("V2EX best keyboard", {}), ["v2ex"]);
 });
 
-test("shouldRunCollectorInteractive: V2EX wording", () => {
-  assert.equal(shouldRunCollectorInteractive("V2EX best keyboard", {}), true);
-});
-
-test("shouldRunCollectorInteractive: GitHub issues/repos/discussions intent", () => {
-  assert.equal(shouldRunCollectorInteractive("GitHub issues React 19 bug", {}), true);
-  assert.equal(shouldRunCollectorInteractive("best GitHub repos for CLI tools", {}), true);
-  assert.equal(shouldRunCollectorInteractive("GitHub discussions about Node.js", {}), true);
-  assert.equal(shouldRunCollectorInteractive("GitHub trending this week", {}), true);
-  assert.equal(shouldRunCollectorInteractive("top GitHub repos for Rust", {}), true);
+test("selectedCommunityPlatforms: GitHub issues/repos/discussions intent", () => {
+  assert.deepEqual(selectedCommunityPlatforms("GitHub issues React 19 bug", {}), ["github"]);
+  assert.deepEqual(selectedCommunityPlatforms("best GitHub repos for CLI tools", {}), ["github"]);
+  assert.deepEqual(selectedCommunityPlatforms("GitHub discussions about Node.js", {}), ["github"]);
+  assert.deepEqual(selectedCommunityPlatforms("GitHub trending this week", {}), ["github"]);
+  assert.deepEqual(selectedCommunityPlatforms("top GitHub repos for Rust", {}), ["github"]);
 });
 
 // --- Interactive flow tests (with mocked fetch for collectors) ---
@@ -92,7 +91,7 @@ test("community checkpoint: unavailable collector returns structured error", asy
   );
   assert.equal(result.ok, true);
   assert.equal(result.action, "search");
-  assert.equal(result.legacyAction, "collector_search");
+  assert.equal("legacyAction" in result, false);
   assert.ok(result.collectorResults[0].available === false);
   assert.ok(result.collectorResults[0].reason);
 });
@@ -133,7 +132,7 @@ test("community checkpoint: HN collector returns structured results", async () =
     );
     assert.equal(result.ok, true);
     assert.equal(result.action, "search");
-    assert.equal(result.legacyAction, "collector_search");
+    assert.equal("legacyAction" in result, false);
     assert.ok(result.sessionId);
     assert.equal(result.turn, 1);
     assert.ok(Array.isArray(result.collectorResults));
@@ -197,13 +196,174 @@ test("community checkpoint: fetch uses selectedResultIds from prior search", asy
       { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
       undefined,
       undefined,
-      { platforms: ["hn"], interactive: true, sessionId: first.sessionId, action: "fetch", selectedResultIds: [selectedId], isolate: true }
+      { interactive: true, sessionId: first.sessionId, action: "fetch", selectedResultIds: [selectedId], isolate: true }
     );
     assert.equal(second.ok, true);
     assert.equal(second.action, "fetch");
-    assert.equal(second.legacyAction, "collector_fetch");
+    assert.equal("legacyAction" in second, false);
     assert.equal(second.pages.length, 1);
     assert.ok(second.nextActions.some((action) => action.action === "synthesize"));
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("community checkpoint: fetch preserves strict host policy", async () => {
+  const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+  let blockedUrlFetched = false;
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("hn.algolia.com")) {
+      return {
+        ok: true,
+        headers: { get: () => "application/json" },
+        async json() { return { hits: [{ title: "Result", url: "https://blocked.example/post", author: "t", points: 10, num_comments: 2, created_at: "2026-01-01" }] }; },
+      };
+    }
+    if (text.includes("blocked.example")) blockedUrlFetched = true;
+    return {
+      status: 200,
+      url: text,
+      headers: { get: () => "text/html" },
+      async text() { return `<html><body>${("blocked content ").repeat(120)}</body></html>`; },
+    };
+  };
+
+  try {
+    const first = await runWebResearch(
+      "React 19",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, isolate: true }
+    );
+    const selectedId = first.collectorResults[0].results[0].id;
+
+    const second = await runWebResearch(
+      "React 19",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, sessionId: first.sessionId, action: "fetch", selectedResultIds: [selectedId], hostAllowlist: ["allowed.example"], isolate: true }
+    );
+    assert.equal(second.ok, true);
+    assert.equal(second.pages.length, 0);
+    assert.equal(second.fetchDiagnostics[0].reason, "source_policy");
+    assert.equal(second.nextActions.some((action) => action.action === "synthesize"), false);
+    assert.equal(blockedUrlFetched, false);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("community checkpoint: HN item fetch falls back to Algolia item API", async () => {
+  const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+  let newsFetched = false;
+  let itemApiFetched = false;
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("hn.algolia.com/api/v1/search")) {
+      return {
+        ok: true,
+        headers: { get: () => "application/json" },
+        async json() { return { hits: [{ title: "HN-only thread", url: null, objectID: "4242", author: "t", points: 10, num_comments: 2, created_at: "2026-01-01" }] }; },
+      };
+    }
+    if (text.includes("hn.algolia.com/api/v1/items/4242")) {
+      itemApiFetched = true;
+      return {
+        ok: true,
+        headers: { get: () => "application/json" },
+        async json() {
+          return {
+            id: 4242,
+            title: "HN-only thread",
+            author: "t",
+            points: 10,
+            text: "<p>thread body",
+            children: [{ author: "c", text: "<p>useful comment" }],
+          };
+        },
+      };
+    }
+    if (text.includes("news.ycombinator.com")) newsFetched = true;
+    return { ok: false, status: 429, headers: { get: () => "text/plain" }, async text() { return ""; } };
+  };
+
+  try {
+    const first = await runWebResearch(
+      "HN-only thread",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, isolate: true }
+    );
+    const selectedId = first.collectorResults[0].results[0].id;
+    const second = await runWebResearch(
+      "HN-only thread",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { interactive: true, sessionId: first.sessionId, action: "fetch", selectedResultIds: [selectedId], isolate: true }
+    );
+
+    assert.equal(second.ok, true);
+    assert.equal(second.pages.length, 1);
+    assert.equal(second.pages[0].url, "https://news.ycombinator.com/item?id=4242");
+    assert.equal(itemApiFetched, true);
+    assert.equal(newsFetched, false);
+  } finally {
+    globalThis.fetch = previousFetch;
+  }
+});
+
+test("community checkpoint: allowedSources does not block explicit community fetch", async () => {
+  const { runWebResearch, clearResearchMemory } = await import("../lib/web-research.js");
+  clearResearchMemory();
+  const previousFetch = globalThis.fetch;
+
+  globalThis.fetch = async (url) => {
+    const text = String(url);
+    if (text.includes("hn.algolia.com")) {
+      return {
+        ok: true,
+        headers: { get: () => "application/json" },
+        async json() { return { hits: [{ title: "Community result", url: "https://community.example/post", author: "t", points: 10, num_comments: 2, created_at: "2026-01-01" }] }; },
+      };
+    }
+    return {
+      status: 200,
+      url: text,
+      headers: { get: () => "text/html" },
+      async text() { return `<html><title>Community</title><body>${("community evidence ").repeat(120)}</body></html>`; },
+    };
+  };
+
+  try {
+    const first = await runWebResearch(
+      "community result",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { platforms: ["hn"], interactive: true, allowedSources: ["react.dev"], isolate: true }
+    );
+    const selectedId = first.collectorResults[0].results[0].id;
+    const second = await runWebResearch(
+      "community result",
+      { model: null, modelRegistry: { async getApiKeyAndHeaders() { return { ok: false }; } } },
+      undefined,
+      undefined,
+      { interactive: true, sessionId: first.sessionId, action: "fetch", selectedResultIds: [selectedId], allowedSources: ["react.dev"], isolate: true }
+    );
+
+    assert.equal(second.ok, true);
+    assert.equal(second.pages.length, 1);
   } finally {
     globalThis.fetch = previousFetch;
   }
@@ -375,7 +535,7 @@ test("interactive without platforms runs normal pipeline, not collector checkpoi
     );
     assert.equal(result.ok, true);
     assert.equal(result.action, "final");
-    assert.equal(result.legacyAction, "web_research");
+    assert.equal("legacyAction" in result, false);
     assert.equal(result.collectorResults, undefined);
   } finally {
     globalThis.fetch = previousFetch;
@@ -433,8 +593,7 @@ test("community synthesize action runs normal pipeline instead of legacy collect
     );
     assert.equal(result.ok, true);
     assert.equal(result.action, "final");
-    assert.equal(result.legacyAction, "web_research");
-    assert.notEqual(result.legacyAction, "collector_synthesize");
+    assert.equal("legacyAction" in result, false);
   } finally {
     globalThis.fetch = previousFetch;
   }

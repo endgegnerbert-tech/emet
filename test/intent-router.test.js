@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { classifyQuestionDomain, normalizeResearchMode } from "../lib/research-intent.js";
+import { buildResearchGuardrails } from "../lib/research-guardrails.js";
+import { resolveQuestionDomain } from "../lib/research/pipeline.js";
 
 test("classifyQuestionDomain routes GitHub issue questions to github", () => {
   assert.equal(classifyQuestionDomain("bug in issue tracker for this repo"), "github");
@@ -46,4 +48,15 @@ test("classifyQuestionDomain adds standards, news, and local how-to domains", ()
 test("normalizeResearchMode keeps explicit mode and default fallback", () => {
   assert.equal(normalizeResearchMode({ mode: "academic" }, "fast"), "academic");
   assert.equal(normalizeResearchMode({}, "fast"), "fast");
+});
+
+test("resolveQuestionDomain lets guardrails veto high-risk downgrade to web", async () => {
+  const query = "Current CVE-2026-1234 vendor advisory mitigation";
+  const guardrails = buildResearchGuardrails(query);
+  const decision = await resolveQuestionDomain(query, { mode: "fast", domain: "web" }, undefined, guardrails);
+
+  assert.equal(decision.heuristicDomain, "security");
+  assert.equal(decision.finalDomain, "security");
+  assert.equal(decision.decisionSource, "guardrail");
+  assert.equal(decision.decisionReason, "guardrail_veto_domain_downgrade");
 });

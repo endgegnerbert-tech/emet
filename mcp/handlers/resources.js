@@ -9,7 +9,7 @@ function latestResearchResource(runtime) {
     query: latest.query,
     queryHash: latest.queryHash,
     createdAt: latest.createdAt,
-    result: latest.payload?.ok && (latest.payload.action === "final" || latest.payload.action === "web_research" || latest.payload.legacyAction === "web_research")
+    result: latest.payload?.ok && latest.payload.action === "final"
       ? compactResearchPayload(latest.payload)
       : latest.payload,
   };

@@ -36,6 +36,20 @@ Retrieval    → returns candidates, never decides sufficiency
 Collectors   → never synthesize answers
 MCP/Pi/CLI   → import only runWebResearch, webFetch
 Logs/traces  → no auth tokens, cookies, API keys
+Boundary test → catches static and dynamic imports
+```
+
+Production grader rules:
+
+```
+Fetch policy  → validate hostAllowlist/source type before network and after redirects
+Cache keys    → include semantic policy/output fields before memory or disk hits
+Topic cache   → never use for versions, years, URLs, site:, repo paths, rawPages, or strict sources
+Search paths  → host/path allowlists are segment-aware (/docs matches /docs/x, not /docsx)
+Community     → never import lib/web-research.js; call lower-layer helpers or pipeline callbacks
+CLI globals   → --help, --no-telemetry, and unknown flags are handled before MCP startup
+Package       → bin targets executable, Node >=20, plugin bootstrap pinned to package version
+Dependencies  → remove unused deps; stdlib first, existing dep second, new dep last
 ```
 
 ## Adding code

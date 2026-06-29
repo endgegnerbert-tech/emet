@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import pkg from "../package.json" with { type: "json" };
 
 test("package manifest exposes the pi extension entrypoint", () => {
@@ -13,6 +13,8 @@ test("package manifest exposes MCP CLI aliases", () => {
   assert.equal(pkg.bin["emet-mcp"], "bin/emet-mcp.js");
   assert.equal(existsSync("bin/emet.js"), true);
   assert.equal(existsSync("bin/emet-mcp.js"), true);
+  assert.equal(Boolean(statSync("bin/emet.js").mode & 0o111), true);
+  assert.equal(Boolean(statSync("bin/emet-mcp.js").mode & 0o111), true);
 });
 
 test("package manifest ships MCP host config examples", () => {
@@ -57,4 +59,34 @@ test("plugin manifests are aligned to the package version", async () => {
   assert.equal(claudePlugin.version, pkg.version);
   assert.equal(codexPlugin.version, pkg.version);
   assert.equal(bundledCodexPlugin.version, pkg.version);
+  const bootstrap = readFileSync("plugins/emet/start.mjs", "utf8");
+  assert.ok(!bootstrap.includes("PACKAGE_VERSION = \"latest\""));
+  assert.ok(bootstrap.includes(".codex-plugin"));
+});
+
+test("package declares the Node floor and omits unused markdown converter", () => {
+  assert.equal(pkg.engines.node, ">=20");
+  assert.equal(Object.hasOwn(pkg.dependencies, "turndown"), false);
+});
+
+test("package exposes only documented public subpaths", () => {
+  assert.deepEqual(pkg.exports, {
+    ".": "./index.js",
+    "./web-research": "./lib/web-research.js",
+    "./research": "./lib/research.js",
+    "./research-contract": "./lib/research-contract.js",
+    "./research-flow": "./lib/research-flow.js",
+    "./mcp-server": "./mcp-server.js",
+    "./mcp": "./mcp/index.js",
+    "./package.json": "./package.json",
+  });
+  for (const target of Object.values(pkg.exports)) {
+    if (target === "./package.json") continue;
+    assert.equal(existsSync(target), true, `${target} exists`);
+  }
+});
+
+test("package check includes the tarball install smoke", () => {
+  assert.match(pkg.scripts["pack:smoke"], /package-install-smoke\.mjs/);
+  assert.match(pkg.scripts.check, /npm run pack:smoke/);
 });

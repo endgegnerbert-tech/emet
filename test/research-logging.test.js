@@ -1,122 +1,64 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
-import { getResearchLogPath, logResearchEvent } from "../lib/local-logger.js";
-import { fetchPageSource, searchDuckDuckGo } from "../lib/web-research.js";
+import { logResearchEvent } from "../lib/local-logger.js";
+import { readLocalFiles } from "../lib/research/fetch.js";
 
-test("research logger uses explicit log path and writes structured JSONL", async () => {
-  const dir = await mkdtemp(join(tmpdir(), "emet-log-test-"));
-  const previous = process.env.EMET_LOG_PATH;
-  process.env.EMET_LOG_PATH = join(dir, "emet.jsonl");
-
-  try {
-    assert.equal(getResearchLogPath(), process.env.EMET_LOG_PATH);
-    await logResearchEvent("unit_event", { reason: "success", outcome: "success", error: new Error("boom") });
-    const line = (await readFile(process.env.EMET_LOG_PATH, "utf8")).trim();
-    const parsed = JSON.parse(line);
-    assert.equal(parsed.schemaVersion, 1);
-    assert.equal(parsed.type, "unit_event");
-    assert.equal(parsed.event, "unit_event");
-    assert.equal(parsed.data.reason, "success");
-    assert.equal(parsed.data.error.name, "Error");
-  } finally {
-    if (previous === undefined) delete process.env.EMET_LOG_PATH;
-    else process.env.EMET_LOG_PATH = previous;
-    await rm(dir, { recursive: true, force: true });
-  }
-});
-
-test("research logger follows context-aware path when EMET_CONTEXT_PATH is set", () => {
-  const previousLog = process.env.EMET_LOG_PATH;
-  const previousContext = process.env.EMET_CONTEXT_PATH;
-  delete process.env.EMET_LOG_PATH;
-  process.env.EMET_CONTEXT_PATH = "/tmp/emet-context/emet-context.db";
+test("default research logs omit cwd, stacks, and raw config/result blobs", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "emet-logs-"));
+  const previousLogPath = process.env.EMET_LOG_PATH;
+  const path = join(dir, "research.jsonl");
+  process.env.EMET_LOG_PATH = path;
 
   try {
-    assert.match(getResearchLogPath(new Date("2026-06-12T00:00:00.000Z")), /\/tmp\/emet-context\/logs\/emet-2026-06-12\.jsonl$/);
-  } finally {
-    if (previousLog === undefined) delete process.env.EMET_LOG_PATH;
-    else process.env.EMET_LOG_PATH = previousLog;
-    if (previousContext === undefined) delete process.env.EMET_CONTEXT_PATH;
-    else process.env.EMET_CONTEXT_PATH = previousContext;
-  }
-});
-
-test("fetch logging records stable reason and retry fields for transient HTTP failures", async () => {
-  const dir = await mkdtemp(join(tmpdir(), "emet-fetch-log-test-"));
-  const previousLog = process.env.EMET_LOG_PATH;
-  const previousFetch = globalThis.fetch;
-  process.env.EMET_LOG_PATH = join(dir, "emet.jsonl");
-  let calls = 0;
-
-  globalThis.fetch = async () => {
-    calls += 1;
-    return {
-      ok: false,
-      status: 503,
-      url: "https://example.com/down",
-      headers: { get: () => "text/html" },
-      async text() { return ""; },
-    };
-  };
-
-  try {
-    const page = await fetchPageSource("https://example.com/down", undefined, {
-      pageTextLimit: 4000,
-      minPageText: 300,
-      useJinaFallback: false,
-      pageTimeoutMs: 1000,
-      isolate: true,
+    const error = new Error("provider failed");
+    error.code = "ETEST";
+    await logResearchEvent("test_event", {
+      config: { hostAllowlist: ["secret.internal"], pageTextLimit: 123 },
+      result: { answer: "raw answer", sources: [{ url: "https://example.com", text: "raw text" }], pageTexts: ["raw page"] },
+      error,
     });
-    assert.equal(page, null);
-    assert.equal(calls, 2);
-    const events = (await readFile(process.env.EMET_LOG_PATH, "utf8")).trim().split("\n").map((line) => JSON.parse(line));
-    const errorEvent = events.find((event) => event.type === "fetch_error");
-    assert.equal(errorEvent.data.reason, "http_5xx");
-    assert.equal(errorEvent.data.statusCode, 503);
-    assert.equal(errorEvent.data.fallbackUsed, true);
-    assert.equal(typeof errorEvent.data.retryCount, "number");
+
+    const line = (await readFile(path, "utf8")).trim();
+    const record = JSON.parse(line);
+
+    assert.equal("cwd" in record, false);
+    assert.equal(record.data.config, "[Redacted config]");
+    assert.equal(record.data.result.redacted, true);
+    assert.equal(record.data.result.sourceCount, 1);
+    assert.equal(record.data.result.pageTextCount, 1);
+    assert.deepEqual(record.data.error, { name: "Error", message: "provider failed" });
+    assert.equal(JSON.stringify(record).includes("raw answer"), false);
+    assert.equal(JSON.stringify(record).includes("raw page"), false);
+    assert.equal(JSON.stringify(record).includes("stack"), false);
   } finally {
-    globalThis.fetch = previousFetch;
-    if (previousLog === undefined) delete process.env.EMET_LOG_PATH;
-    else process.env.EMET_LOG_PATH = previousLog;
+    if (previousLogPath === undefined) delete process.env.EMET_LOG_PATH;
+    else process.env.EMET_LOG_PATH = previousLogPath;
     await rm(dir, { recursive: true, force: true });
   }
 });
 
-test("search logging records provider fallthrough and ranked set size", async () => {
-  const dir = await mkdtemp(join(tmpdir(), "emet-search-log-test-"));
-  const previousLog = process.env.EMET_LOG_PATH;
-  const previousFetch = globalThis.fetch;
-  process.env.EMET_LOG_PATH = join(dir, "emet.jsonl");
-
-  globalThis.fetch = async (url) => {
-    const text = String(url);
-    if (text.includes("html.duckduckgo.com")) {
-      return { ok: true, status: 200, headers: { get: () => "text/html" }, async text() { return ""; } };
-    }
-    return {
-      ok: true,
-      status: 200,
-      headers: { get: () => "text/html" },
-      async text() {
-        return `<a class="result-link" rel="nofollow" href="https://docs.example.com/a">Docs</a><td class="result-snippet">topic docs</td>`;
-      },
-    };
-  };
+test("readLocalFiles redacts local paths in default logs", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "emet-local-file-log-test-"));
+  const previousLogPath = process.env.EMET_LOG_PATH;
+  const logPath = join(dir, "research.jsonl");
+  const filePath = join(dir, "private-note.txt");
+  process.env.EMET_LOG_PATH = logPath;
 
   try {
-    await searchDuckDuckGo("topic docs", undefined, { ...{ resultsPerQuery: 3, searchProvider: "ddg_html", isolate: true }, allowedSourceTypes: [], allowedSources: [] });
-    const events = (await readFile(process.env.EMET_LOG_PATH, "utf8")).trim().split("\n").map((line) => JSON.parse(line));
-    assert.ok(events.some((event) => event.type === "search_provider_result" && event.data.provider === "ddg_html" && event.data.reason === "search_empty"));
-    assert.ok(events.some((event) => event.type === "search_results_summary" && typeof event.data.finalRankedSetSize === "number"));
+    await writeFile(filePath, "local file content ".repeat(20), "utf8");
+    const pages = await readLocalFiles([filePath], { pageTextLimit: 1000, minPageText: 1 });
+    assert.equal(pages.length, 1);
+
+    const record = JSON.parse((await readFile(logPath, "utf8")).trim());
+    assert.match(record.data.path, /^\[local-file:[a-f0-9]+:private-note\.txt\]$/);
+    assert.equal(record.data.path.includes(dir), false);
   } finally {
-    globalThis.fetch = previousFetch;
-    if (previousLog === undefined) delete process.env.EMET_LOG_PATH;
-    else process.env.EMET_LOG_PATH = previousLog;
+    if (previousLogPath === undefined) delete process.env.EMET_LOG_PATH;
+    else process.env.EMET_LOG_PATH = previousLogPath;
     await rm(dir, { recursive: true, force: true });
   }
 });

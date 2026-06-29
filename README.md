@@ -7,11 +7,11 @@
 
 **Zero-setup grounded research for AI coding agents.**
 
-Pinned: [docs index](docs/README.md) · [tool reference](docs/tool-reference.md) · [host setup](docs/hosts/README.md) · [5-minute quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [SECURITY](SECURITY.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [1.4.6 release notes](docs/releases/1.4.6.md)
+Pinned: [docs index](docs/README.md) · [tool reference](docs/tool-reference.md) · [host setup](docs/hosts/README.md) · [5-minute quickstarts](docs/quickstarts.md) · [examples](docs/examples.md) · [SECURITY](SECURITY.md) · [contributing](CONTRIBUTING.md) · [changelog](CHANGELOG.md) · [2.0.0 release notes](docs/releases/2.0.0.md)
 
 `emet` gives agents live, cited answers from the web, docs, repositories, papers, and selected community/media sources — without adding tool sprawl.
 
-> **Current shape:** public tools stay exactly `emet` + `web_fetch`. Community/media retrieval is read-only and explicit. Supported backends today: **Hacker News, V2EX, GitHub, RSS/Atom, YouTube**. Not every social network is supported, and factual/high-risk claims still require authoritative follow-up.
+> **Current shape:** public tools stay exactly `emet` + `web_fetch`. Community/media retrieval is read-only and explicit. Supported backends today: **Hacker News, Reddit, V2EX, GitHub, RSS/Atom, YouTube**. Not every social network is supported, and factual/high-risk claims still require authoritative follow-up.
 
 ![emet in action](docs/assets/emet-demo.gif)
 
@@ -45,6 +45,7 @@ Supported read-only community/media backends today:
 | Backend | What it is good for |
 | --- | --- |
 | `hn` | Hacker News discussions and launch reactions |
+| `reddit` | Reddit threads and community sentiment |
 | `v2ex` | V2EX threads and community chatter |
 | `github` | repos, issues, and code-search-style context |
 | `rss` | feed-backed updates and mention tracking |

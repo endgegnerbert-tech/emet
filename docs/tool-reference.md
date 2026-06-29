@@ -33,7 +33,9 @@ Pinned: [README](../README.md) · [quickstarts](./quickstarts.md) · [examples](
 ### Raw source access
 
 - `web_fetch({ url })` — best when you already have the URL; faster than deep mode for targeted page reads
+- `options.selectedUrls: ["https://..."]` — fetch and summarize known URLs through `emet`; works with or without an interactive session
 - `options.rawPages: true` — best when you want a normal `emet` answer plus full source text in `pageTexts[]`
+- `options.requirePrimarySource: true` — require official/primary evidence where possible; aliases to stricter authority guardrails
 
 ### Local repo grounding
 
@@ -44,6 +46,7 @@ Pinned: [README](../README.md) · [quickstarts](./quickstarts.md) · [examples](
 Use `options.platforms` explicitly for read-only community/media sources:
 
 - `hn`
+- `reddit`
 - `v2ex`
 - `github`
 - `rss`
@@ -57,7 +60,10 @@ Important: community/media results are signals, not automatic truth. For CVEs, o
 - `sessionId` — continue a bounded session
 - `action: "search" | "refine" | "fetch" | "synthesize"` — continue the session intentionally
 - `queryOverride` — refine the question
-- `selectedResultIds` / `selectedUrls` — fetch selected results from a checkpoint response
+- `selectedResultIds` — fetch selected results from a checkpoint response
+- `deepResearchConfig.depth` — follow-up depth, 1-3
+- `deepResearchConfig.breadth` — queries per depth layer, 2-4
+- `deepResearchConfig.concurrency` — concurrent searches/fetches, 1-4
 
 `interactive: true` is for checkpointing. `platforms` is for community/media retrieval. They are related, but not the same thing. If you already know the URL, use `web_fetch` instead of an interactive round.
 

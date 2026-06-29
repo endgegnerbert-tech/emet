@@ -163,7 +163,7 @@ test("normalizeCollectorResults: empty result", () => {
 // --- Authoritative is always false ---
 
 test("normalizeCollectorResult: community sources are never authoritative", () => {
-  const platforms = ["hn", "v2ex", "github", "rss", "youtube"];
+  const platforms = ["hn", "reddit", "v2ex", "github", "rss", "youtube"];
   for (const platform of platforms) {
     const result = normalizeCollectorResult(platform, { title: "X", url: "https://x.com" }, 0);
     assert.equal(result.authoritative, false, `${platform} should not be authoritative`);
